@@ -86,12 +86,12 @@
   }
 
   /* ---------- Menu principal ---------- */
-  .mainnav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 18px 0 16px; }
+  .mainnav { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin: 18px 0 16px; }
   .mainnav button {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; line-height: 1.05; text-align: center;
     --c: var(--title); border: 1.5px solid color-mix(in srgb, var(--c) 35%, transparent);
     background: color-mix(in srgb, var(--c) 9%, var(--surface)); border-radius: 16px; padding: 10px 8px;
-    font-size: 20px; text-transform: uppercase; letter-spacing: .8px; box-shadow: 0 3px 0 color-mix(in srgb, var(--c) 25%, transparent);
+    font-size: 16px; text-transform: uppercase; letter-spacing: .6px; box-shadow: 0 3px 0 color-mix(in srgb, var(--c) 25%, transparent);
     transition: transform .15s;
   }
   .mainnav button:hover { transform: translateY(-2px); }
@@ -99,10 +99,13 @@
   .mainnav button[aria-current="page"] .ico { color: var(--surface); }
   .mainnav .ico { color: var(--c); }
   .mainnav [data-view="treino"] { --c: var(--green); }
-  .mainnav [data-view="livros"] { --c: var(--purple); }
+  .mainnav [data-view="livros"] { --c: var(--indigo); }
+  .mainnav [data-view="bem"] { --c: var(--orange); }
+  .mainnav [data-view="dinheiro"] { --c: var(--gold); }
+  .mainnav [data-view="diario"] { --c: var(--purple); }
   .mainnav [data-view="filmes"] { --c: var(--blue); }
   #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 20; width: 100%; height: 100%; }
-  @media (max-width: 760px) { .mainnav { grid-template-columns: repeat(2, minmax(0, 1fr)); } .mainnav button { font-size: 17px; } }
+  @media (max-width: 900px) { .mainnav { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; } .mainnav button { font-size: 13.5px; padding: 8px 4px; letter-spacing: .3px; } }
 
   /* ---------- Barra da semana ---------- */
   .weekbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
@@ -277,6 +280,89 @@
 
   .notice { padding: 14px 16px; border-radius: 12px; margin-bottom: 12px; background: color-mix(in srgb, var(--peach) 16%, var(--surface)); }
 
+  /* ---------- Prioridades, energia, sugestões ---------- */
+  .prio { margin-bottom: 12px; }
+  .row-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 8px 0 12px; }
+  .row-actions .add { width: auto; flex: 1; margin: 0; }
+  .energy, .suggest { border-radius: 14px; padding: 10px 14px; margin-bottom: 12px; background: color-mix(in srgb, var(--blue) 9%, var(--surface)); }
+  .suggest { background: color-mix(in srgb, var(--pink) 10%, var(--surface)); margin-top: 12px; font-size: 17px; }
+  .energy .lbl { font-size: 17px; }
+  .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .pillbtn { border: 1px solid var(--line); background: var(--raised); border-radius: 999px; padding: 4px 12px; font-size: 15px; }
+  .pillbtn.on { background: var(--blue); border-color: var(--blue); color: var(--surface); }
+  .tip { margin: 8px 0 0; font-size: 16px; }
+  .muted { color: var(--muted); } .small { font-size: 15px; }
+  .retro h2 { font-family: var(--f-display); font-weight: normal; color: var(--title); font-size: 28px; margin: 0; }
+  .retro-list { list-style: none; padding: 0; margin: 12px 0; display: grid; gap: 10px; }
+  .retro-list li { display: flex; gap: 10px; align-items: flex-start; background: var(--surface); border-radius: 14px; padding: 10px 14px; font-size: 18px; line-height: 1.3; }
+  .retro-list .ico { color: var(--title); flex: none; }
+
+  /* ---------- Bem-estar, finanças e diário ---------- */
+  .wcard { --c: var(--title); background: var(--surface); border: 1px solid color-mix(in srgb, var(--c) 22%, transparent); border-radius: 18px; padding: 12px 16px; margin-bottom: 12px; min-width: 0; display: grid; gap: 4px; align-content: start; }
+  .wcard h3 { margin: 0 0 6px; font-weight: normal; font-size: 20px; color: var(--c); display: flex; align-items: center; gap: 8px; }
+  .wcard .big { font-size: 34px; font-weight: normal; line-height: 1.1; color: var(--c); font-variant-numeric: tabular-nums; }
+  .wgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .wgrid .wcard { margin: 0; }
+  @media (max-width: 560px) { .wgrid { grid-template-columns: 1fr; } }
+  .faces { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+  .face { border: 2px solid transparent; background: color-mix(in srgb, var(--gold) 12%, var(--surface)); border-radius: 16px; padding: 8px 2px; display: grid; justify-items: center; gap: 2px; }
+  .face span { font-size: 34px; line-height: 1.1; }
+  .face small { font-size: 14px; color: var(--muted); }
+  .face.on { border-color: var(--green); background: color-mix(in srgb, var(--green) 16%, var(--surface)); }
+  .sleep { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .sleep label { display: grid; gap: 2px; font-size: 14px; color: var(--muted); }
+  .sleep input, .journal { font: inherit; font-size: 18px; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; width: 100%; }
+  .journal { min-height: 110px; resize: vertical; line-height: 1.35; margin-bottom: 8px; }
+  .minibars { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; height: 64px; align-items: end; margin-top: 8px; }
+  .minibars span { display: grid; grid-template-rows: 1fr auto; height: 100%; text-align: center; }
+  .minibars i { align-self: end; display: block; background: var(--c); border-radius: 4px 4px 2px 2px; min-height: 2px; opacity: .75; }
+  .minibars small { font-size: 12px; color: var(--muted); }
+  .hstrip { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-bottom: 12px; }
+  .hday { border: 0; background: none; display: grid; justify-items: center; gap: 4px; }
+  .hday small { font-size: 14px; color: var(--muted); }
+  .hday span { width: 40px; height: 40px; border-radius: 50%; display: grid; place-content: center; background: var(--surface); border: 1px solid var(--line); font-size: 17px; font-variant-numeric: tabular-nums; }
+  .hday.full span { background: color-mix(in srgb, var(--green) 22%, var(--surface)); color: var(--green); border-color: transparent; }
+  .hday.on span { background: var(--title); color: var(--surface); }
+  .habit { display: grid; grid-template-columns: minmax(0, 1fr) auto 34px 34px; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); }
+  .hname { display: flex; align-items: center; gap: 10px; border: 0; background: none; text-align: left; font-size: 18px; padding: 0; min-width: 0; }
+  .hname .ico { width: 38px; height: 38px; border-radius: 50%; display: grid; place-content: center; background: color-mix(in srgb, var(--green) 12%, var(--surface)); color: var(--green); flex: none; }
+  .hname .ico svg { width: 20px; height: 20px; }
+  .hcount { font-variant-numeric: tabular-nums; color: var(--muted); }
+  .habit.ok .hcount { color: var(--green); }
+  .habit .step { width: 34px; height: 34px; padding: 0; font-size: 20px; }
+  .habit .step.plus { background: color-mix(in srgb, var(--green) 14%, var(--surface)); }
+  .meta { display: flex; align-items: center; gap: 10px; }
+  .bar.wide { flex: 1; width: auto; min-width: 60px; }
+  .bar.wide i { background: var(--c, var(--title)); }
+  .goals { display: grid; gap: 10px; margin-bottom: 14px; }
+  .goal { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 4px 12px; align-items: center; text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; }
+  .goal .ico { grid-row: span 2; width: 44px; height: 44px; border-radius: 50%; display: grid; place-content: center; background: color-mix(in srgb, var(--pink) 12%, var(--surface)); color: var(--pink); }
+  .goal .gt { font-size: 18px; }
+  .btn.center { display: block; margin: 0 auto 16px; }
+  .money-top > div:first-child { display: grid; }
+  .money-top .split { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border-top: 1px solid var(--line); padding-top: 8px; margin-top: 4px; }
+  .money-top .split > div { display: grid; }
+  .money-top .split b { font-size: 22px; font-weight: normal; }
+  .pos { color: var(--green) !important; } .neg { color: var(--danger) !important; }
+  .catrow { display: grid; grid-template-columns: 30px minmax(70px, auto) minmax(0, 1fr) auto auto; gap: 8px; align-items: center; padding: 6px 0; font-size: 17px; }
+  .catrow .ico { color: var(--k); }
+  .catrow small { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .catrow b { font-weight: normal; font-variant-numeric: tabular-nums; }
+  .catrow .e { font-size: 22px; }
+  @media (max-width: 520px) { .catrow { grid-template-columns: 26px 1fr auto; } .catrow .bar, .catrow small { display: none; } }
+  [data-money] { grid-template-columns: 110px minmax(0, 1fr) auto !important; }
+  [data-money] b { font-weight: normal; font-variant-numeric: tabular-nums; }
+  .feels { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .feel { border: 1px solid color-mix(in srgb, var(--k) 35%, transparent); background: color-mix(in srgb, var(--k) 10%, var(--surface)); border-radius: 14px; padding: 6px 2px; display: grid; justify-items: center; font-size: 15px; }
+  .feel span { font-size: 28px; line-height: 1.15; }
+  .entry { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 8px; text-align: left; border: 0; border-left: 4px solid var(--k); background: color-mix(in srgb, var(--k) 8%, var(--surface)); border-radius: 10px; padding: 8px 10px; margin-top: 6px; font-size: 17px; }
+  .entry .e { font-size: 26px; }
+  .list .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); margin-top: 9px; flex: none; }
+  .resumo { font-size: 18px; line-height: 1.4; margin: 0 0 8px; }
+  .quote { margin: 4px 0; font-family: var(--f-hand); font-size: 21px; color: var(--script); }
+  .inbox { display: grid; gap: 6px; border-left: 4px solid var(--k); background: color-mix(in srgb, var(--k) 7%, var(--surface)); border-radius: 10px; padding: 8px 12px; margin-top: 6px; }
+  .inbox .text { font-size: 18px; }
+
   /* ---------- Editor ---------- */
   dialog { border: 0; border-radius: 16px; padding: 0; width: min(480px, calc(100vw - 32px)); color: var(--ink); background: var(--surface); box-shadow: 0 20px 60px var(--shadow); }
   dialog::backdrop { background: #1d1b2666; }
@@ -317,7 +403,10 @@
 
   <nav class="mainnav" id="mainnav" aria-label="Seções">
     <button data-view="rotina"><span class="ico" data-icon="agenda"></span>Minha rotina</button>
+    <button data-view="bem"><span class="ico" data-icon="coracao"></span>Bem-estar</button>
     <button data-view="treino"><span class="ico" data-icon="academia"></span>Atividade física</button>
+    <button data-view="dinheiro"><span class="ico" data-icon="dinheiro"></span>Finanças</button>
+    <button data-view="diario"><span class="ico" data-icon="diario"></span>Diário</button>
     <button data-view="livros"><span class="ico" data-icon="livro"></span>Livros</button>
     <button data-view="filmes"><span class="ico" data-icon="filme"></span>Filmes e séries</button>
   </nav>
@@ -356,7 +445,7 @@
 // Banco de dados local: guarda tudo neste navegador (localStorage), no mesmo formato do app online
 (function () {
   const KEY = 'meu-planner-dados';
-  const SEED = {"fixed": {}, "weeks": {}, "goals": {}, "books": {}, "shows": {}};
+  const SEED = {"fixed": {}, "weeks": {}, "goals": {}, "books": {}, "shows": {}, "days": {}, "habits": {}, "money": {}, "wishes": {}, "journal": {}, "inbox": {}, "objetivos": {}, "perfil": {}};
   let data = null;
   try { data = JSON.parse(localStorage.getItem(KEY)); } catch {}
   const fresh = !data;
@@ -424,9 +513,9 @@
     const a = txt.indexOf('{'), b = txt.lastIndexOf('}');
     if (a < 0 || b < a) throw 0;
     const obj = JSON.parse(txt.slice(a, b + 1));
-    ['fixed', 'weeks', 'goals', 'books', 'shows'].forEach(c => data[c] = data[c] || {});
+    ['fixed', 'weeks', 'goals', 'books', 'shows', 'days', 'habits', 'money', 'wishes', 'journal', 'inbox', 'objetivos', 'perfil'].forEach(c => data[c] = data[c] || {});
     if (obj.weeks && obj.fixed) {
-      data = obj; ['fixed', 'weeks', 'goals', 'books', 'shows'].forEach(c => data[c] = data[c] || {});
+      data = obj; ['fixed', 'weeks', 'goals', 'books', 'shows', 'days', 'habits', 'money', 'wishes', 'journal', 'inbox', 'objetivos', 'perfil'].forEach(c => data[c] = data[c] || {});
       return 'Sua agenda chegou! ♡';
     }
     if (!Array.isArray(obj.planner)) throw 0;
@@ -505,6 +594,10 @@ const ICONS = {
   taca: '<path d="M7 3h10l-1 6a4 4 0 0 1-8 0z"/><path d="M12 13v7M8 21h8"/>',
   bolo: '<rect x="4" y="12" width="16" height="8" rx="1.5"/><path d="M4 15c2 1.5 4 1.5 6 0s4-1.5 6 0 4 1.5 4 0"/><path d="M7 12V9h10v3M12 9V6"/><circle cx="12" cy="4.5" r="1"/>',
   estrela: '<path d="M12 3l2.8 5.8 6.2.9-4.5 4.4 1 6.2L12 17.4 6.5 20.3l1-6.2L3 9.7l6.2-.9z"/>',
+  agua: '<path d="M12 3c-3 4.5-6 8-6 11a6 6 0 0 0 12 0c0-3-3-6.5-6-11z"/><path d="M9 15a3 3 0 0 0 3 3"/>',
+  sacola: '<path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
+  dinheiro: '<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 9v.01M18 15v.01"/>',
+  diario: '<path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6z"/><path d="M6 3v18M10 8h5M10 12h5"/>',
   lua: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
   sol: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
   tarde: '<path d="M3 18h18M6 18a6 6 0 0 1 12 0M12 6v2M5.6 10.6l1.4 1.4M18.4 10.6 17 12"/>',
@@ -528,7 +621,7 @@ const ICON_CAT = {
   livro: 'estudo', notebook: 'estudo', prova: 'estudo', apresentacao: 'estudo', capelo: 'estudo',
   academia: 'exercicio', tenis: 'exercicio', corrida: 'exercicio', yoga: 'exercicio', natacao: 'exercicio', bike: 'exercicio', cafe: 'refeicao', comida: 'refeicao',
   coracao: 'lazer', taca: 'lazer', bolo: 'lazer', estrela: 'lazer', filme: 'lazer', laco: 'lazer', folha: 'lazer',
-  lua: 'descanso', carro: 'trajeto', lista: 'pendencia', medico: 'pendencia', agenda: 'pendencia'
+  agua: 'lazer', sacola: 'pendencia', lua: 'descanso', carro: 'trajeto', lista: 'pendencia', medico: 'pendencia', agenda: 'pendencia'
 };
 const PICKABLE = ['livro', 'notebook', 'prova', 'apresentacao', 'academia', 'tenis', 'corrida', 'yoga', 'natacao', 'bike', 'cafe', 'comida', 'coracao', 'taca', 'bolo', 'filme', 'estrela', 'lua', 'carro', 'lista', 'medico'];
 const catOf = it => CATS[ICON_CAT[it.icon]] ? ICON_CAT[it.icon] : 'trajeto';
@@ -575,7 +668,7 @@ const goals = new Map();
 const weeks = new Map();
 let pref = {};
 try { pref = JSON.parse(localStorage.getItem('agenda-pref') || '{}'); } catch {}
-let view = ['rotina', 'treino', 'livros', 'filmes'].includes(location.hash.slice(1)) ? location.hash.slice(1) : (pref.view || 'rotina');
+let view = ['rotina', 'bem', 'treino', 'dinheiro', 'diario', 'livros', 'filmes'].includes(location.hash.slice(1)) ? location.hash.slice(1) : (pref.view || 'rotina');
 let sub = pref.sub || 'dia';
 let selDay = TODAY;
 const selWeek = () => blockOf(selDay);
@@ -634,13 +727,16 @@ function render() {
   renderHello();
   $('mainnav').querySelectorAll('button').forEach(b => b.dataset.view === view ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current'));
   if (view === 'treino') return renderTraining();
+  if (view === 'bem') return renderBem();
+  if (view === 'dinheiro') return renderDinheiro();
+  if (view === 'diario') return renderDiario();
   if (view === 'livros') return renderBooks();
   if (view === 'filmes') return renderShows();
   renderRotina();
 }
 
 // ================= Minha rotina =================
-const SUBS = [['dia', 'Dia a dia'], ['semana', 'Semana inteira'], ['metas', 'Metas da semana'], ['fixas', 'Atividades fixas']];
+const SUBS = [['dia', 'Dia a dia'], ['semana', 'Semana inteira'], ['metas', 'Metas da semana'], ['fixas', 'Atividades fixas'], ['retro', 'Retrospectiva']];
 function renderRotina() {
   const ws = selWeek(), we = addDays(ws, 6);
   let total = 0, made = 0;
@@ -649,6 +745,7 @@ function renderRotina() {
   if (sub === 'dia') body = renderDay();
   else if (sub === 'semana') body = renderWeekGrid();
   else if (sub === 'metas') body = renderGoals();
+  else if (sub === 'retro') body = renderRetro();
   else body = renderFixed();
   $('view').innerHTML = `
     ${sub === 'fixas' ? '' : weekbar(`${made} de ${total} feitas na semana`, total ? made / total : 0)}
@@ -684,6 +781,8 @@ function renderDay() {
   const pct = d.list.length ? Math.round(d.done / d.list.length * 100) : 0;
   return `
     <div class="strip">${strip}</div>
+    ${prioCard(selDay)}
+    ${energyCard(selDay)}
     <section class="daycard c-${wd}">
       <div class="daycard-head tint">
         <h2>${DAYS[wd]}, ${longDate(selDay)}</h2>
@@ -698,7 +797,8 @@ function renderDay() {
         </div>
       </div>
     </section>
-    <div class="legend">${Object.values(CATS).map(c => `<span style="--k:${c.color}"><i></i>${c.label}</span>`).join('')}<span>· fixa = repete toda semana</span></div>`;
+    <div class="legend">${Object.values(CATS).map(c => `<span style="--k:${c.color}"><i></i>${c.label}</span>`).join('')}<span>· fixa = repete toda semana</span></div>
+    ${lifeCard()}`;
 }
 function rowItem(it, done, checkable = true) {
   const k = kColor(it);
@@ -800,6 +900,22 @@ function findItem(key, iso) {
 $('view').addEventListener('click', e => {
   const t = e.target, act = t.closest('[data-act]')?.dataset.act;
   if (view !== 'rotina' && view !== 'treino') return;
+  if (act === 'addprio') {
+    const iso = t.closest('[data-prio]').dataset.prio;
+    patchDay(iso, { prioridades: [...(dayDoc(iso).prioridades || []), { text: '', done: false }] }); render();
+    const l = $('view').querySelectorAll('[data-prio] textarea'); l[l.length - 1]?.focus(); return;
+  }
+  const pli = t.closest('[data-prio] li[data-i]');
+  if (pli) {
+    const iso = t.closest('[data-prio]').dataset.prio, arr = (dayDoc(iso).prioridades || []).map(x => ({ ...x }));
+    if (t.classList.contains('chk')) { arr[pli.dataset.i].done = t.checked; patchDay(iso, { prioridades: arr }); pli.classList.toggle('done', t.checked); if (t.checked && arr.every(x => x.done)) celebrate('Prioridades cumpridas! ♡'); }
+    if (t.classList.contains('del')) { arr.splice(pli.dataset.i, 1); patchDay(iso, { prioridades: arr }); render(); }
+    return;
+  }
+  const en = t.closest('[data-energia]');
+  if (en) { const iso = t.closest('[data-energy]').dataset.energy; patchDay(iso, { energia: dayDoc(iso).energia === en.dataset.energia ? null : en.dataset.energia }); return render(); }
+  const lz = t.closest('[data-lazer]');
+  if (lz) return editActivity({ mode: 'new', iso: freestDay(), preset: { text: lz.dataset.lazer, icon: lz.dataset.iconK, time: 'Tarde' } });
   if (act === 'addex') return editActivity({ mode: 'new', iso: t.closest('[data-iso]').dataset.iso, exercise: true });
   if (act === 'addexfixed') return editActivity({ mode: 'newFixed', wd: parse(selDay).getDay(), exercise: true });
   if (t.closest('[data-sub]')) { sub = t.closest('[data-sub]').dataset.sub; remember(); return render(); }
@@ -830,7 +946,7 @@ $('view').addEventListener('click', e => {
 });
 $('view').addEventListener('keydown', e => {
   if (e.key === 'Enter' && e.target.matches('.row-item, .card')) e.target.click();
-  if (e.key === 'Enter' && e.target.tagName === 'TEXTAREA') { e.preventDefault(); e.target.blur(); }
+  if (e.key === 'Enter' && e.target.matches('.list textarea')) { e.preventDefault(); e.target.blur(); }
 });
 function goalList(panel) { return ((goals.get(selWeek())?.lists || {})[panel.dataset.list] || []).map(x => ({ ...x })); }
 function saveGoal(panel, arr) {
@@ -839,8 +955,14 @@ function saveGoal(panel, arr) {
   queue(() => db.doc('goals/' + id).set(doc));
 }
 $('view').addEventListener('change', e => {
-  if (e.target.tagName !== 'TEXTAREA') return;
-  const panel = e.target.closest('.panel'), arr = goalList(panel);
+  if (view !== 'rotina' || e.target.tagName !== 'TEXTAREA') return;
+  const pli = e.target.closest('[data-prio] li[data-i]');
+  if (pli) {
+    const iso = e.target.closest('[data-prio]').dataset.prio, arr = (dayDoc(iso).prioridades || []).map(x => ({ ...x }));
+    arr[pli.dataset.i].text = e.target.value.trim(); return patchDay(iso, { prioridades: arr });
+  }
+  const panel = e.target.closest('.panel[data-list]'); if (!panel) return;
+  const arr = goalList(panel);
   arr[e.target.closest('li').dataset.i].text = e.target.value.trim(); saveGoal(panel, arr);
 });
 
@@ -893,7 +1015,7 @@ $('fDelete').onclick = () => {
 function editActivity(c) {
   const isFixed = c.mode === 'fixed' || c.mode === 'newFixed';
   const ws = weekOf(c.iso || selDay), block = blockOf(c.iso || selDay);
-  let it = { time: '', text: '', sub: '', icon: c.exercise ? 'academia' : 'coracao', hl: false };
+  let it = { time: '', text: '', sub: '', icon: c.exercise ? 'academia' : 'coracao', hl: false, ...(c.preset || {}) };
   if (c.mode === 'week') it = weekDoc(ws).items.find(x => x.id === c.id);
   if (c.mode === 'fixed') it = fixed.find(x => x.id === c.fixedId);
   if (!it) return;
@@ -971,6 +1093,502 @@ function renderTraining() {
       <button class="add" data-act="addexfixed" style="--c:var(--green)">+ treino fixo</button>
     </section>`;
 }
+
+// ================= Dados das novas seções =================
+const COLLS = ['days', 'habits', 'money', 'wishes', 'journal', 'inbox', 'objetivos', 'perfil'];
+const S = Object.fromEntries(COLLS.map(c => [c, new Map()]));
+function put(coll, id, data) { S[coll].set(id, data); return queue(() => db.doc(coll + '/' + id).set(data)); }
+function del(coll, id) { S[coll].delete(id); return queue(() => db.doc(coll + '/' + id).delete()); }
+const dayDoc = iso => S.days.get(iso) || {};
+const patchDay = (iso, patch) => put('days', iso, { ...dayDoc(iso), ...patch });
+const TOMORROW = addDays(TODAY, 1);
+const monthOf = iso => iso.slice(0, 7);
+let monthSel = monthOf(TODAY);
+const monthName = m => { const [y, mm] = m.split('-').map(Number); return `${MONTHS[mm - 1]} de ${y}`; };
+const shiftMonth = (m, n) => { const [y, mm] = m.split('-').map(Number); const d = new Date(y, mm - 1 + n, 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; };
+const brl = v => (v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+const parseMoney = s => { const n = parseFloat(String(s || '').replace(/[^\d,.-]/g, '').replace(/\.(?=\d{3}(\D|$))/g, '').replace(',', '.')); return isNaN(n) ? 0 : Math.round(n * 100) / 100; };
+const subTabs = (list, cur, attr = 'data-sub2') => `<div class="subnav" role="tablist">${list.map(([k, l]) => `<button role="tab" aria-selected="${cur === k}" ${attr}="${k}">${l}</button>`).join('')}</div>`;
+const monthBar = () => `<div class="weekbar"><button class="arrow" data-month="-1" aria-label="Mês anterior">‹</button><div class="label">${monthName(monthSel)}</div><button class="arrow" data-month="1" aria-label="Próximo mês">›</button></div>`;
+let sub2 = { bem: 'geral', dinheiro: 'geral', diario: 'hoje' };
+
+// ================= Prioridades do dia, energia e lazer (na rotina) =================
+function prioCard(iso) {
+  const list = dayDoc(iso).prioridades || [];
+  const evening = iso === TODAY && new Date().getHours() >= 18;
+  const title = iso === TODAY ? 'Minhas prioridades de hoje' : iso === TOMORROW ? 'Minhas prioridades de amanhã' : `Prioridades de ${DAYS[parse(iso).getDay()].toLowerCase()}`;
+  return `<section class="panel prio" data-prio="${iso}" style="--c:var(--title)">
+    <h2 class="tint">${icon('estrela')}${title}</h2>
+    <ul class="list">${list.map((p, i) => `
+      <li class="${p.done ? 'done' : ''}" data-i="${i}">
+        <input type="checkbox" class="chk" ${p.done ? 'checked' : ''} aria-label="Feito">
+        <textarea rows="1" id="p-${iso}-${i}" placeholder="O que é mais importante?" aria-label="Prioridade">${esc(p.text)}</textarea>
+        <button class="del" aria-label="Excluir">×</button>
+      </li>`).join('') || `<li class="empty">${iso === TOMORROW ? 'Escreva aqui, à noite, o que é mais importante amanhã.' : 'Até 3 coisas que fariam este dia valer a pena.'}</li>`}</ul>
+    <div class="row-actions"><button class="add" data-act="addprio">+ prioridade</button>
+    ${evening ? `<button class="btn primary" data-day="${TOMORROW}">Escrever as de amanhã</button>` : ''}</div>
+  </section>`;
+}
+const ENERGY = {
+  alta: { label: 'Alta', tip: 'Aproveite para o conteúdo novo ou mais difícil, como um bloco novo de ND2, ou para escrever trabalhos.' },
+  media: { label: 'Média', tip: 'Bom momento para fazer questões, revisar conteúdos e resolver tarefas moderadas.' },
+  baixa: { label: 'Baixa', tip: 'Vá de leve: flashcards, organizar materiais ou assistir a uma aula gravada. Uma pausa de 20 minutos antes também ajuda.' }
+};
+function energyCard(iso) {
+  if (iso < TODAY) return '';
+  const e = dayDoc(iso).energia;
+  return `<section class="energy" data-energy="${iso}">
+    <span class="lbl">Como está sua energia para estudar?</span>
+    <div class="pills">${Object.entries(ENERGY).map(([k, v]) => `<button class="pillbtn ${e === k ? 'on' : ''}" data-energia="${k}">${v.label}</button>`).join('')}</div>
+    ${e ? `<p class="tip">${ENERGY[e].tip}</p>` : ''}
+  </section>`;
+}
+const LAZER = [['Caminhar', 'folha'], ['Ler um pouco', 'livro'], ['Ver um filme', 'filme'], ['Conhecer um lugar novo', 'estrela']];
+function lifeCard() {
+  const days = blockDays(selWeek()).filter(iso => iso >= TODAY);
+  if (!days.length) return '';
+  const lazer = blockDays(selWeek()).flatMap(iso => dayItems(iso).list).filter(it => catOf(it) === 'lazer').length;
+  if (lazer >= 3) return '';
+  return `<section class="suggest">
+    <b>Sua semana está bem cheia de obrigações.</b> Que tal reservar um momento só seu? Escolha se tiver vontade, sem obrigação ♡
+    <div class="pills">${LAZER.map(([t, i]) => `<button class="pillbtn" data-lazer="${t}" data-icon-k="${i}">${t}</button>`).join('')}</div>
+  </section>`;
+}
+function freestDay() {
+  const days = blockDays(selWeek()).filter(iso => iso >= TODAY);
+  return days.sort((a, b) => dayItems(a).list.length - dayItems(b).list.length)[0] || selDay;
+}
+
+// ================= Retrospectiva da semana =================
+function renderRetro() {
+  const days = blockDays(selWeek());
+  const all = days.flatMap(iso => dayItems(iso).list.map(it => ({ ...it, iso })));
+  const done = all.filter(isDone);
+  const big = done.filter(it => it.hl || it.special);
+  const treinos = done.filter(isExercise).length;
+  const descanso = done.filter(it => ['lazer', 'descanso'].includes(catOf(it))).length;
+  const prio = days.flatMap(iso => dayDoc(iso).prioridades || []);
+  const metas = Object.values(goals.get(selWeek())?.lists || {}).flat();
+  const habOk = habitList().map(h => ({ h, n: days.filter(iso => iso <= TODAY && habitCount(h, iso) >= h.goal).length })).filter(x => x.n >= 3);
+  const feelings = [...S.journal.values()].filter(j => days.includes(j.date));
+  const lines = [];
+  if (big.length) lines.push(['estrela', `Você concluiu ${big.length === 1 ? 'algo importante' : `${big.length} coisas importantes`}: ${big.slice(0, 5).map(i => `<b>${esc(i.text)}</b>`).join(', ')}.`]);
+  if (treinos) lines.push(['academia', `Você manteve <b>${treinos} momento${treinos > 1 ? 's' : ''} de atividade física</b>.`]);
+  if (descanso) lines.push(['coracao', `Você reservou <b>${descanso} momento${descanso > 1 ? 's' : ''} de descanso e lazer</b>. Isso também é evolução.`]);
+  const pd = prio.filter(p => p.done).length;
+  if (pd) lines.push(['lista', `Cumpriu <b>${pd} de ${prio.length} prioridades</b> que escolheu para os seus dias.`]);
+  const md = metas.filter(m => m.done);
+  if (md.length) lines.push(['capelo', `Avançou nas metas da semana: ${md.slice(0, 4).map(m => `<b>${esc(m.text.replace(/\.$/, ''))}</b>`).join(', ')}.`]);
+  if (habOk.length) lines.push(['folha', `Hábitos que você manteve: ${habOk.map(x => `<b>${esc(x.h.name)}</b> (${x.n} dias)`).join(', ')}.`]);
+  if (feelings.length) lines.push(['coracao', `Registrou <b>${feelings.length} sentimento${feelings.length > 1 ? 's' : ''}</b> no diário.`]);
+  return `<section class="retro">
+    <h2>Meu progresso real</h2>
+    <p class="muted">O que você construiu nesta semana, além dos números.</p>
+    ${lines.length ? `<ul class="retro-list">${lines.map(([i, t]) => `<li>${icon(i)}<span>${t}</span></li>`).join('')}</ul>` : '<div class="empty">Conforme você for marcando as atividades, suas conquistas da semana aparecem aqui.</div>'}
+    <p class="muted small">${done.length} de ${all.length} atividades marcadas como feitas.</p>
+  </section>`;
+}
+
+// ================= Bem-estar =================
+const DEFAULT_HABITS = [
+  { id: 'agua', name: 'Beber água', icon: 'agua', goal: 8, order: 1 },
+  { id: 'ler', name: 'Ler', icon: 'livro', goal: 1, order: 2 },
+  { id: 'treino', name: 'Atividade física', icon: 'academia', goal: 1, order: 3 },
+  { id: 'estudar', name: 'Estudar', icon: 'notebook', goal: 4, order: 4 },
+  { id: 'dormir', name: 'Dormir bem', icon: 'lua', goal: 1, order: 5 },
+  { id: 'telas', name: 'Momento sem telas', icon: 'folha', goal: 1, order: 6 }
+];
+const habitList = () => (S.habits.size ? [...S.habits.entries()].map(([id, h]) => ({ id, ...h })) : DEFAULT_HABITS).filter(h => !h.off).sort((a, b) => (a.order || 0) - (b.order || 0));
+// "Atividade física" conta sozinha os treinos marcados na rotina
+function habitCount(h, iso) {
+  const manual = (dayDoc(iso).habitos || {})[h.id] || 0;
+  if (h.id !== 'treino') return manual;
+  return Math.max(manual, dayItems(iso).list.filter(it => isExercise(it) && isDone(it)).length);
+}
+let habDay = TODAY;
+const FACES = [['otimo', '😄', 'Ótima'], ['bem', '🙂', 'Bem'], ['neutro', '😐', 'Mais ou menos'], ['mal', '😟', 'Difícil']];
+function cyclePhase(day) { return day <= 5 ? 'Fase menstrual' : day <= 13 ? 'Fase folicular' : day <= 16 ? 'Ovulação' : 'Fase lútea'; }
+function renderBem() {
+  const tabs = subTabs([['geral', 'Visão geral'], ['habitos', 'Hábitos'], ['metas', 'Metas']], sub2.bem);
+  let body;
+  if (sub2.bem === 'habitos') body = renderHabits();
+  else if (sub2.bem === 'metas') body = renderObjetivos();
+  else {
+    const d = dayDoc(TODAY), perfil = S.perfil.get('main') || {};
+    const last7 = [...Array(7)].map((_, i) => addDays(TODAY, i - 6));
+    const sonoMax = 10;
+    const treinosSemana = blockDays(blockOf(TODAY)).flatMap(iso => dayItems(iso).list).filter(it => isExercise(it) && isDone(it)).length;
+    let ciclo = '<span class="muted">Toque para registrar o início da última menstruação.</span>';
+    if (perfil.cicloInicio) {
+      const dur = perfil.cicloDuracao || 28;
+      const n = Math.round((parse(TODAY) - parse(perfil.cicloInicio)) / 864e5);
+      const day = ((n % dur) + dur) % dur + 1;
+      ciclo = `<b class="big">Dia ${day}</b><span>${cyclePhase(day)} · ciclo de ${dur} dias</span><span class="muted">Próxima menstruação em ~${dur - day + 1} dias</span>`;
+    }
+    body = `
+      <section class="wcard mood"><h3>Como você está hoje?</h3>
+        <div class="faces">${FACES.map(([k, e, l]) => `<button class="face ${d.humor === k ? 'on' : ''}" data-humor="${k}" aria-label="${l}"><span>${e}</span><small>${l}</small></button>`).join('')}</div>
+      </section>
+      <div class="wgrid">
+        <section class="wcard" style="--c:var(--purple)"><h3>${icon('lua')} Sono</h3>
+          <div class="sleep"><label>Horas dormidas<input type="text" inputmode="decimal" id="sono-h" data-day-field="sono" value="${d.sono ?? ''}" placeholder="ex.: 7,5"></label>
+          <label>Bateria corporal<input type="text" inputmode="numeric" id="sono-b" data-day-field="bateria" value="${d.bateria ?? ''}" placeholder="0 a 100"></label></div>
+          <div class="minibars">${last7.map(iso => { const v = dayDoc(iso).sono || 0; return `<span title="${ddmm(iso)}: ${v}h"><i style="height:${Math.min(100, v / sonoMax * 100)}%"></i><small>${DOW[parse(iso).getDay()][0]}</small></span>`; }).join('')}</div>
+          <p class="muted small">Meta: 8h. Copie os números do app Garmin pela manhã.</p>
+        </section>
+        <section class="wcard" style="--c:var(--green)"><h3>${icon('academia')} Atividade física</h3>
+          <b class="big">${treinosSemana}x</b><span>na semana</span>
+          <button class="linkbtn" data-go-view="treino">ver treinos</button>
+        </section>
+        <section class="wcard" style="--c:var(--pink)" data-act="ciclo" tabindex="0"><h3>${icon('coracao')} Ciclo menstrual</h3>${ciclo}
+          <button class="linkbtn" data-act="ciclohoje">Menstruação começou hoje</button>
+        </section>
+        <section class="wcard" style="--c:var(--peach)"><h3>${icon('lista')} Atalhos</h3>
+          <button class="linkbtn" data-go-view="diario">Meu diário</button>
+          <button class="linkbtn" data-sub2="habitos">Meus hábitos</button>
+          <button class="linkbtn" data-sub2="metas">Minhas metas</button>
+        </section>
+      </div>`;
+  }
+  $('view').innerHTML = `<div class="media-head"><h2>Meu bem-estar</h2></div>${tabs}${body}`;
+}
+function renderHabits() {
+  const days = blockDays(blockOf(habDay)), hs = habitList();
+  const full = iso => hs.every(h => habitCount(h, iso) >= h.goal);
+  const elapsed = days.filter(iso => iso <= TODAY);
+  const sum = elapsed.reduce((a, iso) => a + hs.reduce((b, h) => b + Math.min(1, habitCount(h, iso) / h.goal), 0), 0);
+  const pct = elapsed.length && hs.length ? Math.round(sum / (elapsed.length * hs.length) * 100) : 0;
+  return `
+    <div class="hstrip">${days.map(iso => `<button class="hday ${iso === habDay ? 'on' : ''} ${full(iso) ? 'full' : ''}" data-habday="${iso}"><small>${DOW[parse(iso).getDay()]}</small><span>${full(iso) && iso !== habDay ? '✓' : parse(iso).getDate()}</span></button>`).join('')}</div>
+    <section class="wcard habits">
+      <h3>${habDay === TODAY ? 'Hoje' : `${DAYS[parse(habDay).getDay()]}, ${ddmm(habDay)}`}</h3>
+      ${hs.map(h => { const n = habitCount(h, habDay), ok = n >= h.goal; return `
+        <div class="habit ${ok ? 'ok' : ''}" data-habit="${h.id}">
+          <button class="hname" data-act="edithabit">${icon(h.icon)}<span>${esc(h.name)}</span></button>
+          <span class="hcount">${n}/${h.goal}</span>
+          <button class="step" data-hstep="-1" aria-label="Menos">−</button><button class="step plus" data-hstep="1" aria-label="Mais">+</button>
+        </div>`; }).join('')}
+      <button class="add" data-act="addhabit" style="--c:var(--green)">+ novo hábito</button>
+    </section>
+    <section class="wcard"><h3>Meu progresso da semana</h3><div class="meta"><span class="bar wide" style="--c:var(--green)"><i style="width:${pct}%"></i></span><b>${pct}%</b></div></section>`;
+}
+function editHabit(h) {
+  const isNew = !h; h = h || { name: '', icon: 'estrela', goal: 1 };
+  openForm({
+    title: isNew ? 'Novo hábito' : 'Editar hábito',
+    fields: [
+      { name: 'name', label: 'Hábito', value: h.name, full: true, placeholder: 'ex.: Meditar' },
+      { name: 'goal', label: 'Meta por dia (vezes)', type: 'number', value: h.goal },
+      { name: 'icon', label: 'Ícone', type: 'icons', value: h.icon }
+    ],
+    onDelete: isNew ? null : () => { materializeHabits(); put('habits', h.id, { ...S.habits.get(h.id), off: true }); },
+    onSave: v => { materializeHabits(); const id = h.id || uid('h'); put('habits', id, { name: v.name || 'Hábito', goal: Math.max(1, v.goal || 1), icon: v.icon, order: h.order || Date.now() }); }
+  });
+}
+// Na primeira edição, grava a lista padrão para poder alterá-la
+function materializeHabits() { if (!S.habits.size) DEFAULT_HABITS.forEach(({ id, ...h }) => put('habits', id, h)); }
+function renderObjetivos() {
+  const prazo = sub2.prazo || 'curto';
+  const list = [...S.objetivos.entries()].map(([id, o]) => ({ id, ...o })).filter(o => (o.prazo || 'curto') === prazo);
+  return `${subTabs([['curto', 'Curto prazo'], ['longo', 'Longo prazo']], prazo, 'data-prazo')}
+    <div class="goals">${list.map(o => `<button class="goal" data-obj="${o.id}">${icon(o.icon || 'estrela')}<span class="gt">${esc(o.title)}</span><span class="meta"><span class="bar wide" style="--c:var(--green)"><i style="width:${o.progress || 0}%"></i></span><b>${o.progress || 0}%</b></span></button>`).join('') || '<div class="empty">Nenhuma meta ainda. Exemplos: "Ler 12 livros este ano", "Manter a frequência na academia".</div>'}</div>
+    <button class="btn primary center" data-act="addobj">+ Nova meta</button>`;
+}
+function editObjetivo(o) {
+  const isNew = !o; o = o || { prazo: sub2.prazo || 'curto', progress: 0, icon: 'estrela' };
+  openForm({
+    title: isNew ? 'Nova meta' : 'Editar meta',
+    fields: [
+      { name: 'title', label: 'Meta', value: o.title, full: true, placeholder: 'ex.: Economizar para minha viagem' },
+      { name: 'prazo', label: 'Prazo', type: 'select', options: [['curto', 'Curto prazo'], ['longo', 'Longo prazo']], value: o.prazo },
+      { name: 'progress', label: 'Progresso (%)', type: 'number', value: o.progress },
+      { name: 'icon', label: 'Ícone', type: 'icons', value: o.icon }
+    ],
+    onDelete: isNew ? null : () => del('objetivos', o.id),
+    onSave: v => {
+      const p = Math.min(100, Math.max(0, v.progress || 0));
+      put('objetivos', o.id || uid('o'), { title: v.title || 'Meta', prazo: v.prazo, progress: p, icon: v.icon });
+      if (p === 100 && (o.progress || 0) < 100) celebrate('Meta concluída! ♡');
+    }
+  });
+}
+
+// ================= Finanças =================
+const MONEY_CATS = {
+  alimentacao: ['Alimentação', 'comida', 'var(--orange)'], transporte: ['Transporte', 'carro', 'var(--blue)'],
+  lazer: ['Lazer', 'coracao', 'var(--pink)'], assinaturas: ['Assinaturas', 'filme', 'var(--purple)'],
+  saude: ['Saúde e beleza', 'medico', 'var(--green)'], faculdade: ['Faculdade', 'capelo', 'var(--indigo)'],
+  compras: ['Compras', 'sacola', 'var(--gold)'], outros: ['Outros', 'lista', 'var(--slate)']
+};
+const moneyList = () => [...S.money.entries()].map(([id, m]) => ({ id, ...m }));
+function renderDinheiro() {
+  const tabs = subTabs([['geral', 'Visão geral'], ['lanc', 'Lançamentos'], ['desejos', 'Quero comprar']], sub2.dinheiro);
+  let body;
+  const all = moneyList(), month = all.filter(m => monthOf(m.date) === monthSel);
+  const sumOf = (l, t) => l.filter(m => m.type === t).reduce((a, m) => a + (m.value || 0), 0);
+  const addBtns = `<div class="row-actions"><button class="btn primary" data-act="addgasto">+ Gasto</button><button class="btn" data-act="addentrada">+ Entrada</button></div>`;
+  if (sub2.dinheiro === 'desejos') {
+    const w = [...S.wishes.entries()].map(([id, x]) => ({ id, ...x }));
+    const open = w.filter(x => !x.bought).sort((a, b) => ['alta', 'media', 'baixa'].indexOf(a.priority) - ['alta', 'media', 'baixa'].indexOf(b.priority));
+    const bought = w.filter(x => x.bought);
+    const card = x => `<div class="card ${x.bought ? 'done' : ''}" tabindex="0" data-wish="${x.id}" style="--c:var(--gold)"><div class="top"><input type="checkbox" class="chk" ${x.bought ? 'checked' : ''} aria-label="Comprei"><div><div class="ttl">${esc(x.name)}</div><div class="meta"><b>${brl(x.price)}</b><span class="pill">prioridade ${x.priority === 'alta' ? 'alta' : x.priority === 'baixa' ? 'baixa' : 'média'}</span>${x.where ? `<span>${esc(x.where)}</span>` : ''}</div></div></div></div>`;
+    body = `<div class="media-head"><span class="muted">Total da lista: <b>${brl(open.reduce((a, x) => a + (x.price || 0), 0))}</b></span><button class="btn primary" data-act="addwish">+ Adicionar</button></div>
+      <p class="muted small">Ao marcar "comprei", o valor entra sozinho nos seus gastos (Compras).</p>
+      ${open.length ? `<div class="cards">${open.map(card).join('')}</div>` : '<div class="empty">Sua lista de desejos está vazia.</div>'}
+      ${bought.length ? `<details class="done-shelf"><summary>Já comprei (${bought.length})</summary><div class="cards">${bought.map(card).join('')}</div></details>` : ''}`;
+  } else if (sub2.dinheiro === 'lanc') {
+    const byDate = {};
+    month.sort((a, b) => b.date.localeCompare(a.date)).forEach(m => (byDate[m.date] = byDate[m.date] || []).push(m));
+    body = `${monthBar()}${addBtns}${Object.entries(byDate).map(([iso, l]) => `<section class="fixed-day"><h3 style="color:var(--muted)">${DAYS[parse(iso).getDay()]}, ${ddmm(iso)}</h3>${l.map(moneyRow).join('')}</section>`).join('') || '<div class="empty">Nenhum lançamento neste mês.</div>'}`;
+  } else {
+    const ent = sumOf(month, 'entrada'), sai = sumOf(month, 'saida');
+    const total = sumOf(all, 'entrada') - sumOf(all, 'saida');
+    const cats = Object.entries(MONEY_CATS).map(([k, c]) => ({ k, c, v: month.filter(m => m.type === 'saida' && (m.cat || 'outros') === k).reduce((a, m) => a + m.value, 0) })).filter(x => x.v > 0).sort((a, b) => b.v - a.v);
+    body = `${monthBar()}
+      <section class="wcard money-top">
+        <div><span class="muted">Saldo do mês</span><b class="big ${ent - sai < 0 ? 'neg' : 'pos'}">${brl(ent - sai)}</b></div>
+        <div class="split"><div><span class="muted">Entradas</span><b class="pos">${brl(ent)}</b></div><div><span class="muted">Saídas</span><b class="neg">${brl(sai)}</b></div></div>
+        <div class="muted small">Quanto eu tenho (somando todos os meses): <b class="${total < 0 ? 'neg' : 'pos'}">${brl(total)}</b></div>
+      </section>
+      ${addBtns}
+      <section class="wcard"><h3>Meus gastos</h3>
+        ${cats.map(x => `<div class="catrow" style="--k:${x.c[2]}">${icon(x.c[1])}<span>${x.c[0]}</span><span class="bar wide"><i style="width:${sai ? x.v / sai * 100 : 0}%;background:var(--k)"></i></span><small>${sai ? Math.round(x.v / sai * 100) : 0}%</small><b>${brl(x.v)}</b></div>`).join('') || '<div class="empty">Nenhum gasto neste mês ainda.</div>'}
+      </section>`;
+  }
+  $('view').innerHTML = `<div class="media-head"><h2>Meu dinheiro</h2></div>${tabs}${body}`;
+}
+function moneyRow(m) {
+  const c = m.type === 'entrada' ? ['Entrada', 'estrela', 'var(--green)'] : (MONEY_CATS[m.cat] || MONEY_CATS.outros);
+  return `<div class="row-item nochk" tabindex="0" data-money="${m.id}" style="--k:${c[2]}"><div class="time">${c[0]}</div><div><div class="text">${esc(m.desc || c[0])}</div></div><b class="${m.type === 'entrada' ? 'pos' : 'neg'}">${m.type === 'entrada' ? '+' : '−'}${brl(m.value)}</b></div>`;
+}
+function editMoney(m, type) {
+  const isNew = !m; m = m || { type, date: TODAY, cat: type === 'saida' ? 'alimentacao' : '' };
+  openForm({
+    title: isNew ? (m.type === 'entrada' ? 'Nova entrada' : 'Novo gasto') : 'Editar lançamento',
+    fields: [
+      { name: 'value', label: 'Valor (R$)', value: m.value ? String(m.value).replace('.', ',') : '', placeholder: 'ex.: 25,90' },
+      { name: 'date', label: 'Data', type: 'date', value: m.date },
+      { name: 'desc', label: 'Descrição', value: m.desc, full: true, placeholder: m.type === 'entrada' ? 'ex.: Mesada, salário' : 'ex.: Almoço no bandejão' },
+      { name: 'type', label: 'Tipo', type: 'select', options: [['saida', 'Gasto'], ['entrada', 'Entrada']], value: m.type },
+      { name: 'cat', label: 'Categoria (gastos)', type: 'select', options: Object.entries(MONEY_CATS).map(([k, c]) => [k, c[0]]), value: m.cat || 'outros' }
+    ],
+    onDelete: isNew ? null : () => del('money', m.id),
+    onSave: v => put('money', m.id || uid('m'), { type: v.type, value: parseMoney(v.value), date: v.date || TODAY, desc: v.desc, cat: v.type === 'saida' ? v.cat : '' })
+  });
+  setTimeout(() => $('ff-value')?.setAttribute('inputmode', 'decimal'));
+}
+function editWish(x) {
+  const isNew = !x; x = x || { priority: 'media' };
+  openForm({
+    title: isNew ? 'Quero comprar' : 'Editar desejo',
+    fields: [
+      { name: 'name', label: 'O que você quer comprar', value: x.name, full: true },
+      { name: 'price', label: 'Preço (R$)', value: x.price ? String(x.price).replace('.', ',') : '', placeholder: 'ex.: 150' },
+      { name: 'priority', label: 'Prioridade', type: 'select', options: [['alta', 'Alta'], ['media', 'Média'], ['baixa', 'Baixa']], value: x.priority },
+      { name: 'where', label: 'Onde comprar (opcional)', value: x.where, full: true }
+    ],
+    onDelete: isNew ? null : () => del('wishes', x.id),
+    onSave: v => put('wishes', x.id || uid('d'), { name: v.name || 'Item', price: parseMoney(v.price), priority: v.priority, where: v.where, bought: !!x.bought })
+  });
+}
+
+// ================= Diário =================
+const FEELINGS = {
+  feliz: ['😊', 'Feliz', 'var(--gold)', 1], grata: ['🥰', 'Grata', 'var(--pink)', 1], calma: ['😌', 'Calma', 'var(--green)', 1], animada: ['🤩', 'Animada', 'var(--orange)', 1],
+  cansada: ['😴', 'Cansada', 'var(--slate)', 0], ansiosa: ['😰', 'Ansiosa', 'var(--purple)', 0], triste: ['😢', 'Triste', 'var(--blue)', 0], irritada: ['😤', 'Irritada', 'var(--danger)', 0]
+};
+const journalList = () => [...S.journal.entries()].map(([id, j]) => ({ id, ...j })).sort((a, b) => (b.ts || 0) - (a.ts || 0));
+function renderDiario() {
+  const tabs = subTabs([['hoje', 'Hoje'], ['mente', 'Descarregue a mente'], ['mes', 'Meu mês']], sub2.diario);
+  let body;
+  if (sub2.diario === 'mente') body = renderMente();
+  else if (sub2.diario === 'mes') body = renderMes();
+  else {
+    const d = dayDoc(TODAY), today = journalList().filter(j => j.date === TODAY), grat = d.gratidao || [];
+    body = `
+      <section class="wcard"><h3>Como você está se sentindo?</h3>
+        <div class="feels">${Object.entries(FEELINGS).map(([k, f]) => `<button class="feel" data-feel="${k}" style="--k:${f[2]}"><span>${f[0]}</span>${f[1]}</button>`).join('')}</div>
+        <p class="muted small">Toque num sentimento para escrever por que está se sentindo assim.</p>
+        ${today.map(j => `<button class="entry" data-entry="${j.id}" style="--k:${FEELINGS[j.feeling]?.[2] || 'var(--slate)'}"><span class="e">${FEELINGS[j.feeling]?.[0] || '•'}</span><span><b>${FEELINGS[j.feeling]?.[1] || ''}</b> <small class="muted">${new Date(j.ts).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</small><br>${esc(j.note || '')}</span></button>`).join('')}
+      </section>
+      <section class="wcard"><h3>Como foi o seu dia?</h3>
+        <textarea class="journal" id="diario-texto" data-day-field="diario" placeholder="Escreva livremente. Ninguém além de você vê isso.">${esc(d.diario || '')}</textarea>
+      </section>
+      <section class="panel" style="--c:var(--gold)" data-grat="${TODAY}"><h2 class="tint">${icon('estrela')}Sou grata por…</h2>
+        <ul class="list">${grat.map((g, i) => `<li data-i="${i}"><span class="dot"></span><textarea rows="1" id="g-${i}" aria-label="Gratidão">${esc(g)}</textarea><button class="del" aria-label="Excluir">×</button></li>`).join('') || '<li class="empty">Três coisinhas boas de hoje.</li>'}</ul>
+        <button class="add" data-act="addgrat">+ gratidão</button>
+      </section>`;
+  }
+  $('view').innerHTML = `<div class="media-head"><h2>Meu diário</h2><span class="muted small">só seu ♡</span></div>${tabs}${body}`;
+}
+function editEntry(j, feeling) {
+  const isNew = !j; j = j || { feeling, date: TODAY };
+  const f = FEELINGS[j.feeling];
+  openForm({
+    title: `${f[0]} ${f[1]}`,
+    fields: [
+      { name: 'feeling', label: 'Sentimento', type: 'select', options: Object.entries(FEELINGS).map(([k, x]) => [k, `${x[0]} ${x[1]}`]), value: j.feeling, full: true },
+      { name: 'note', label: 'Por que estou me sentindo assim?', value: j.note, full: true, placeholder: 'ex.: consegui terminar o trabalho de ND1' }
+    ],
+    onDelete: isNew ? null : () => del('journal', j.id),
+    onSave: v => put('journal', j.id || uid('j'), { feeling: v.feeling, note: v.note, date: j.date, ts: j.ts || Date.now() })
+  });
+}
+function renderMes() {
+  const ents = journalList().filter(j => monthOf(j.date) === monthSel);
+  const counts = Object.entries(FEELINGS).map(([k, f]) => ({ k, f, n: ents.filter(j => j.feeling === k).length })).filter(x => x.n).sort((a, b) => b.n - a.n);
+  const max = Math.max(1, ...counts.map(x => x.n));
+  const daysIn = [...S.days.entries()].filter(([iso]) => monthOf(iso) === monthSel);
+  const grat = daysIn.reduce((a, [, d]) => a + (d.gratidao || []).filter(Boolean).length, 0);
+  const humor = daysIn.map(([, d]) => d.humor).filter(Boolean);
+  const pos = ents.filter(j => FEELINGS[j.feeling]?.[3]).length;
+  const diasReg = new Set(ents.map(j => j.date)).size;
+  const treinos = daysIn.length ? [...new Set(daysIn.map(([iso]) => iso))].length : 0;
+  let resumo = 'Ainda não há registros neste mês. Conforme você usar o diário, o resumo aparece aqui.';
+  if (ents.length) {
+    resumo = `Em ${MONTHS[+monthSel.slice(5) - 1]} você registrou <b>${ents.length} sentimento${ents.length > 1 ? 's' : ''}</b> em ${diasReg} dia${diasReg > 1 ? 's' : ''}. ` +
+      `O que mais apareceu foi <b>${counts[0].f[1].toLowerCase()}</b> (${counts[0].n}x). ` +
+      `${Math.round(pos / ents.length * 100)}% dos registros foram sentimentos bons. ` +
+      (pos / ents.length >= .6 ? 'Foi um mês leve, guarde o que fez bem ♡ ' : 'Teve dias pesados, e tudo bem. Olhe com carinho para o que pode te ajudar no próximo mês. ') +
+      (grat ? `Você foi grata <b>${grat} vez${grat > 1 ? 'es' : ''}</b>.` : '');
+  }
+  const top = ents.filter(j => j.note).slice(0, 4);
+  return `${monthBar()}
+    <section class="wcard"><h3>Como me senti</h3>
+      ${counts.map(x => `<div class="catrow" style="--k:${x.f[2]}"><span class="e">${x.f[0]}</span><span>${x.f[1]}</span><span class="bar wide"><i style="width:${x.n / max * 100}%;background:var(--k)"></i></span><b>${x.n}</b></div>`).join('') || '<div class="empty">Sem registros neste mês.</div>'}
+    </section>
+    <section class="wcard"><h3>Resumo do mês</h3><p class="resumo">${resumo}</p>
+      ${humor.length ? `<p class="muted small">Humor marcado no bem-estar: ${FACES.map(([k, e]) => { const n = humor.filter(h => h === k).length; return n ? `${e} ${n}` : ''; }).filter(Boolean).join(' · ')}</p>` : ''}
+      ${top.length ? `<h3>Alguns registros</h3>${top.map(j => `<p class="quote">${FEELINGS[j.feeling]?.[0] || ''} ${esc(j.note)} <small class="muted">${ddmm(j.date)}</small></p>`).join('')}` : ''}
+    </section>`;
+}
+
+// ---- Descarregue a mente: separa o texto em tarefas, compromissos e lembretes ----
+const WEEKDAYS = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
+function parseDump(txt) {
+  const parts = txt.split(/\n|[,;!?]+|\.(?!\d)|\s+e\s+(?=\S+r\b)|\s+e depois\s+/i).map(s => s.trim()).filter(s => s.length > 2);
+  return parts.map(raw => {
+    let text = raw.replace(/^(e\s+|depois\s+|também\s+|eu\s+)+/i, '').replace(/^(tenho que|tenho de|preciso|devo|quero|vou)\s+/i, '');
+    const low = text.toLowerCase();
+    let time = '', date = '';
+    const tm = low.match(/(?:às|as|a partir das)?\s*(\d{1,2})\s*(?:h|:)\s*(\d{2})?/);
+    if (tm && +tm[1] < 24) time = `${tm[1].padStart(2, '0')}:${tm[2] || '00'}`;
+    if (/\bamanhã\b|\bamanha\b/.test(low)) date = TOMORROW;
+    else if (/\bhoje\b/.test(low)) date = TODAY;
+    else { const w = WEEKDAYS.findIndex(d => low.includes(d) || low.includes(d.replace('ç', 'c').replace('á', 'a'))); if (w >= 0) { let iso = TODAY; while (parse(iso).getDay() !== w) iso = addDays(iso, 1); date = iso; } }
+    let kind = 'tarefa';
+    if (/^(lembrar|responder|ligar|mandar|enviar|pagar|comprar|marcar|avisar|agendar|devolver|buscar)/.test(low) || low.includes('lembrar')) kind = 'lembrete';
+    else if (time || date || /\b(aula|consulta|reunião|reuniao|prova|academia|treino|jantar|almoço|almoco|encontro|ir (à|ao|a|para|no|na))\b/.test(low)) kind = 'compromisso';
+    text = text.charAt(0).toUpperCase() + text.slice(1);
+    return { text, kind, time, date };
+  });
+}
+const KINDS = { tarefa: ['Tarefas', 'lista', 'var(--blue)'], compromisso: ['Compromissos', 'agenda', 'var(--pink)'], lembrete: ['Lembretes', 'estrela', 'var(--gold)'] };
+function renderMente() {
+  const items = [...S.inbox.entries()].map(([id, x]) => ({ id, ...x })).sort((a, b) => (a.created || 0) - (b.created || 0));
+  const suggestion = x => x.kind === 'compromisso'
+    ? `Sugestão: pôr na rotina${x.date ? ` (${DAYS[parse(x.date).getDay()].toLowerCase()}${x.time ? ' ' + x.time : ''})` : ''}`
+    : x.kind === 'lembrete' ? (x.text.toLowerCase().startsWith('comprar') ? 'Sugestão: lista de compras ou prioridade de hoje' : 'Sugestão: prioridade de hoje') : 'Sugestão: prioridade de amanhã';
+  return `<section class="wcard"><h3>Descarregue sua mente</h3>
+      <p class="muted small">Escreva tudo o que está pensando, mesmo bagunçado. Para falar em vez de digitar, toque no microfone do teclado.</p>
+      <textarea class="journal" id="dump" placeholder="ex.: Tenho que estudar Imuno, fazer ND2, ir à academia quarta 18h, comprar um presente e lembrar de responder uma mensagem."></textarea>
+      <button class="btn primary" data-act="organizar">Organizar</button>
+    </section>
+    ${Object.entries(KINDS).map(([k, c]) => { const l = items.filter(x => x.kind === k); return l.length ? `<section class="fixed-day"><h3 style="color:${c[2]}">${c[0]}</h3>${l.map(x => `
+      <div class="inbox" data-inbox="${x.id}" style="--k:${c[2]}">
+        <div><div class="text">${esc(x.text)}</div><small class="muted">${suggestion(x)}</small></div>
+        <div class="pills">
+          ${k === 'compromisso' ? '<button class="pillbtn" data-move="rotina">Pôr na rotina</button>' : `<button class="pillbtn" data-move="${k === 'lembrete' ? 'hoje' : 'amanha'}">${k === 'lembrete' ? 'Prioridade de hoje' : 'Prioridade de amanhã'}</button>`}
+          ${x.text.toLowerCase().startsWith('comprar') ? '<button class="pillbtn" data-move="desejo">Lista de compras</button>' : ''}
+          <button class="pillbtn" data-move="tipo">Mudar tipo</button>
+          <button class="pillbtn" data-move="feito">✓ Feito</button>
+        </div>
+      </div>`).join('')}</section>` : ''; }).join('')}`;
+}
+
+// ================= Cliques das novas seções =================
+$('view').addEventListener('click', e => {
+  const t = e.target;
+  if (t.closest('[data-go-view]')) { view = t.closest('[data-go-view]').dataset.goView; remember(); return render(); }
+  if (!['bem', 'dinheiro', 'diario'].includes(view)) return;
+  const s2 = t.closest('[data-sub2]'); if (s2) { sub2[view] = s2.dataset.sub2; return render(); }
+  const mo = t.closest('[data-month]'); if (mo) { monthSel = shiftMonth(monthSel, +mo.dataset.month); return render(); }
+  const act = t.closest('[data-act]')?.dataset.act;
+  if (view === 'bem') {
+    const hu = t.closest('[data-humor]'); if (hu) { patchDay(TODAY, { humor: hu.dataset.humor }); return render(); }
+    const pz = t.closest('[data-prazo]'); if (pz) { sub2.prazo = pz.dataset.prazo; return render(); }
+    const hd = t.closest('[data-habday]'); if (hd) { habDay = hd.dataset.habday; return render(); }
+    const st = t.closest('[data-hstep]');
+    if (st) {
+      const h = habitList().find(x => x.id === t.closest('[data-habit]').dataset.habit);
+      const cur = (dayDoc(habDay).habitos || {})[h.id] || 0, next = Math.max(0, cur + +st.dataset.hstep);
+      patchDay(habDay, { habitos: { ...(dayDoc(habDay).habitos || {}), [h.id]: next } }); render();
+      if (+st.dataset.hstep > 0 && habitList().every(x => habitCount(x, habDay) >= x.goal)) celebrate('Todos os hábitos do dia! ♡');
+      return;
+    }
+    if (act === 'edithabit') return editHabit(habitList().find(x => x.id === t.closest('[data-habit]').dataset.habit));
+    if (act === 'addhabit') return editHabit();
+    if (act === 'addobj') return editObjetivo();
+    const ob = t.closest('[data-obj]'); if (ob) return editObjetivo({ id: ob.dataset.obj, ...S.objetivos.get(ob.dataset.obj) });
+    if (act === 'ciclohoje') { put('perfil', 'main', { ...(S.perfil.get('main') || {}), cicloInicio: TODAY }); return render(); }
+    if (act === 'ciclo') {
+      const p = S.perfil.get('main') || {};
+      return openForm({ title: 'Ciclo menstrual', fields: [
+        { name: 'cicloInicio', label: 'Início da última menstruação', type: 'date', value: p.cicloInicio || TODAY, full: true },
+        { name: 'cicloDuracao', label: 'Duração do ciclo (dias)', type: 'number', value: p.cicloDuracao || 28 }
+      ], onSave: v => put('perfil', 'main', { ...p, cicloInicio: v.cicloInicio, cicloDuracao: v.cicloDuracao || 28 }) });
+    }
+  }
+  if (view === 'dinheiro') {
+    if (act === 'addgasto') return editMoney(null, 'saida');
+    if (act === 'addentrada') return editMoney(null, 'entrada');
+    if (act === 'addwish') return editWish();
+    const mr = t.closest('[data-money]'); if (mr) return editMoney({ id: mr.dataset.money, ...S.money.get(mr.dataset.money) });
+    const wc = t.closest('[data-wish]');
+    if (wc) {
+      const x = { id: wc.dataset.wish, ...S.wishes.get(wc.dataset.wish) };
+      if (t.classList.contains('chk')) {
+        const { id, ...data } = x;
+        put('wishes', id, { ...data, bought: t.checked });
+        if (t.checked && x.price) { put('money', uid('m'), { type: 'saida', value: x.price, date: TODAY, desc: x.name, cat: 'compras' }); toast('Comprado! O valor entrou nos seus gastos.'); }
+        return render();
+      }
+      return editWish(x);
+    }
+  }
+  if (view === 'diario') {
+    const fe = t.closest('[data-feel]'); if (fe) return editEntry(null, fe.dataset.feel);
+    const en = t.closest('[data-entry]'); if (en) return editEntry({ id: en.dataset.entry, ...S.journal.get(en.dataset.entry) });
+    if (act === 'addgrat') { patchDay(TODAY, { gratidao: [...(dayDoc(TODAY).gratidao || []), ''] }); render(); const l = $('view').querySelectorAll('[data-grat] textarea'); l[l.length - 1]?.focus(); return; }
+    const gl = t.closest('[data-grat] li[data-i]');
+    if (gl && t.classList.contains('del')) { const g = [...(dayDoc(TODAY).gratidao || [])]; g.splice(gl.dataset.i, 1); patchDay(TODAY, { gratidao: g }); return render(); }
+    if (act === 'organizar') {
+      const txt = $('dump').value.trim(); if (!txt) return toast('Escreva alguma coisa primeiro ♡');
+      const parsed = parseDump(txt);
+      parsed.forEach((x, i) => put('inbox', uid('i'), { ...x, created: Date.now() + i }));
+      toast(`Organizei ${parsed.length} ite${parsed.length > 1 ? 'ns' : 'm'} ♡`); return render();
+    }
+    const mv = t.closest('[data-move]');
+    if (mv) {
+      const id = t.closest('[data-inbox]').dataset.inbox, x = S.inbox.get(id), how = mv.dataset.move;
+      if (how === 'tipo') { const ks = Object.keys(KINDS); put('inbox', id, { ...x, kind: ks[(ks.indexOf(x.kind) + 1) % ks.length] }); return render(); }
+      if (how === 'feito') { del('inbox', id); return render(); }
+      if (how === 'hoje' || how === 'amanha') {
+        const iso = how === 'hoje' ? TODAY : TOMORROW;
+        patchDay(iso, { prioridades: [...(dayDoc(iso).prioridades || []), { text: x.text, done: false }] });
+        del('inbox', id); toast(`Foi para as prioridades de ${how === 'hoje' ? 'hoje' : 'amanhã'} ♡`); return render();
+      }
+      if (how === 'desejo') { put('wishes', uid('d'), { name: x.text.replace(/^comprar\s+/i, ''), price: 0, priority: 'media', bought: false }); del('inbox', id); toast('Foi para a lista Quero comprar ♡'); return render(); }
+      if (how === 'rotina') { del('inbox', id); return editActivity({ mode: 'new', iso: x.date || TODAY, preset: { text: x.text, time: x.time, icon: /academia|treino/i.test(x.text) ? 'academia' : 'agenda' } }); }
+    }
+  }
+});
+$('view').addEventListener('change', e => {
+  const t = e.target, f = t.dataset.dayField;
+  if (f) { const v = f === 'diario' ? t.value : (t.value.trim() === '' ? null : parseMoney(t.value)); patchDay(TODAY, { [f]: v }); return; }
+  const gl = t.closest('[data-grat] li[data-i]');
+  if (gl) { const g = [...(dayDoc(TODAY).gratidao || [])]; g[gl.dataset.i] = t.value.trim(); patchDay(TODAY, { gratidao: g }); }
+});
 
 // ================= Livros =================
 const BOOK_STATUS = [['lendo', 'Lendo agora'], ['quero', 'Quero ler'], ['lido', 'Já li']];
@@ -1083,6 +1701,7 @@ render();
   db.collection('fixed').onSnapshot(s => { fixed = s.docs.map(d => ({ id: d.id, ...d.data() })); later(); }, lost);
   db.collection('weeks').onSnapshot(s => { weeks.clear(); s.docs.forEach(d => weeks.set(d.id, { ...blankWeek(d.id), ...d.data() })); later(); }, lost);
   db.collection('goals').onSnapshot(s => { goals.clear(); s.docs.forEach(d => goals.set(d.id, d.data())); later(); }, lost);
+  COLLS.forEach(c => db.collection(c).onSnapshot(s => { S[c].clear(); s.docs.forEach(d => S[c].set(d.id, d.data())); later(); }, lost));
   db.collection('books').onSnapshot(s => { books = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.updated || 0) - (a.updated || 0)); later(); }, lost);
   db.collection('shows').onSnapshot(s => { shows = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.updated || 0) - (a.updated || 0)); later(); }, lost);
   document.addEventListener('focusout', () => setTimeout(later, 60));

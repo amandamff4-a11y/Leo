@@ -9,7 +9,7 @@ pwa = '--pwa' in args
 args = [a for a in args if a != '--pwa']
 data_dir = args[0] if args else None
 
-seed = {c: {} for c in ('fixed', 'weeks', 'goals', 'books', 'shows')}
+seed = {c: {} for c in ('fixed', 'weeks', 'goals', 'books', 'shows', 'days', 'habits', 'money', 'wishes', 'journal', 'inbox', 'objetivos', 'perfil')}
 if data_dir:
     for c in seed:
         d = os.path.join(data_dir, c)
@@ -110,9 +110,9 @@ shim = r'''
     const a = txt.indexOf('{'), b = txt.lastIndexOf('}');
     if (a < 0 || b < a) throw 0;
     const obj = JSON.parse(txt.slice(a, b + 1));
-    ['fixed', 'weeks', 'goals', 'books', 'shows'].forEach(c => data[c] = data[c] || {});
+    ['fixed', 'weeks', 'goals', 'books', 'shows', 'days', 'habits', 'money', 'wishes', 'journal', 'inbox', 'objetivos', 'perfil'].forEach(c => data[c] = data[c] || {});
     if (obj.weeks && obj.fixed) {
-      data = obj; ['fixed', 'weeks', 'goals', 'books', 'shows'].forEach(c => data[c] = data[c] || {});
+      data = obj; ['fixed', 'weeks', 'goals', 'books', 'shows', 'days', 'habits', 'money', 'wishes', 'journal', 'inbox', 'objetivos', 'perfil'].forEach(c => data[c] = data[c] || {});
       return 'Sua agenda chegou! ♡';
     }
     if (!Array.isArray(obj.planner)) throw 0;
