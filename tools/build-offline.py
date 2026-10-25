@@ -80,7 +80,7 @@ shim = r'''
   const bar = document.createElement('div');
   bar.className = 'paste-bar';
   bar.innerHTML = '<button class="btn" id="pasteOpen">📋 Colar do Claude</button>';
-  document.querySelector('.mainnav').after(bar);
+  document.querySelector('header.top').appendChild(bar);
   const dlg = document.createElement('dialog');
   dlg.innerHTML = '<form id="pasteForm"><h3>Colar do Claude</h3><p class="form-note">Cole aqui o código que o Claude te mandou no chat e toque em Aplicar.</p>' +
     '<textarea id="pasteText" rows="7" placeholder="Toque e segure aqui, depois escolha Colar"></textarea>' +
@@ -151,7 +151,7 @@ shim = r'''
     const hi = document.createElement('div');
     hi.className = 'notice welcome';
     hi.innerHTML = '<b>Bem-vinda ao seu planner! ♡</b><br>Para trazer a sua agenda, copie o código que o Claude te mandou e toque em <b>Colar do Claude</b>. Ou comece do zero adicionando suas atividades.<br><button class="btn primary" style="margin-top:8px" id="pasteOpen2">📋 Colar do Claude</button>';
-    bar.after(hi);
+    document.querySelector('.mainnav').after(hi);
     document.getElementById('pasteOpen2').onclick = openPaste;
   }
   document.getElementById('bkSave').onclick = () => {
