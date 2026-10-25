@@ -15,6 +15,14 @@ if data_dir:
                 if f.endswith('.json'):
                     seed[c][f[:-5]] = json.load(open(os.path.join(d, f), encoding='utf-8'))
 
+# Aparece só quando o visualizador não roda JavaScript (ex.: pré-visualização do app Arquivos)
+NOJS = '''
+  <div id="nojs" style="margin:12px 0;padding:14px 16px;border-radius:14px;background:#fde8ef;color:#6d2a46;border:2px solid #e64980;font-size:18px;line-height:1.35">
+    <b>Os botões não funcionam nesta pré-visualização.</b><br>
+    Abra o arquivo num navegador: no iPhone, toque em Compartilhar e escolha <b>Abrir no Safari</b> (ou "Abrir com" → Chrome).
+    No Android, toque nos três pontinhos e escolha <b>Abrir com Chrome</b>. No computador, clique duas vezes no arquivo.
+  </div>'''
+
 head, body = src.split('\n<div class="wrap">', 1)
 head = head.replace('<meta name="claude:viewport-fit-sides" content="cover">\n', '')
 main_script = body.index('\n<script>')
@@ -51,6 +59,7 @@ shim = r'''
     }
   };
   window.claude = { use: async name => name === 'db' ? db : null };
+  document.getElementById('nojs')?.remove();
   // Mantém abas abertas ao mesmo tempo sincronizadas
   addEventListener('storage', e => { if (e.key !== KEY) return; try { data = JSON.parse(e.newValue) || data; } catch {} Object.keys(subs).forEach(fire); });
 
@@ -80,7 +89,7 @@ shim = r'''
 
 out = ('<!doctype html>\n<html lang="pt-BR">\n<head>\n<meta charset="utf-8">\n'
        '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
-       + head + '\n</head>\n<body>\n<div class="wrap">' + body[:main_script] + shim + body[main_script:] + '\n</body>\n</html>\n')
+       + head + '\n</head>\n<body>\n<div class="wrap">' + NOJS + body[:main_script] + shim + body[main_script:] + '\n</body>\n</html>\n')
 out = out.replace('<title>Planejamento da Semana</title>', '<title>Meu Planner</title>')
 open(os.path.join(root, 'meu-planner.html'), 'w', encoding='utf-8').write(out)
 print('meu-planner.html', len(out), 'bytes;', {c: len(v) for c, v in seed.items()})

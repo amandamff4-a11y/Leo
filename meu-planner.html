@@ -296,6 +296,11 @@
 </head>
 <body>
 <div class="wrap">
+  <div id="nojs" style="margin:12px 0;padding:14px 16px;border-radius:14px;background:#fde8ef;color:#6d2a46;border:2px solid #e64980;font-size:18px;line-height:1.35">
+    <b>Os botões não funcionam nesta pré-visualização.</b><br>
+    Abra o arquivo num navegador: no iPhone, toque em Compartilhar e escolha <b>Abrir no Safari</b> (ou "Abrir com" → Chrome).
+    No Android, toque nos três pontinhos e escolha <b>Abrir com Chrome</b>. No computador, clique duas vezes no arquivo.
+  </div>
   <header>
     <div class="hand left"><span>disciplina<br>também é<br>amor próprio ♡</span><svg class="deco" viewBox="0 0 54 70" aria-hidden="true"><path style="stroke:var(--green)" d="M27 66V30" stroke-width="2.5" fill="none" stroke-linecap="round"/><path style="fill:color-mix(in srgb, var(--green) 35%, transparent);stroke:var(--green)" d="M27 52c-8-2-14-8-15-16 8 1 14 7 15 16zM27 46c7-2 12-7 13-14-7 1-12 6-13 14z" stroke-width="1.5"/><path style="fill:color-mix(in srgb, var(--pink) 45%, transparent);stroke:var(--pink)" d="M15 12c2 10 6 18 12 18s10-8 12-18c-4 3-7 5-9 5l-3-9-3 9c-2 0-5-2-9-5z" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
     <div class="title-block"><h1>PLANEJAMENTO DA SEMANA</h1><div class="hello" id="hello"></div></div>
@@ -363,6 +368,7 @@
     }
   };
   window.claude = { use: async name => name === 'db' ? db : null };
+  document.getElementById('nojs')?.remove();
   // Mantém abas abertas ao mesmo tempo sincronizadas
   addEventListener('storage', e => { if (e.key !== KEY) return; try { data = JSON.parse(e.newValue) || data; } catch {} Object.keys(subs).forEach(fire); });
 
