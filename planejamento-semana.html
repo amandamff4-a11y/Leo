@@ -1,311 +1,275 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Planejamento da Semana</title>
+<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Pathway+Gothic+One&family=Rozha+One&display=swap" rel="stylesheet">
 <style>
+  /* Layout: abas de semanas no topo, 7 colunas de dias (domingo a sábado), listas da semana embaixo — igual ao planner em papel */
   :root {
     --bg: #fdf8f4;
+    --surface: #fffaf8;
     --ink: #3d3b52;
-    --muted: #6b6880;
+    --muted: #6f6b82;
     --title: #d6336c;
-    --card: #ffffffcc;
-    --line: #00000010;
-
-    --pink: #e64980;   --pink-bg: #fde8ef;
-    --orange: #e8590c; --orange-bg: #fff1e3;
-    --green: #2b8a3e;  --green-bg: #e6f4ea;
-    --blue: #1c7ed6;   --blue-bg: #e5f0fc;
-    --purple: #6741d9; --purple-bg: #eeeafc;
-    --gold: #f59f00;
+    --script: #3b3a6b;
+    --line: #3d3b5214;
+    --pink: #e64980;
+    --orange: #e8590c;
+    --peach: #f08c00;
+    --green: #2b8a3e;
+    --blue: #1c7ed6;
+    --purple: #6741d9;
+    --indigo: #3b4cc0;
+    --danger: #c92a2a;
+    --shadow: #3d3b5233;
+    --f-display: "Rozha One", Georgia, serif;
+    --f-body: "Pathway Gothic One", "Arial Narrow", sans-serif;
+    --f-hand: "Caveat", "Segoe Print", cursive;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1d1b26; --surface: #25222f; --ink: #ece8f4; --muted: #a9a4bb; --title: #f783ac; --script: #c5c2f0;
+      --line: #ffffff14; --pink: #f783ac; --orange: #ff922b; --peach: #ffc078; --green: #69db7c; --blue: #74c0fc;
+      --purple: #b197fc; --indigo: #91a7ff; --danger: #ff8787; --shadow: #0008; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1d1b26; --surface: #25222f; --ink: #ece8f4; --muted: #a9a4bb; --title: #f783ac; --script: #c5c2f0;
+    --line: #ffffff14; --pink: #f783ac; --orange: #ff922b; --peach: #ffc078; --green: #69db7c; --blue: #74c0fc;
+    --purple: #b197fc; --indigo: #91a7ff; --danger: #ff8787; --shadow: #0008; color-scheme: dark;
   }
   * { box-sizing: border-box; }
   body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--ink);
-    font-family: "Pathway Gothic One", "Arial Narrow", sans-serif;
-    font-size: 17px;
-    letter-spacing: .2px;
+    background: var(--bg); color: var(--ink);
+    font-family: var(--f-body); font-size: 17px; letter-spacing: .2px;
   }
-  .wrap { max-width: 1480px; margin: 0 auto; padding: 18px 16px 40px; }
+  .wrap {
+    max-width: 1480px; margin: 0 auto;
+    padding-block: 16px 40px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  button { font: inherit; color: inherit; }
+  button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--title); outline-offset: 2px; }
 
-  /* ---------- Cabeçalho ---------- */
-  header {
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 18px;
-  }
-  .hand {
-    font-family: "Caveat", cursive;
-    color: #3b3a6b;
-    font-size: 24px;
-    line-height: 1.05;
-  }
-  .hand.left { transform: rotate(-12deg); justify-self: start; }
-  .hand.right { transform: rotate(-14deg); justify-self: end; color: var(--title); text-align: left; }
+  /* Cabeçalho */
+  header { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; }
+  .hand { font-family: var(--f-hand); color: var(--script); font-size: 23px; line-height: 1.05; }
+  .hand.left { transform: rotate(-10deg); justify-self: start; }
+  .hand.right { transform: rotate(-12deg); justify-self: end; color: var(--title); }
   .title-block { text-align: center; }
+  h1 {
+    margin: 0; font-family: var(--f-display); font-weight: normal; color: var(--title);
+    font-size: clamp(30px, 5vw, 58px); line-height: 1.05; transform: rotate(-1.5deg); text-wrap: balance;
+  }
+  .period {
+    display: inline-block; margin-top: 6px; padding: 3px 26px; border-radius: 999px;
+    background: color-mix(in srgb, var(--pink) 14%, var(--surface)); color: var(--ink);
+    font-size: clamp(18px, 2.4vw, 26px);
+  }
   @media (max-width: 760px) {
     header { grid-template-columns: 1fr 1fr; }
     .title-block { grid-column: 1 / -1; grid-row: 1; }
     .hand { font-size: 19px; }
-    .period { padding: 4px 16px; }
   }
-  h1 {
-    margin: 0;
-    font-family: "Rozha One", serif;
-    color: var(--title);
-    font-size: clamp(30px, 5vw, 62px);
-    letter-spacing: 1px;
-    line-height: 1.05;
-    transform: rotate(-1.5deg);
-  }
-  .period {
-    display: inline-block;
-    margin-top: 6px;
-    padding: 4px 28px;
-    border-radius: 999px;
-    background: var(--pink-bg);
-    color: #6d2a46;
-    font-size: clamp(18px, 2.4vw, 28px);
-    outline: none;
-  }
-  .toolbar {
-    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
-    margin: 0 0 16px;
-  }
-  .btn {
-    font: inherit; font-size: 16px;
-    border: 1px solid #e9d6de; background: #fff; color: var(--ink);
-    padding: 6px 14px; border-radius: 999px; cursor: pointer;
-  }
-  .btn:hover { background: var(--pink-bg); }
-  .btn.primary { background: var(--title); color: #fff; border-color: var(--title); }
-  .btn.danger { color: #c92a2a; }
-  .hint { text-align: center; color: var(--muted); font-size: 15px; margin: -6px 0 14px; }
 
-  /* ---------- Dias ---------- */
-  .week {
-    display: grid;
-    grid-template-columns: repeat(8, minmax(0, 1fr));
-    gap: 8px;
+  /* Abas de semanas */
+  .tabs-row { display: flex; gap: 10px; align-items: center; margin: 18px 0 10px; }
+  .tabs { display: flex; gap: 6px; overflow-x: auto; padding: 4px 2px; flex: 1; min-width: 0; scrollbar-width: thin; }
+  .tab {
+    flex: none; border: 1px solid var(--line); background: var(--surface); border-radius: 999px;
+    padding: 6px 14px; cursor: pointer; font-size: 17px; white-space: nowrap; font-variant-numeric: tabular-nums;
   }
+  .tab:hover { border-color: var(--title); }
+  .tab.on { background: var(--title); border-color: var(--title); color: var(--bg); }
+  .tab small { opacity: .75; font-size: 14px; margin-left: 4px; }
+  .tab.fixed-tab { border-style: dashed; }
+  .tab.add { color: var(--title); border-style: dashed; }
+  .progress {
+    flex: none; display: flex; align-items: center; gap: 8px; font-size: 16px; color: var(--muted);
+  }
+  .bar { width: 110px; height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--title); border-radius: 99px; transition: width .3s; }
+  @media (max-width: 620px) { .tabs-row { flex-wrap: wrap; } .progress { width: 100%; } .bar { flex: 1; } }
+  .hint { color: var(--muted); font-size: 15px; margin: 0 0 12px; }
+  .notice {
+    padding: 14px 16px; border-radius: 12px; margin-bottom: 12px;
+    background: color-mix(in srgb, var(--peach) 16%, var(--surface)); color: var(--ink);
+  }
+
+  /* Dias */
+  .week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
   @media (max-width: 1250px) { .week { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
   @media (max-width: 760px)  { .week { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 480px)  { .week { grid-template-columns: 1fr; } }
-
   .day {
-    --c: var(--pink); --cbg: var(--pink-bg);
-    background: linear-gradient(to bottom, var(--cbg) 0 78px, #fffaf8 78px);
-    border: 1px solid color-mix(in srgb, var(--c) 18%, transparent);
-    border-radius: 12px;
-    padding: 8px 6px 10px;
-    display: flex; flex-direction: column;
-    min-height: 200px;
+    --c: var(--pink); --tint: color-mix(in srgb, var(--c) 14%, var(--surface));
+    background: linear-gradient(to bottom, var(--tint) 0 74px, var(--surface) 74px);
+    border: 1px solid color-mix(in srgb, var(--c) 22%, transparent);
+    border-radius: 12px; padding: 8px 6px 10px; display: flex; flex-direction: column; min-width: 0;
   }
-  .day[data-color="orange"] { --c: var(--orange); --cbg: var(--orange-bg); }
-  .day[data-color="green"]  { --c: var(--green);  --cbg: var(--green-bg); }
-  .day[data-color="blue"]   { --c: var(--blue);   --cbg: var(--blue-bg); }
-  .day[data-color="purple"] { --c: var(--purple); --cbg: var(--purple-bg); }
-  .day.drag-over { outline: 2px dashed var(--c); outline-offset: 2px; }
-
-  .day-head {
-    position: relative;
-    text-align: center;
-    color: var(--c);
-    height: 66px;
-    line-height: 1.1;
-  }
-  .day-name { font-size: 24px; text-transform: uppercase; }
-  .day-date { font-size: 22px; }
+  .day.today { box-shadow: 0 0 0 2px var(--c); }
+  .c-orange { --c: var(--orange); } .c-peach { --c: var(--peach); } .c-green { --c: var(--green); }
+  .c-blue { --c: var(--blue); } .c-purple { --c: var(--purple); } .c-indigo { --c: var(--indigo); }
+  .day-head { position: relative; text-align: center; color: var(--c); min-height: 62px; line-height: 1.1; }
+  .day-name { font-size: 23px; text-transform: uppercase; letter-spacing: .6px; }
+  .day-date { font-size: 21px; font-variant-numeric: tabular-nums; }
   .day-note { font-size: 15px; }
-  .day-head .ico { position: absolute; right: 2px; top: 14px; color: var(--c); }
+  .today-pill { font-size: 13px; background: var(--c); color: var(--surface); border-radius: 99px; padding: 0 8px; }
+  .day-head .ico { position: absolute; right: 2px; top: 12px; }
+  .items { display: flex; flex-direction: column; gap: 3px; flex: 1; margin-top: 6px; }
+  .empty { color: var(--muted); font-size: 15px; text-align: center; padding: 10px 4px; }
 
-  .items { display: flex; flex-direction: column; gap: 4px; flex: 1; }
   .item {
-    position: relative;
-    display: grid;
-    grid-template-columns: 22px 1fr 30px;
-    gap: 4px;
-    align-items: start;
-    padding: 8px 6px;
-    border-radius: 8px;
+    display: grid; grid-template-columns: 22px minmax(0, 1fr) 28px; gap: 4px; align-items: start;
+    padding: 7px 5px; border-radius: 8px; border-bottom: 1px solid var(--line);
     cursor: pointer;
-    border-bottom: 1px solid var(--line);
-    transition: background .15s;
   }
-  .item:hover { background: color-mix(in srgb, var(--cbg) 60%, #fff); }
-  .item.hl { background: var(--cbg); border-bottom-color: transparent; }
-  .item.dragging { opacity: .4; }
-  .item.nocheck { grid-template-columns: 1fr 30px; }
+  .item:hover { background: color-mix(in srgb, var(--c) 8%, var(--surface)); }
+  .item.hl { background: var(--tint); border-bottom-color: transparent; }
   .item .chk {
-    appearance: none; -webkit-appearance: none;
-    width: 15px; height: 15px; margin: 3px 0 0;
-    border: 1.6px solid var(--c); border-radius: 3px; background: #fff;
-    cursor: pointer; display: grid; place-content: center;
+    appearance: none; -webkit-appearance: none; width: 16px; height: 16px; margin: 3px 0 0;
+    border: 1.6px solid var(--c); border-radius: 4px; background: var(--surface); cursor: pointer;
+    display: grid; place-content: center;
   }
   .item .chk:checked { background: var(--c); }
-  .item .chk:checked::after { content: ""; width: 8px; height: 4px; border: 2px solid #fff; border-top: 0; border-right: 0; transform: rotate(-45deg) translate(1px,-1px); }
-  .item .time { font-size: 17px; color: var(--ink); }
-  .item .text { font-size: 17px; color: var(--ink); line-height: 1.2; }
-  .item.hl .text { font-size: 18px; }
-  .item .sub { font-size: 14.5px; color: var(--muted); line-height: 1.15; }
-  .item.done .time, .item.done .text, .item.done .sub { text-decoration: line-through; opacity: .5; }
-  .item .ico { color: var(--c); justify-self: end; }
-  .item.special {
-    grid-template-columns: 1fr;
-    text-align: center;
-    padding: 14px 8px;
-    background: var(--cbg);
+  .item .chk:checked::after, .list .chk:checked::after {
+    content: ""; width: 8px; height: 4px; border: 2px solid var(--surface); border-top: 0; border-right: 0;
+    transform: rotate(-45deg) translate(1px, -1px);
   }
-  .item.special .ico { justify-self: center; margin-bottom: 4px; }
-  .item.special .text { font-size: 22px; color: var(--c); }
+  .item .time { font-size: 16px; font-variant-numeric: tabular-nums; }
+  .item .text { font-size: 17px; line-height: 1.2; overflow-wrap: anywhere; }
+  .item .sub { font-size: 14.5px; color: var(--muted); line-height: 1.15; overflow-wrap: anywhere; }
+  .item .fixed-mark { font-size: 12px; color: var(--c); letter-spacing: .5px; text-transform: uppercase; }
+  .item.done .time, .item.done .text, .item.done .sub { text-decoration: line-through; opacity: .45; }
+  .item .ico { color: var(--c); justify-self: end; }
+  .item.special { grid-template-columns: 22px minmax(0, 1fr); text-align: center; padding: 12px 6px; background: var(--tint); }
+  .item.special .text { font-size: 21px; color: var(--c); }
+  .item.special .ico { justify-self: center; }
+  .item.nochk { grid-template-columns: minmax(0, 1fr) 28px; }
 
-  .add {
-    margin-top: 6px;
-    font: inherit; font-size: 15px;
-    background: none; border: 1px dashed color-mix(in srgb, var(--c) 45%, transparent);
+  .add, .restore {
+    margin-top: 6px; font-size: 15px; background: none; border: 1px dashed color-mix(in srgb, var(--c) 50%, transparent);
     color: var(--c); border-radius: 8px; padding: 5px; cursor: pointer;
   }
-  .add:hover { background: var(--cbg); }
+  .restore { border: 0; padding: 2px; text-decoration: underline; }
+  .add:hover { background: var(--tint); }
 
-  .ico svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-  .special .ico svg { width: 36px; height: 36px; }
+  .ico svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; display: block; }
+  .special .ico svg { width: 32px; height: 32px; }
 
-  /* ---------- Painéis de baixo ---------- */
-  .panels {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr .85fr;
-    gap: 10px;
-    margin-top: 12px;
-  }
+  /* Listas da semana */
+  .panels { display: grid; grid-template-columns: 1fr 1fr 1fr .85fr; gap: 10px; margin-top: 12px; }
   @media (max-width: 1100px) { .panels { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 620px)  { .panels { grid-template-columns: 1fr; } }
   .panel {
-    --c: var(--pink); --cbg: var(--pink-bg);
-    background: linear-gradient(to bottom, var(--cbg) 0 46px, #fffaf8 46px);
-    border: 1px solid color-mix(in srgb, var(--c) 18%, transparent);
-    border-radius: 12px;
-    padding: 10px 16px 14px;
+    --c: var(--pink); --tint: color-mix(in srgb, var(--c) 14%, var(--surface));
+    background: linear-gradient(to bottom, var(--tint) 0 46px, var(--surface) 46px);
+    border: 1px solid color-mix(in srgb, var(--c) 22%, transparent);
+    border-radius: 12px; padding: 10px 16px 14px; min-width: 0;
   }
-  .panel[data-color="purple"] { --c: #3b4cc0; --cbg: var(--purple-bg); }
-  .panel[data-color="green"]  { --c: var(--green); --cbg: var(--green-bg); }
-  .panel[data-color="orange"] { --c: #e8590c; --cbg: var(--orange-bg); }
-  .panel h2 {
-    display: flex; align-items: center; gap: 10px;
-    margin: 0 0 12px; font-weight: normal; font-size: 23px;
-    color: var(--c); text-transform: uppercase;
+  .panel h2 { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; font-weight: normal; font-size: 22px; color: var(--c); text-transform: uppercase; letter-spacing: .6px; }
+  .list { list-style: none; padding: 0; margin: 0; display: grid; gap: 2px; }
+  .list li { display: flex; align-items: flex-start; gap: 8px; }
+  .list .chk {
+    appearance: none; -webkit-appearance: none; flex: none; width: 16px; height: 16px; margin-top: 5px;
+    border: 1.6px solid var(--c); border-radius: 4px; background: var(--surface); cursor: pointer; display: grid; place-content: center;
   }
-  .panel ul { list-style: none; padding: 0; margin: 0; }
-  .panel li { display: flex; align-items: flex-start; gap: 10px; padding: 3px 0; font-size: 17px; }
-  .panel li .chk {
-    appearance: none; -webkit-appearance: none; flex: none;
-    width: 15px; height: 15px; margin-top: 3px;
-    border: 1.6px solid var(--c); border-radius: 3px; background: #fff; cursor: pointer;
-    display: grid; place-content: center;
+  .list .chk:checked { background: var(--c); }
+  .list textarea {
+    flex: 1; resize: none; field-sizing: content; overflow: hidden; line-height: 1.25; min-width: 0; font: inherit; font-size: 17px; color: var(--ink); background: transparent;
+    border: 0; border-radius: 4px; padding: 2px 4px;
   }
-  .panel li .chk:checked { background: var(--c); }
-  .panel li .chk:checked::after { content: ""; width: 8px; height: 4px; border: 2px solid #fff; border-top: 0; border-right: 0; transform: rotate(-45deg) translate(1px,-1px); }
-  .panel li .t { flex: 1; outline: none; border-radius: 4px; padding: 0 3px; }
-  .panel li .t:focus { background: var(--cbg); }
-  .panel li.done .t { text-decoration: line-through; opacity: .5; }
-  .panel li .x { opacity: 0; border: 0; background: none; color: #c92a2a; cursor: pointer; font-size: 18px; line-height: 1; }
-  .panel li:hover .x, .panel li .x:focus { opacity: 1; }
-  @media (hover: none) { .panel li .x { opacity: .6; } }
+  .list textarea:focus { background: var(--tint); outline: none; }
+  .list li.done textarea { text-decoration: line-through; opacity: .45; }
+  .list .x { border: 0; background: none; color: var(--danger); cursor: pointer; font-size: 20px; line-height: 1; opacity: .35; }
+  .list li:hover .x, .list .x:focus-visible { opacity: 1; }
   .panel .add { width: 100%; }
-  .remember { position: relative; }
   .remember .big {
-    font-family: "Caveat", cursive; font-weight: 700;
-    color: var(--title); font-size: 34px;
-    background: var(--pink-bg); border-radius: 999px;
-    display: inline-block; padding: 0 18px; transform: rotate(-6deg);
-    margin: 4px 0 8px; outline: none;
+    font-family: var(--f-hand); font-weight: 700; color: var(--title); font-size: 32px;
+    background: color-mix(in srgb, var(--pink) 14%, var(--surface)); border-radius: 999px;
+    display: inline-block; padding: 0 18px; transform: rotate(-5deg); margin: 4px 0 8px;
   }
-  .remember .msg {
-    font-family: "Caveat", cursive; font-size: 24px; color: #3b3a6b;
-    line-height: 1.25; transform: rotate(-4deg); outline: none; white-space: pre-line;
-  }
+  .remember p { font-family: var(--f-hand); font-size: 23px; color: var(--script); line-height: 1.25; transform: rotate(-3deg); margin: 0; }
 
-  /* ---------- Modal ---------- */
+  /* Editor */
   dialog {
-    border: 0; border-radius: 16px; padding: 0;
-    width: min(440px, calc(100vw - 32px));
-    color: var(--ink); background: #fff;
-    box-shadow: 0 20px 60px #0003;
+    border: 0; border-radius: 16px; padding: 0; width: min(460px, calc(100vw - 32px));
+    color: var(--ink); background: var(--surface); box-shadow: 0 20px 60px var(--shadow);
   }
-  dialog::backdrop { background: #3d3b5255; }
+  dialog::backdrop { background: #1d1b2666; }
   dialog form { padding: 20px; display: grid; gap: 12px; }
-  dialog h3 { margin: 0; font-family: "Rozha One", serif; color: var(--title); font-weight: normal; font-size: 26px; }
-  dialog label { display: grid; gap: 4px; font-size: 16px; color: var(--muted); }
-  dialog input[type=text], dialog select, dialog textarea {
-    font: inherit; font-size: 18px; color: var(--ink);
-    border: 1px solid #e3dbe0; border-radius: 8px; padding: 7px 10px; width: 100%;
-    background: #fff;
+  dialog h3 { margin: 0; font-family: var(--f-display); color: var(--title); font-weight: normal; font-size: 25px; }
+  .fixed-note { margin: -6px 0 0; font-size: 15px; color: var(--muted); }
+  dialog label { display: grid; gap: 4px; font-size: 15px; color: var(--muted); }
+  dialog input[type=text], dialog select {
+    font: inherit; font-size: 18px; color: var(--ink); background: var(--bg);
+    border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; width: 100%;
   }
   dialog .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  dialog .check { display: flex; align-items: center; gap: 8px; color: var(--ink); }
-  .icon-pick { display: flex; flex-wrap: wrap; gap: 6px; }
-  .icon-pick button {
-    border: 1px solid #eee; background: #fff; border-radius: 8px; padding: 4px; cursor: pointer; color: var(--ink);
-  }
-  .icon-pick button.on { border-color: var(--title); background: var(--pink-bg); color: var(--title); }
-  .icon-pick .ico svg { width: 22px; height: 22px; }
-  dialog .actions { display: flex; gap: 8px; justify-content: space-between; margin-top: 4px; }
+  dialog .check { display: flex; align-items: center; gap: 8px; color: var(--ink); font-size: 17px; }
+  .icon-pick { display: flex; flex-wrap: wrap; gap: 5px; }
+  .icon-pick button { border: 1px solid var(--line); background: var(--bg); border-radius: 8px; padding: 4px; cursor: pointer; color: var(--ink); }
+  .icon-pick button.on { border-color: var(--title); color: var(--title); background: color-mix(in srgb, var(--pink) 14%, var(--surface)); }
+  .icon-pick .ico svg { width: 21px; height: 21px; }
+  .icon-pick .none { width: 21px; height: 21px; display: grid; place-content: center; }
+  .actions { display: flex; gap: 8px; justify-content: space-between; flex-wrap: wrap; margin-top: 4px; }
+  .actions span { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn { border: 1px solid var(--line); background: var(--bg); padding: 6px 14px; border-radius: 999px; cursor: pointer; font-size: 16px; }
+  .btn.primary { background: var(--title); border-color: var(--title); color: var(--bg); }
+  .btn.danger { color: var(--danger); }
+  .btn.danger.armed { background: var(--danger); color: var(--bg); }
 
-  @media print {
-    .toolbar, .hint, .add, .panel li .x { display: none !important; }
-    body { background: #fff; }
+  .toast {
+    position: fixed; left: 50%; transform: translateX(-50%);
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    background: var(--ink); color: var(--bg); padding: 8px 16px; border-radius: 999px; font-size: 16px;
+    max-width: calc(100vw - 32px);
   }
+  @media (prefers-reduced-motion: reduce) { .bar i { transition: none; } }
 </style>
-</head>
-<body>
+
 <div class="wrap">
   <header>
-    <div class="hand left" contenteditable="true" data-key="leftNote">disciplina<br>também é<br>amor próprio ♡</div>
+    <div class="hand left">disciplina<br>também é<br>amor próprio ♡</div>
     <div class="title-block">
       <h1>PLANEJAMENTO DA SEMANA</h1>
-      <div class="period" contenteditable="true" data-key="period">25 de outubro a 01 de novembro</div>
+      <div class="period" id="period">carregando…</div>
     </div>
-    <div class="hand right" contenteditable="true" data-key="rightNote">foco<br>organização<br>evolução<br>momentos bons ♡</div>
+    <div class="hand right">foco<br>organização<br>evolução<br>momentos bons ♡</div>
   </header>
 
-  <div class="toolbar">
-    <button class="btn" id="btnPrint">🖨️ Imprimir</button>
-    <button class="btn" id="btnExport">⬇️ Salvar backup</button>
-    <button class="btn" id="btnImport">⬆️ Abrir backup</button>
-    <button class="btn danger" id="btnReset">↺ Voltar ao original</button>
-    <input type="file" id="fileImport" accept="application/json" hidden>
+  <div class="tabs-row">
+    <nav class="tabs" id="tabs" aria-label="Semanas"></nav>
+    <div class="progress" id="progress"></div>
   </div>
-  <p class="hint">Clique num compromisso para editar · marque a caixinha quando concluir · arraste para mudar de dia ou de ordem · tudo fica salvo automaticamente neste navegador</p>
+  <p class="hint" id="hint"></p>
+  <div class="notice" id="notice" hidden></div>
 
   <main class="week" id="week"></main>
-
   <section class="panels" id="panels"></section>
 </div>
 
 <dialog id="dlg">
-  <form method="dialog" id="form">
-    <h3 id="dlgTitle">Editar compromisso</h3>
+  <form id="form">
+    <h3 id="dlgTitle">Editar</h3>
+    <p class="fixed-note" id="fixedNote" hidden>Atividade fixa: aparece em todas as semanas. Mudanças aqui valem para todas.</p>
     <div class="row">
-      <label>Horário<input type="text" name="time" placeholder="ex.: 14:00 – 18:00"></label>
-      <label>Dia<select name="day"></select></label>
+      <label>Horário<input type="text" id="fTime" name="time" placeholder="ex.: 14:00 – 18:00 ou Tarde"></label>
+      <label><span id="whenLabel">Dia</span><select id="fWhen" name="when"></select></label>
     </div>
-    <label>Compromisso<input type="text" name="text" placeholder="ex.: Faculdade"></label>
-    <label>Detalhe (opcional)<input type="text" name="sub" placeholder="ex.: (bloco 1 – revisão)"></label>
+    <label>Atividade<input type="text" id="fText" name="text" placeholder="ex.: Faculdade" required></label>
+    <label>Detalhe (opcional)<input type="text" id="fSub" name="sub" placeholder="ex.: (bloco 1 – revisão)"></label>
     <label>Ícone<div class="icon-pick" id="iconPick"></div></label>
     <div class="row">
-      <label class="check"><input type="checkbox" name="hl"> Destacar</label>
-      <label class="check"><input type="checkbox" name="done"> Concluído</label>
+      <label class="check"><input type="checkbox" id="fHl" name="hl"> Destacar</label>
+      <label class="check" id="repeatWrap"><input type="checkbox" id="fRepeat" name="repeat"> Repete toda semana</label>
     </div>
     <div class="actions">
-      <button type="button" class="btn danger" id="btnDelete">Excluir</button>
+      <span>
+        <button type="button" class="btn danger" id="btnDelete">Excluir</button>
+        <button type="button" class="btn" id="btnSkip" hidden>Pular nesta semana</button>
+      </span>
       <span>
         <button type="button" class="btn" id="btnCancel">Cancelar</button>
         <button type="submit" class="btn primary">Salvar</button>
@@ -315,11 +279,9 @@
 </dialog>
 
 <script>
-// ---------- Ícones (traço simples) ----------
 const ICONS = {
-  none: '',
   cafe: '<path d="M4 9h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 10h2a2.5 2.5 0 0 1 0 5h-2"/><path d="M8 3c0 1.5 1 1.5 1 3M12 3c0 1.5 1 1.5 1 3"/>',
-  carro: '<path d="M3 15v-3l2-5h14l2 5v3"/><rect x="2" y="12" width="20" height="5" rx="1.5"/><circle cx="7" cy="17.5" r="1.5"/><circle cx="17" cy="17.5" r="1.5"/><path d="M6 12h12"/>',
+  carro: '<path d="M3 15v-3l2-5h14l2 5v3"/><rect x="2" y="12" width="20" height="5" rx="1.5"/><circle cx="7" cy="17.5" r="1.5"/><circle cx="17" cy="17.5" r="1.5"/>',
   notebook: '<rect x="4" y="5" width="16" height="11" rx="1"/><path d="M2 19h20"/>',
   livro: '<path d="M2 5c3-1 7-1 10 1v14c-3-2-7-2-10-1z"/><path d="M22 5c-3-1-7-1-10 1v14c3-2 7-2 10-1z"/>',
   comida: '<path d="M6 3v7a2 2 0 0 0 4 0V3M8 3v18"/><path d="M17 3c-2 0-3 3-3 6s1 3 3 3v9"/>',
@@ -336,359 +298,336 @@ const ICONS = {
   folha: '<path d="M12 21V8"/><path d="M12 12c-4 0-6-3-6-7 4 0 6 3 6 7zM12 9c3 0 5-2 5-6-3 0-5 2-5 6z"/>',
   bolo: '<rect x="4" y="12" width="16" height="8" rx="1.5"/><path d="M4 15c2 1.5 4 1.5 6 0s4-1.5 6 0 4 1.5 4 0"/><path d="M7 12V9h10v3M12 9V6"/><circle cx="12" cy="4.5" r="1"/>',
   capelo: '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5M22 9v6"/>',
-  estrela: '<path d="M12 3l2.8 5.8 6.2.9-4.5 4.4 1 6.2L12 17.4 6.5 20.3l1-6.2L3 9.7l6.2-.9z"/>'
+  estrela: '<path d="M12 3l2.8 5.8 6.2.9-4.5 4.4 1 6.2L12 17.4 6.5 20.3l1-6.2L3 9.7l6.2-.9z"/>',
+  medico: '<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v3a4 4 0 0 0 8 0v-2"/><circle cx="18" cy="12" r="2"/>'
 };
-const ICON_NAMES = Object.keys(ICONS);
-const icon = n => n && ICONS[n] ? `<span class="ico"><svg viewBox="0 0 24 24">${ICONS[n]}</svg></span>` : '<span class="ico"></span>';
-
-// ---------- Dados originais ----------
-const I = (time, text, ic, sub = '', hl = false) => ({ time, text, sub, icon: ic, hl, done: false });
-const DEFAULT = {
-  period: '25 de outubro a 01 de novembro',
-  leftNote: 'disciplina<br>também é<br>amor próprio ♡',
-  rightNote: 'foco<br>organização<br>evolução<br>momentos bons ♡',
-  days: [
-    { name: 'Domingo', date: '25/10', note: '', color: 'pink', icon: 'coracao', items: [
-      I('09:00', 'Acordar e café tranquilo', 'cafe'),
-      I('10:00 – 13:00', 'Finalizar e enviar trabalho de ND1', 'notebook', '', true),
-      I('13:00', 'Almoço', 'comida'),
-      I('14:00 – 18:00', 'Terminar trabalho de Imunologia (artigo 1)', 'notebook', '', true),
-      I('18:00', 'Tempo livre', 'coracao'),
-      I('20:00', 'Revisar ND2', 'livro', '(se der tempo)'),
-      I('22:00', 'Descansar', 'lua')
-    ]},
-    { name: 'Segunda', date: '26/10', note: '', color: 'orange', icon: 'sol', items: [
-      I('07:00', 'Trajeto', 'carro'),
-      I('08:00 – 11:00', 'Faculdade (ND2)', 'livro', '', true),
-      I('11:00 – 12:00', 'Trajeto de volta', 'carro'),
-      I('12:00', 'Almoço', 'comida'),
-      I('14:00 – 18:30', 'Faculdade', 'livro', '(Avaliação Nutricional)', true),
-      I('19:00', 'Jantar', 'comida'),
-      I('19:30 – 21:00', 'Estudar ND2', 'notebook', '(bloco 1 – revisão)', true),
-      I('22:00', 'Rotina noturna', 'lua')
-    ]},
-    { name: 'Terça', date: '27/10', note: '(sem aula)', color: 'orange', icon: 'coracao', items: [
-      I('08:00', 'Acordar e café', 'cafe'),
-      I('09:00 – 10:00', 'Tênis', 'tenis'),
-      I('10:30 – 12:00', 'Academia', 'academia'),
-      I('12:30', 'Almoço', 'comida'),
-      I('14:00 – 15:00', 'ND2', 'notebook', '(bloco 3 – aprofundar)', true),
-      I('15:00 – 16:00', 'Filme ou leitura', 'coracao', '(você escolhe)'),
-      I('17:00 – 19:00', 'Imunologia', 'notebook', '(finalizar slides e revisar)', true),
-      I('20:00', 'Jantar', 'comida'),
-      I('22:00', 'Descanso', 'lua')
-    ]},
-    { name: 'Quarta', date: '28/10', note: '', color: 'green', icon: 'folha', items: [
-      I('07:00', 'Trajeto', 'carro'),
-      I('08:00 – 12:00', 'Faculdade', 'livro', '(Sociologia da Saúde e Economia da Saúde)', true),
-      I('12:00', 'Almoço', 'comida'),
-      I('13:00 – 15:00', 'ND2', 'notebook', '(revisão final)', true),
-      I('16:00 – 17:00', 'Tênis', 'tenis'),
-      I('17:30', 'Academia', 'academia', '(opcional)'),
-      I('19:00 – 21:00', 'Imunologia', 'notebook', '(ensaiar apresentação)', true),
-      I('22:00', 'Descanso', 'lua')
-    ]},
-    { name: 'Quinta', date: '29/10', note: '', color: 'blue', icon: 'laco', items: [
-      I('06:30', 'Acordar e se preparar', ''),
-      I('08:00', 'Prova de ND2', 'prova', '', true),
-      I('12:00', 'Almoço', 'comida'),
-      I('14:00 – 18:00', 'Apresentação de Imunologia (artigo 1)', 'apresentacao', '', true),
-      I('19:00', 'Jantar', 'comida'),
-      I('20:00', 'Descanso', 'coracao', '(tempo livre)'),
-      I('22:00', 'Rotina noturna', 'lua')
-    ]},
-    { name: 'Sexta', date: '30/10', note: '(sem aula)', color: 'purple', icon: 'coracao', items: [
-      I('06:30', 'Acordar e café', 'cafe'),
-      I('08:00 – 09:00', 'AERA', 'academia'),
-      I('09:10 – 10:10', 'Velocity', 'academia'),
-      I('10:30', 'Café e banho', 'cafe'),
-      I('11:00 – 13:00', 'Pendências pessoais', 'lista'),
-      I('13:00', 'Almoço', 'comida'),
-      I('Tarde', 'Tempo livre', 'coracao'),
-      I('Noite', 'Livre', 'taca', '(programa social, Leo ou jantar fora)'),
-      I('22:00', 'Rotina noturna', 'lua')
-    ]},
-    { name: 'Sábado', date: '31/10', note: '', color: 'orange', icon: 'sol', nocheck: true, items: [
-      I('Manhã', 'Livre', 'coracao', '(atividade física, passeio ou programa cultural)'),
-      I('12:00', 'Almoço', 'comida'),
-      I('Tarde', 'Livre', 'coracao', '(aproveitar o dia)'),
-      I('Noite', 'Livre', 'coracao'),
-      I('22:00', 'Dormir', 'lua')
-    ]},
-    { name: 'Domingo', date: '01/11', note: '', color: 'pink', icon: 'coracao', items: [
-      Object.assign(I('', 'Comemorar 1 ano com o Leo ♡', 'bolo'), { special: true }),
-      I('Manhã', 'Acordar e café tranquilo', 'cafe'),
-      I('Tarde', 'Programa especial', 'coracao'),
-      I('Noite', 'Jantar', 'comida'),
-      I('22:00', 'Dormir', 'lua')
-    ]}
-  ],
-  panels: [
-    { title: 'Prioridades da semana', color: 'pink', icon: 'coracao', items: [
-      'Enviar trabalho de ND1 (domingo).',
-      'Prova de ND2 (quinta de manhã).',
-      'Apresentação de Imunologia (quinta à tarde).',
-      'ND2: estudar conteúdos mais difíceis e fazer questões.',
-      'Imunologia: finalizar slides, revisar o artigo e ensaiar.',
-      'Manter rotina de estudos e atividade física.'
-    ]},
-    { title: 'Tarefas acadêmicas', color: 'purple', icon: 'capelo', items: [
-      'Finalizar e enviar trabalho de ND1.',
-      'Estudar ND2 (blocos 2 e 3 + questões).',
-      'Finalizar slides de Imunologia.',
-      'Revisar artigo 1 e ensaiar apresentação.',
-      'Organizar materiais da semana.',
-      'Resolver exercícios / leituras.'
-    ]},
-    { title: 'Pendências pessoais', color: 'green', icon: 'coracao', items: [
-      'Marcar o lash.',
-      'Responder às minhas amigas.',
-      'Comprar o álbum de fotos de 1 ano do Leo.',
-      'Organizar roupas e itens da faculdade.',
-      'Resolver pendências pessoais.',
-      'Tempo de qualidade comigo.'
-    ]}
-  ],
-  remember: {
-    big: 'Você consegue! ♡',
-    msg: 'Organização também é autocuidado.\nDisciplina hoje, conquistas amanhã.\nCada passo importa. ♡'
-  }
-};
-DEFAULT.panels.forEach(p => p.items = p.items.map(t => ({ text: t, done: false })));
-
-// ---------- Estado + salvamento ----------
-const KEY = 'planejamento-semana-v1';
-const clone = o => JSON.parse(JSON.stringify(o));
-let state;
-try { state = JSON.parse(localStorage.getItem(KEY)) || clone(DEFAULT); } catch { state = clone(DEFAULT); }
-function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch {} }
+const icon = n => n && ICONS[n] ? `<span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg></span>` : '<span class="ico"></span>';
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-// ---------- Desenho dos dias ----------
-const week = document.getElementById('week');
-function renderWeek() {
-  week.innerHTML = state.days.map((d, di) => `
-    <article class="day" data-color="${d.color}" data-day="${di}">
-      <div class="day-head">
-        <div class="day-name">${esc(d.name)}</div>
-        <div class="day-date">${esc(d.date)}</div>
-        ${d.note ? `<div class="day-note">${esc(d.note)}</div>` : ''}
-        ${icon(d.icon)}
-      </div>
-      <div class="items">
-        ${d.items.map((it, ii) => it.special ? `
-          <div class="item special" draggable="true" data-day="${di}" data-idx="${ii}">
-            ${icon(it.icon)}
-            <div class="text">${esc(it.text)}</div>
-          </div>` : `
-          <div class="item ${it.hl ? 'hl' : ''} ${it.done ? 'done' : ''} ${d.nocheck ? 'nocheck' : ''}" draggable="true" data-day="${di}" data-idx="${ii}">
-            ${d.nocheck ? '' : `<input type="checkbox" class="chk" ${it.done ? 'checked' : ''} aria-label="Concluído">`}
-            <div>
-              ${it.time ? `<div class="time">${esc(it.time)}</div>` : ''}
-              <div class="text">${esc(it.text)}</div>
-              ${it.sub ? `<div class="sub">${esc(it.sub)}</div>` : ''}
-            </div>
-            ${icon(it.icon)}
-          </div>`).join('')}
-      </div>
-      <button class="add" data-day="${di}">+ adicionar</button>
-    </article>`).join('');
+const DAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+const DAY_COLOR = ['', 'c-orange', 'c-peach', 'c-green', 'c-blue', 'c-purple', 'c-peach'];
+const DAY_ICON = ['coracao', 'sol', 'coracao', 'folha', 'laco', 'coracao', 'sol'];
+const MONTHS = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+const LISTS = [
+  { key: 'prioridades', title: 'Prioridades da semana', icon: 'coracao', color: '' },
+  { key: 'academicas', title: 'Tarefas acadêmicas', icon: 'capelo', color: 'c-indigo' },
+  { key: 'pessoais', title: 'Pendências pessoais', icon: 'coracao', color: 'c-green' }
+];
+
+// ---------- Datas (semanas de domingo a sábado) ----------
+const parse = iso => { const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d, 12); };
+const fmt = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const addDays = (iso, n) => { const d = parse(iso); d.setDate(d.getDate() + n); return fmt(d); };
+const weekStart = d => { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12); x.setDate(x.getDate() - x.getDay()); return fmt(x); };
+const ddmm = iso => { const d = parse(iso); return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`; };
+const TODAY = fmt(new Date());
+const THIS_WEEK = weekStart(new Date());
+
+function minutes(it) {
+  if (it.special) return -1;
+  const t = (it.time || '').toLowerCase();
+  const m = t.match(/(\d{1,2}):(\d{2})/);
+  if (m) return +m[1] * 60 + +m[2];
+  if (t.startsWith('manh')) return 480;
+  if (t.startsWith('tarde')) return 840;
+  if (t.startsWith('noite')) return 1140;
+  return 2000;
 }
 
-week.addEventListener('click', e => {
-  const add = e.target.closest('.add');
-  if (add) return openEditor(+add.dataset.day, -1);
-  const item = e.target.closest('.item');
-  if (!item) return;
-  const di = +item.dataset.day, ii = +item.dataset.idx;
-  if (e.target.classList.contains('chk')) {
-    state.days[di].items[ii].done = e.target.checked;
-    item.classList.toggle('done', e.target.checked);
-    return save();
+// ---------- Estado ----------
+let db = null;
+let fixed = [];          // atividades fixas: {id, weekday, time, text, sub, icon, hl}
+const weeks = new Map(); // id da semana (data do domingo) -> documento
+let loaded = { fixed: false, weeks: false };
+let selected = THIS_WEEK;
+try { selected = localStorage.getItem('agenda-aba') || THIS_WEEK; } catch {}
+
+const blankWeek = start => ({ start, items: [], done: {}, skip: [], notes: {}, lists: { prioridades: [], academicas: [], pessoais: [] } });
+const weekDoc = id => weeks.get(id) || blankWeek(id);
+const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+let chain = Promise.resolve();
+function queue(fn) {
+  chain = chain.then(fn).catch(e => toast(e && e.code === 'quota_exceeded' ? 'A agenda está cheia: apague semanas antigas.' : 'Não consegui salvar. Tente de novo.'));
+  return chain;
+}
+function saveWeek(id, patch) {
+  if (!db) return toast('Abra pelo link do Claude para salvar.');
+  const exists = weeks.has(id);
+  if (!exists) weeks.set(id, { ...blankWeek(id), ...patch });
+  else {
+    const cur = weeks.get(id), next = { ...cur };
+    for (const k in patch) next[k] = (patch[k] && typeof patch[k] === 'object' && !Array.isArray(patch[k]) && cur[k]) ? { ...cur[k], ...patch[k] } : patch[k];
+    weeks.set(id, next);
   }
-  openEditor(di, ii);
+  const full = weeks.get(id);
+  return queue(() => exists ? db.doc('weeks/' + id).update(patch) : db.doc('weeks/' + id).set(full));
+}
+
+// ---------- Abas ----------
+const tabsEl = document.getElementById('tabs');
+function weekIds() {
+  const ids = new Set([...weeks.keys(), THIS_WEEK]);
+  if (selected !== 'fixas') ids.add(selected);
+  return [...ids].sort();
+}
+function renderTabs() {
+  const ids = weekIds();
+  tabsEl.innerHTML = `<button class="tab fixed-tab ${selected === 'fixas' ? 'on' : ''}" data-week="fixas">★ Atividades fixas</button>` +
+    ids.map(id => `<button class="tab ${id === selected ? 'on' : ''}" data-week="${id}">${ddmm(id)} – ${ddmm(addDays(id, 6))}${id === THIS_WEEK ? '<small>esta semana</small>' : ''}</button>`).join('') +
+    `<button class="tab add" data-week="${addDays(ids[ids.length - 1], 7)}" title="Abrir a semana seguinte">+ próxima semana</button>`;
+  const on = tabsEl.querySelector('.tab.on');
+  if (on) on.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+}
+tabsEl.addEventListener('click', e => {
+  const b = e.target.closest('.tab'); if (!b) return;
+  selected = b.dataset.week;
+  try { localStorage.setItem('agenda-aba', selected); } catch {}
+  renderAll();
 });
 
-// Arrastar e soltar
-let drag = null;
-week.addEventListener('dragstart', e => {
-  const item = e.target.closest('.item');
-  if (!item) return;
-  drag = { di: +item.dataset.day, ii: +item.dataset.idx };
-  item.classList.add('dragging');
-  e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/plain', '');
-});
-week.addEventListener('dragend', () => { drag = null; document.querySelectorAll('.dragging,.drag-over').forEach(el => el.classList.remove('dragging', 'drag-over')); });
-week.addEventListener('dragover', e => {
-  const day = e.target.closest('.day');
-  if (!drag || !day) return;
-  e.preventDefault();
-  document.querySelectorAll('.drag-over').forEach(el => el !== day && el.classList.remove('drag-over'));
-  day.classList.add('drag-over');
-});
-week.addEventListener('drop', e => {
-  const day = e.target.closest('.day');
-  if (!drag || !day) return;
-  e.preventDefault();
-  const to = +day.dataset.day;
-  const target = e.target.closest('.item');
-  const [moved] = state.days[drag.di].items.splice(drag.ii, 1);
-  let at = state.days[to].items.length;
-  if (target) {
-    at = +target.dataset.idx;
-    if (+target.dataset.day === drag.di && drag.ii < at) at--;
-    const r = target.getBoundingClientRect();
-    if (e.clientY > r.top + r.height / 2) at++;
+// ---------- Dias ----------
+const weekEl = document.getElementById('week');
+function dayItems(wid, i) {
+  const w = weekDoc(wid), iso = addDays(wid, i);
+  const skip = new Set(w.skip || []);
+  const fx = fixed.filter(f => f.weekday === i).map(f => ({ ...f, key: f.id + '_' + iso, fixed: true }));
+  const shown = fx.filter(f => !skip.has(f.key));
+  const own = (w.items || []).filter(it => it.date === iso).map(it => ({ ...it, key: it.id }));
+  return { iso, list: [...shown, ...own].sort((a, b) => minutes(a) - minutes(b)), skipped: fx.length - shown.length };
+}
+function itemHtml(it, checkable, done) {
+  if (it.special) return `
+    <div class="item special" tabindex="0" data-key="${it.key}">
+      ${checkable ? `<input type="checkbox" class="chk" ${done ? 'checked' : ''} aria-label="Feito">` : '<span></span>'}
+      <span>${icon(it.icon)}<span class="text">${esc(it.text)}</span></span>
+    </div>`;
+  return `
+    <div tabindex="0" class="item ${it.hl ? 'hl' : ''} ${done ? 'done' : ''} ${checkable ? '' : 'nochk'}" data-key="${it.key}">
+      ${checkable ? `<input type="checkbox" class="chk" ${done ? 'checked' : ''} aria-label="Feito">` : ''}
+      <span>
+        ${it.time ? `<span class="time">${esc(it.time)}</span><br>` : ''}
+        <span class="text">${esc(it.text)}</span>
+        ${it.sub ? `<br><span class="sub">${esc(it.sub)}</span>` : ''}
+        ${it.fixed && checkable ? '<br><span class="fixed-mark">fixa</span>' : ''}
+      </span>
+      ${icon(it.icon)}
+    </div>`;
+}
+function renderWeek() {
+  if (selected === 'fixas') return renderFixed();
+  const w = weekDoc(selected);
+  let total = 0, made = 0;
+  weekEl.innerHTML = DAYS.map((name, i) => {
+    const { iso, list, skipped } = dayItems(selected, i);
+    const note = (w.notes || {})[iso];
+    list.forEach(it => { total++; if (w.done?.[it.key]) made++; });
+    return `
+      <article class="day ${DAY_COLOR[i]} ${iso === TODAY ? 'today' : ''}" data-iso="${iso}">
+        <div class="day-head">
+          <div class="day-name">${name}</div>
+          <div class="day-date">${ddmm(iso)}</div>
+          ${note ? `<div class="day-note">(${esc(note)})</div>` : ''}
+          ${iso === TODAY ? '<span class="today-pill">hoje</span>' : ''}
+          ${icon(DAY_ICON[i])}
+        </div>
+        <div class="items">
+          ${list.length ? list.map(it => itemHtml(it, true, !!w.done?.[it.key])).join('') : '<div class="empty">Nada marcado ainda</div>'}
+        </div>
+        ${skipped ? `<button class="restore" data-restore="${iso}">↺ ${skipped} fixa${skipped > 1 ? 's' : ''} pulada${skipped > 1 ? 's' : ''}: mostrar de novo</button>` : ''}
+        <button class="add" data-add="${iso}">+ adicionar</button>
+      </article>`;
+  }).join('');
+  const pct = total ? Math.round(made / total * 100) : 0;
+  document.getElementById('progress').innerHTML = `<span>${made} de ${total} feitas</span><span class="bar"><i style="width:${pct}%"></i></span>`;
+}
+function renderFixed() {
+  weekEl.innerHTML = DAYS.map((name, i) => {
+    const list = fixed.filter(f => f.weekday === i).sort((a, b) => minutes(a) - minutes(b)).map(f => ({ ...f, key: f.id, fixed: true }));
+    return `
+      <article class="day ${DAY_COLOR[i]}" data-wd="${i}">
+        <div class="day-head"><div class="day-name">${name}</div><div class="day-date">toda semana</div>${icon(DAY_ICON[i])}</div>
+        <div class="items">${list.length ? list.map(it => itemHtml(it, false)).join('') : '<div class="empty">Sem atividades fixas</div>'}</div>
+        <button class="add" data-addfixed="${i}">+ adicionar fixa</button>
+      </article>`;
+  }).join('');
+  document.getElementById('progress').innerHTML = `<span>${fixed.length} atividades fixas</span>`;
+}
+weekEl.addEventListener('click', e => {
+  const t = e.target;
+  if (t.dataset.add) return openEditor({ mode: 'new', iso: t.dataset.add });
+  if (t.dataset.addfixed) return openEditor({ mode: 'newFixed', wd: +t.dataset.addfixed });
+  if (t.dataset.restore) {
+    const w = weekDoc(selected), iso = t.dataset.restore;
+    return (saveWeek(selected, { skip: (w.skip || []).filter(k => !k.endsWith('_' + iso)) }), renderAll());
   }
-  state.days[to].items.splice(at, 0, moved);
-  drag = null;
-  save(); renderWeek();
+  const item = t.closest('.item'); if (!item) return;
+  const key = item.dataset.key;
+  if (t.classList.contains('chk')) {
+    item.classList.toggle('done', t.checked);
+    saveWeek(selected, { done: { [key]: t.checked } });
+    return renderWeek();
+  }
+  if (selected === 'fixas') return openEditor({ mode: 'fixed', id: key });
+  const [fid, iso] = key.split('_');
+  if (iso) return openEditor({ mode: 'fixed', id: fid, iso });
+  openEditor({ mode: 'week', id: key });
 });
+weekEl.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.classList.contains('item')) e.target.click(); });
+
+// ---------- Listas da semana ----------
+const panelsEl = document.getElementById('panels');
+function renderPanels() {
+  if (panelsEl.contains(document.activeElement) && document.activeElement.tagName === 'TEXTAREA') return;
+  if (selected === 'fixas') { panelsEl.innerHTML = ''; return; }
+  const lists = weekDoc(selected).lists || {};
+  panelsEl.innerHTML = LISTS.map(l => `
+    <div class="panel ${l.color}" data-list="${l.key}">
+      <h2>${icon(l.icon)}${l.title}</h2>
+      <ul class="list">
+        ${(lists[l.key] || []).map((it, i) => `
+          <li class="${it.done ? 'done' : ''}" data-i="${i}">
+            <input type="checkbox" class="chk" ${it.done ? 'checked' : ''} aria-label="Feito">
+            <textarea rows="1" id="l-${l.key}-${i}" placeholder="Escreva aqui…" aria-label="Item">${esc(it.text)}</textarea>
+            <button class="x" aria-label="Excluir item">×</button>
+          </li>`).join('')}
+      </ul>
+      <button class="add">+ adicionar</button>
+    </div>`).join('') + `
+    <div class="panel remember c-orange">
+      <h2>${icon('sol')}Lembre-se</h2>
+      <div class="big">Você consegue! ♡</div>
+      <p>Organização também é autocuidado.<br>Disciplina hoje, conquistas amanhã.<br>Cada passo importa. ♡</p>
+    </div>`;
+}
+function listOf(panel) { return [...((weekDoc(selected).lists || {})[panel.dataset.list] || [])].map(x => ({ ...x })); }
+function saveList(panel, arr) { saveWeek(selected, { lists: { [panel.dataset.list]: arr } }); }
+panelsEl.addEventListener('click', e => {
+  const panel = e.target.closest('.panel[data-list]'); if (!panel) return;
+  const arr = listOf(panel), li = e.target.closest('li');
+  if (e.target.classList.contains('chk')) { arr[li.dataset.i].done = e.target.checked; li.classList.toggle('done', e.target.checked); return saveList(panel, arr); }
+  if (e.target.classList.contains('x')) { arr.splice(li.dataset.i, 1); saveList(panel, arr); return renderPanels(); }
+  if (e.target.classList.contains('add')) {
+    arr.push({ text: '', done: false }); saveList(panel, arr); renderPanels();
+    const inputs = panelsEl.querySelectorAll(`[data-list="${panel.dataset.list}"] textarea`);
+    inputs[inputs.length - 1]?.focus();
+  }
+});
+panelsEl.addEventListener('change', e => {
+  if (e.target.tagName !== 'TEXTAREA') return;
+  const panel = e.target.closest('.panel'), arr = listOf(panel);
+  arr[e.target.closest('li').dataset.i].text = e.target.value.trim();
+  saveList(panel, arr);
+});
+panelsEl.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.tagName === 'TEXTAREA') { e.preventDefault(); e.target.blur(); } });
+panelsEl.addEventListener('focusout', () => setTimeout(() => { if (!panelsEl.contains(document.activeElement)) renderPanels(); }, 50));
 
 // ---------- Editor ----------
 const dlg = document.getElementById('dlg'), form = document.getElementById('form');
-const iconPick = document.getElementById('iconPick');
-let editing = null, pickedIcon = '';
-form.day.innerHTML = state.days.map((d, i) => `<option value="${i}">${esc(d.name)} ${esc(d.date)}</option>`).join('');
-iconPick.innerHTML = ICON_NAMES.map(n => `<button type="button" data-icon="${n}" title="${n === 'none' ? 'sem ícone' : n}">${n === 'none' ? '<span class="ico" style="display:inline-grid;width:22px;height:22px;place-content:center">∅</span>' : icon(n)}</button>`).join('');
-iconPick.addEventListener('click', e => {
-  const b = e.target.closest('button'); if (!b) return;
-  pickedIcon = b.dataset.icon === 'none' ? '' : b.dataset.icon;
-  markIcon();
-});
-const markIcon = () => iconPick.querySelectorAll('button').forEach(b => b.classList.toggle('on', (b.dataset.icon === 'none' ? '' : b.dataset.icon) === pickedIcon));
+const $ = id => document.getElementById(id);
+const iconPick = $('iconPick');
+let ctx = null, pickedIcon = '';
+iconPick.innerHTML = '<button type="button" data-icon="" title="sem ícone"><span class="none">∅</span></button>' +
+  Object.keys(ICONS).map(n => `<button type="button" data-icon="${n}" title="${n}">${icon(n)}</button>`).join('');
+iconPick.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { pickedIcon = b.dataset.icon; markIcon(); } });
+const markIcon = () => iconPick.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.icon === pickedIcon));
 
-function openEditor(di, ii) {
-  editing = { di, ii };
-  const it = ii >= 0 ? state.days[di].items[ii] : I('', '', 'coracao');
-  document.getElementById('dlgTitle').textContent = ii >= 0 ? 'Editar compromisso' : 'Novo compromisso';
-  document.getElementById('btnDelete').style.visibility = ii >= 0 ? 'visible' : 'hidden';
-  form.time.value = it.time; form.text.value = it.text; form.sub.value = it.sub || '';
-  form.day.value = di; form.hl.checked = !!it.hl; form.done.checked = !!it.done;
+function openEditor(c) {
+  ctx = c;
+  const isFixed = c.mode === 'fixed' || c.mode === 'newFixed';
+  let it = { time: '', text: '', sub: '', icon: 'coracao', hl: false };
+  if (c.mode === 'week') it = weekDoc(selected).items.find(x => x.id === c.id);
+  if (c.mode === 'fixed') it = fixed.find(x => x.id === c.id);
+  if (!it) return;
+  $('dlgTitle').textContent = c.mode.startsWith('new') ? 'Nova atividade' : 'Editar atividade';
+  $('fixedNote').hidden = !(c.mode === 'fixed');
+  $('whenLabel').textContent = isFixed ? 'Dia da semana' : 'Dia';
+  $('fWhen').innerHTML = isFixed
+    ? DAYS.map((d, i) => `<option value="${i}">${d}</option>`).join('')
+    : DAYS.map((d, i) => { const iso = addDays(selected, i); return `<option value="${iso}">${d} ${ddmm(iso)}</option>`; }).join('');
+  $('fWhen').value = isFixed ? String(c.mode === 'fixed' ? it.weekday : c.wd) : (c.iso || it.date);
+  $('fTime').value = it.time || ''; $('fText').value = it.text || ''; $('fSub').value = it.sub || '';
+  $('fHl').checked = !!it.hl;
+  $('repeatWrap').hidden = isFixed; $('fRepeat').checked = false;
+  $('btnDelete').hidden = c.mode.startsWith('new');
+  $('btnDelete').classList.remove('armed'); $('btnDelete').textContent = c.mode === 'fixed' ? 'Excluir de todas as semanas' : 'Excluir';
+  $('btnSkip').hidden = !(c.mode === 'fixed' && c.iso);
   pickedIcon = it.icon || ''; markIcon();
   dlg.showModal();
-  form.text.focus();
+  $('fText').focus();
 }
 form.addEventListener('submit', e => {
   e.preventDefault();
-  const { di, ii } = editing;
-  const old = ii >= 0 ? state.days[di].items[ii] : {};
-  const it = { ...old, time: form.time.value.trim(), text: form.text.value.trim() || 'Compromisso', sub: form.sub.value.trim(),
-               icon: pickedIcon, hl: form.hl.checked, done: form.done.checked };
-  const to = +form.day.value;
-  if (ii >= 0 && to === di) state.days[di].items[ii] = it;
-  else {
-    if (ii >= 0) state.days[di].items.splice(ii, 1);
-    insertByTime(state.days[to].items, it);
+  const base = { time: $('fTime').value.trim(), text: $('fText').value.trim() || 'Atividade', sub: $('fSub').value.trim(), icon: pickedIcon, hl: $('fHl').checked };
+  const when = $('fWhen').value;
+  if (ctx.mode === 'fixed' || ctx.mode === 'newFixed' || $('fRepeat').checked) {
+    const wd = (ctx.mode === 'fixed' || ctx.mode === 'newFixed') ? +when : parse(when).getDay();
+    const id = ctx.mode === 'fixed' ? ctx.id : uid('f');
+    const doc = { ...base, weekday: wd };
+    if (!db) return toast('Abra pelo link do Claude para salvar.');
+    const i = fixed.findIndex(f => f.id === id);
+    i >= 0 ? (fixed[i] = { id, ...doc }) : fixed.push({ id, ...doc });
+    queue(() => db.doc('fixed/' + id).set(doc));
+    if (ctx.mode === 'week') removeWeekItem(ctx.id);
+  } else {
+    const items = weekDoc(selected).items.map(x => ({ ...x }));
+    if (ctx.mode === 'week') { const i = items.findIndex(x => x.id === ctx.id); items[i] = { ...items[i], ...base, date: when }; }
+    else items.push({ id: uid('w'), ...base, date: when });
+    saveWeek(selected, { items });
   }
-  save(); renderWeek(); dlg.close();
+  dlg.close(); renderAll();
 });
-// Coloca o novo compromisso na posição certa pelo horário (se tiver um)
-function insertByTime(list, it) {
-  const m = it.time.match(/^(\d{1,2}):(\d{2})/);
-  if (!m) return list.push(it);
-  const mins = +m[1] * 60 + +m[2];
-  const at = list.findIndex(x => { const k = (x.time || '').match(/^(\d{1,2}):(\d{2})/); return k && +k[1] * 60 + +k[2] > mins; });
-  at < 0 ? list.push(it) : list.splice(at, 0, it);
+function removeWeekItem(id) { saveWeek(selected, { items: weekDoc(selected).items.filter(x => x.id !== id) }); }
+$('btnCancel').onclick = () => dlg.close();
+$('btnSkip').onclick = () => {
+  const w = weekDoc(selected);
+  saveWeek(selected, { skip: [...(w.skip || []), ctx.id + '_' + ctx.iso] });
+  dlg.close(); renderAll();
+};
+$('btnDelete').onclick = () => {
+  const b = $('btnDelete');
+  if (!b.classList.contains('armed')) { b.classList.add('armed'); b.textContent = 'Toque de novo para excluir'; return; }
+  if (ctx.mode === 'fixed') {
+    if (!db) return toast('Abra pelo link do Claude para salvar.');
+    fixed = fixed.filter(f => f.id !== ctx.id);
+    queue(() => db.doc('fixed/' + ctx.id).delete());
+  } else removeWeekItem(ctx.id);
+  dlg.close(); renderAll();
+};
+
+// ---------- Geral ----------
+function toast(msg) {
+  const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; t.setAttribute('role', 'status');
+  document.body.appendChild(t); setTimeout(() => t.remove(), 3200);
 }
-document.getElementById('btnCancel').onclick = () => dlg.close();
-document.getElementById('btnDelete').onclick = () => {
-  if (!confirm('Excluir este compromisso?')) return;
-  state.days[editing.di].items.splice(editing.ii, 1);
-  save(); renderWeek(); dlg.close();
-};
-
-// ---------- Painéis de baixo ----------
-const panels = document.getElementById('panels');
-function renderPanels() {
-  panels.innerHTML = state.panels.map((p, pi) => `
-    <div class="panel" data-color="${p.color}">
-      <h2>${icon(p.icon)}${esc(p.title)}</h2>
-      <ul>
-        ${p.items.map((it, ii) => `
-          <li class="${it.done ? 'done' : ''}" data-p="${pi}" data-i="${ii}">
-            <input type="checkbox" class="chk" ${it.done ? 'checked' : ''} aria-label="Concluído">
-            <span class="t" contenteditable="true">${esc(it.text)}</span>
-            <button class="x" title="Excluir" aria-label="Excluir">×</button>
-          </li>`).join('')}
-      </ul>
-      <button class="add" data-p="${pi}">+ adicionar</button>
-    </div>`).join('') + `
-    <div class="panel remember" data-color="orange">
-      <h2>${icon('sol')}Lembre-se</h2>
-      <div class="big" contenteditable="true" data-r="big">${esc(state.remember.big)}</div>
-      <div class="msg" contenteditable="true" data-r="msg">${esc(state.remember.msg)}</div>
-    </div>`;
+function renderAll() {
+  if (selected === 'fixas') {
+    $('period').textContent = 'atividades que se repetem toda semana';
+    $('hint').textContent = 'O que estiver aqui aparece sozinho em todas as semanas. Clique numa atividade para mudar ou excluir.';
+  } else {
+    const s = parse(selected), e = parse(addDays(selected, 6));
+    $('period').textContent = `${s.getDate()} de ${MONTHS[s.getMonth()]} a ${String(e.getDate()).padStart(2, '0')} de ${MONTHS[e.getMonth()]}`;
+    $('hint').textContent = 'Marque a caixinha quando fizer · clique numa atividade para editar · as marcadas como "fixa" se repetem toda semana';
+  }
+  renderTabs(); renderWeek(); renderPanels();
 }
-panels.addEventListener('click', e => {
-  const li = e.target.closest('li');
-  if (e.target.classList.contains('chk')) {
-    state.panels[li.dataset.p].items[li.dataset.i].done = e.target.checked;
-    li.classList.toggle('done', e.target.checked);
-    return save();
-  }
-  if (e.target.classList.contains('x')) {
-    state.panels[li.dataset.p].items.splice(li.dataset.i, 1);
-    save(); return renderPanels();
-  }
-  const add = e.target.closest('.add');
-  if (add) {
-    const p = +add.dataset.p;
-    state.panels[p].items.push({ text: '', done: false });
-    save(); renderPanels();
-    const t = panels.querySelectorAll(`li[data-p="${p}"] .t`);
-    t[t.length - 1].focus();
-  }
-});
-panels.addEventListener('input', e => {
-  const li = e.target.closest('li');
-  if (li) state.panels[li.dataset.p].items[li.dataset.i].text = e.target.innerText.trim();
-  else if (e.target.dataset.r) state.remember[e.target.dataset.r] = e.target.innerText;
-  save();
-});
-panels.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && e.target.classList.contains('t')) { e.preventDefault(); e.target.blur(); }
-});
 
-// ---------- Textos do cabeçalho ----------
-function renderHeader() {
-  document.querySelectorAll('header [data-key]').forEach(el => {
-    const k = el.dataset.key;
-    el[k === 'period' ? 'textContent' : 'innerHTML'] = state[k];
-  });
-}
-document.querySelectorAll('header [data-key]').forEach(el => el.addEventListener('input', () => {
-  const k = el.dataset.key;
-  state[k] = k === 'period' ? el.textContent : el.innerHTML;
-  save();
-}));
-
-// ---------- Barra de ferramentas ----------
-document.getElementById('btnPrint').onclick = () => window.print();
-document.getElementById('btnReset').onclick = () => {
-  if (!confirm('Voltar a agenda ao modelo original? Suas alterações serão perdidas.')) return;
-  state = clone(DEFAULT); save(); renderAll();
-};
-document.getElementById('btnExport').onclick = () => {
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' }));
-  a.download = 'planejamento-semana.json';
-  a.click();
-};
-const fileImport = document.getElementById('fileImport');
-document.getElementById('btnImport').onclick = () => fileImport.click();
-fileImport.onchange = async () => {
-  try {
-    const data = JSON.parse(await fileImport.files[0].text());
-    if (!data.days || !data.panels) throw 0;
-    state = data; save(); renderAll();
-  } catch { alert('Não consegui ler esse arquivo de backup.'); }
-  fileImport.value = '';
-};
-
-function renderAll() { renderHeader(); renderWeek(); renderPanels(); }
 renderAll();
+(async () => {
+  db = window.claude?.use ? await window.claude.use('db') : null;
+  if (!db) {
+    const n = $('notice'); n.hidden = false;
+    n.textContent = 'Sua agenda fica salva na nuvem quando você abre esta página pelo link do Claude. Aqui ela não consegue carregar nem salvar.';
+    return;
+  }
+  db.collection('fixed').onSnapshot(snap => {
+    fixed = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    loaded.fixed = true; renderAll();
+  }, () => toast('Perdi a conexão com a agenda. Recarregue a página.'));
+  db.collection('weeks').onSnapshot(snap => {
+    weeks.clear();
+    snap.docs.forEach(d => weeks.set(d.id, { ...blankWeek(d.id), ...d.data() }));
+    loaded.weeks = true; renderAll();
+  }, () => toast('Perdi a conexão com a agenda. Recarregue a página.'));
+})();
 </script>
-</body>
-</html>
