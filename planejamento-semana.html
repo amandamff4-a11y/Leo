@@ -52,7 +52,7 @@
   }
 
   /* ---------- Menu principal ---------- */
-  .mainnav { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 18px 0 16px; }
+  .mainnav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 18px 0 16px; }
   .mainnav button {
     display: flex; align-items: center; justify-content: center; gap: 8px;
     border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 10px 8px;
@@ -61,7 +61,7 @@
   .mainnav button[aria-current="page"] { background: var(--title); border-color: var(--title); color: var(--bg); }
   .mainnav button[aria-current="page"] .ico { color: var(--bg); }
   .mainnav .ico { color: var(--title); }
-  @media (max-width: 520px) { .mainnav button { flex-direction: column; gap: 2px; font-size: 16px; } }
+  @media (max-width: 760px) { .mainnav { grid-template-columns: repeat(2, minmax(0, 1fr)); } .mainnav button { font-size: 17px; } }
 
   /* ---------- Barra da semana ---------- */
   .weekbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
@@ -192,6 +192,16 @@
   .fixed-day h3::after { content: ""; flex: 1; height: 1px; background: var(--line); }
   .fixed-day .add { width: auto; padding: 4px 12px; }
 
+  /* ---------- Atividade física ---------- */
+  .exsum { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px; }
+  .stat { background: color-mix(in srgb, var(--green) 10%, var(--surface)); border-radius: 14px; padding: 10px 14px; }
+  .stat b { display: block; font-weight: normal; font-size: 30px; color: var(--green); font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .stat span { font-size: 15px; color: var(--muted); }
+  .link-note { font-size: 16px; color: var(--muted); margin: 0 0 14px; }
+  .exday h3 .rest { font-size: 14px; color: var(--muted); text-transform: none; letter-spacing: 0; }
+  .exday .add { width: auto; padding: 4px 12px; --c: var(--green); }
+  @media (max-width: 520px) { .exsum { grid-template-columns: 1fr 1fr; } .exsum .stat:last-child { grid-column: 1 / -1; } }
+
   /* ---------- Livros e filmes ---------- */
   .media-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
   .media-head h2 { margin: 0; font-family: var(--f-display); font-weight: normal; color: var(--title); font-size: 30px; }
@@ -259,11 +269,13 @@
 
   <nav class="mainnav" id="mainnav" aria-label="Seções">
     <button data-view="rotina"><span class="ico" data-icon="agenda"></span>Minha rotina</button>
+    <button data-view="treino"><span class="ico" data-icon="academia"></span>Atividade física</button>
     <button data-view="livros"><span class="ico" data-icon="livro"></span>Livros</button>
     <button data-view="filmes"><span class="ico" data-icon="filme"></span>Filmes e séries</button>
   </nav>
 
   <div class="notice" id="notice" hidden></div>
+  <datalist id="ex-names"><option value="Academia"><option value="Tênis"><option value="AERA"><option value="Velocity"><option value="Corrida"><option value="Caminhada"><option value="Pilates"><option value="Yoga"><option value="Natação"><option value="Bike"><option value="Funcional"><option value="Alongamento"></datalist>
   <main id="view"></main>
 </div>
 
@@ -299,6 +311,10 @@ const ICONS = {
   capelo: '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5M22 9v6"/>',
   academia: '<path d="M2 12h20M5 8v8M8 6v12M16 6v12M19 8v8"/>',
   tenis: '<ellipse cx="15" cy="8" rx="5" ry="6" transform="rotate(40 15 8)"/><path d="M11 12l-8 9M12 5l6 6M10 8l6 6"/>',
+  corrida: '<circle cx="14" cy="4.5" r="1.8"/><path d="M8 21l3-6 3 2v5M6 12l3-4 4 1 2 4 3 1M11 15l-2-3"/>',
+  yoga: '<circle cx="12" cy="4.5" r="1.8"/><path d="M12 7v6M6 10l6 2 6-2M8 20l4-7 4 7M5 20h14"/>',
+  natacao: '<circle cx="16" cy="6" r="1.8"/><path d="M4 13l5-4 4 3 3-2M2 17c2 1.5 4 1.5 6 0s4-1.5 6 0 4 1.5 6 0M2 21c2 1.5 4 1.5 6 0s4-1.5 6 0 4 1.5 6 0"/>',
+  bike: '<circle cx="5.5" cy="16.5" r="3.5"/><circle cx="18.5" cy="16.5" r="3.5"/><path d="M5.5 16.5l4-7h6l3 7M9.5 9.5l3 7h-7M14 6h2"/>',
   carro: '<path d="M3 15v-3l2-5h14l2 5v3"/><rect x="2" y="12" width="20" height="5" rx="1.5"/><circle cx="7" cy="17.5" r="1.5"/><circle cx="17" cy="17.5" r="1.5"/>',
   lista: '<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M8 8h1M11 8h5M8 12h1M11 12h5M8 16h1M11 16h5"/>',
   medico: '<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v3a4 4 0 0 0 8 0v-2"/><circle cx="18" cy="12" r="2"/>',
@@ -327,11 +343,11 @@ const CATS = {
 };
 const ICON_CAT = {
   livro: 'estudo', notebook: 'estudo', prova: 'estudo', apresentacao: 'estudo', capelo: 'estudo',
-  academia: 'exercicio', tenis: 'exercicio', cafe: 'refeicao', comida: 'refeicao',
+  academia: 'exercicio', tenis: 'exercicio', corrida: 'exercicio', yoga: 'exercicio', natacao: 'exercicio', bike: 'exercicio', cafe: 'refeicao', comida: 'refeicao',
   coracao: 'lazer', taca: 'lazer', bolo: 'lazer', estrela: 'lazer', filme: 'lazer', laco: 'lazer', folha: 'lazer',
   lua: 'descanso', carro: 'trajeto', lista: 'pendencia', medico: 'pendencia', agenda: 'pendencia'
 };
-const PICKABLE = ['livro', 'notebook', 'prova', 'apresentacao', 'academia', 'tenis', 'cafe', 'comida', 'coracao', 'taca', 'bolo', 'filme', 'estrela', 'lua', 'carro', 'lista', 'medico'];
+const PICKABLE = ['livro', 'notebook', 'prova', 'apresentacao', 'academia', 'tenis', 'corrida', 'yoga', 'natacao', 'bike', 'cafe', 'comida', 'coracao', 'taca', 'bolo', 'filme', 'estrela', 'lua', 'carro', 'lista', 'medico'];
 const catOf = it => CATS[ICON_CAT[it.icon]] ? ICON_CAT[it.icon] : 'trajeto';
 const kColor = it => CATS[catOf(it)].color;
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -348,6 +364,10 @@ const weekOf = iso => addDays(iso, -parse(iso).getDay());
 const ddmm = iso => { const d = parse(iso); return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`; };
 const longDate = iso => { const d = parse(iso); return `${d.getDate()} de ${MONTHS[d.getMonth()]}`; };
 const TODAY = fmt(new Date());
+// As semanas do app andam de 7 em 7 dias a partir de sábado, 24/10/2026
+const ANCHOR = '2026-10-24';
+const blockOf = iso => { const n = Math.round((parse(iso) - parse(ANCHOR)) / 864e5); return addDays(ANCHOR, Math.floor(n / 7) * 7); };
+const blockDays = b => [0, 1, 2, 3, 4, 5, 6].map(i => addDays(b, i));
 
 function minutes(it) {
   if (it.special) return -1;
@@ -368,13 +388,14 @@ const PERIODS = [
 // ================= Estado =================
 let db = null;
 let fixed = [], books = [], shows = [];
+const goals = new Map();
 const weeks = new Map();
 let pref = {};
 try { pref = JSON.parse(localStorage.getItem('agenda-pref') || '{}'); } catch {}
-let view = ['rotina', 'livros', 'filmes'].includes(location.hash.slice(1)) ? location.hash.slice(1) : (pref.view || 'rotina');
+let view = ['rotina', 'treino', 'livros', 'filmes'].includes(location.hash.slice(1)) ? location.hash.slice(1) : (pref.view || 'rotina');
 let sub = pref.sub || 'dia';
 let selDay = TODAY;
-const selWeek = () => weekOf(selDay);
+const selWeek = () => blockOf(selDay);
 const remember = () => { try { localStorage.setItem('agenda-pref', JSON.stringify({ view, sub })); } catch {} };
 
 const blankWeek = start => ({ start, items: [], done: {}, skip: [], notes: {}, lists: { prioridades: [], academicas: [], pessoais: [] } });
@@ -406,13 +427,14 @@ function deleteDoc(coll, arr, id) {
 // Atividades de um dia: fixas (menos as puladas) + as da semana, em ordem de horário
 function dayItems(iso) {
   const w = weekDoc(weekOf(iso)), skip = new Set(w.skip || []), wd = parse(iso).getDay();
-  const fx = fixed.filter(f => f.weekday === wd).map(f => ({ ...f, key: f.id + '_' + iso, fixedId: f.id, fixed: true }));
+  const fx = fixed.filter(f => f.weekday === wd).map(f => ({ ...f, iso, key: f.id + '_' + iso, fixedId: f.id, fixed: true }));
   const shown = fx.filter(f => !skip.has(f.key));
-  const own = (w.items || []).filter(it => it.date === iso).map(it => ({ ...it, key: it.id }));
+  const own = (w.items || []).filter(it => it.date === iso).map(it => ({ ...it, iso, key: it.id }));
   const list = [...shown, ...own].sort((a, b) => minutes(a) - minutes(b));
   const done = list.filter(it => w.done?.[it.key]).length;
   return { list, done, skipped: fx.length - shown.length, note: (w.notes || {})[iso] };
 }
+const isDone = it => !!weekDoc(weekOf(it.iso)).done?.[it.key];
 
 // ================= Navegação =================
 $('mainnav').addEventListener('click', e => {
@@ -422,6 +444,7 @@ $('mainnav').addEventListener('click', e => {
 });
 function render() {
   $('mainnav').querySelectorAll('button').forEach(b => b.dataset.view === view ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current'));
+  if (view === 'treino') return renderTraining();
   if (view === 'livros') return renderBooks();
   if (view === 'filmes') return renderShows();
   renderRotina();
@@ -432,34 +455,34 @@ const SUBS = [['dia', 'Dia a dia'], ['semana', 'Semana inteira'], ['metas', 'Met
 function renderRotina() {
   const ws = selWeek(), we = addDays(ws, 6);
   let total = 0, made = 0;
-  for (let i = 0; i < 7; i++) { const d = dayItems(addDays(ws, i)); total += d.list.length; made += d.done; }
-  const pct = total ? Math.round(made / total * 100) : 0;
-  const s = parse(ws), e = parse(we);
-  const range = s.getMonth() === e.getMonth() ? `${s.getDate()} a ${e.getDate()} de ${MONTHS[e.getMonth()]}` : `${s.getDate()} de ${MONTHS[s.getMonth()]} a ${e.getDate()} de ${MONTHS[e.getMonth()]}`;
-  const isThis = ws === weekOf(TODAY);
+  for (const iso of blockDays(ws)) { const d = dayItems(iso); total += d.list.length; made += d.done; }
   let body = '';
   if (sub === 'dia') body = renderDay();
   else if (sub === 'semana') body = renderWeekGrid();
   else if (sub === 'metas') body = renderGoals();
   else body = renderFixed();
   $('view').innerHTML = `
-    ${sub === 'fixas' ? '' : `
-    <div class="weekbar">
-      <button class="arrow" data-act="prev" aria-label="Semana anterior">‹</button>
-      <div class="label">${range}<small>${isThis ? 'esta semana' : `semana de ${ddmm(ws)} a ${ddmm(we)}`}</small></div>
-      <button class="arrow" data-act="next" aria-label="Próxima semana">›</button>
-      ${isThis ? '' : '<button class="today-btn" data-act="today">voltar para hoje</button>'}
-      <div class="prog"><span>${made} de ${total} feitas na semana</span><span class="bar"><i style="width:${pct}%"></i></span></div>
-    </div>`}
+    ${sub === 'fixas' ? '' : weekbar(`${made} de ${total} feitas na semana`, total ? made / total : 0)}
     <div class="subnav" role="tablist">
       ${SUBS.map(([k, l]) => `<button role="tab" aria-selected="${sub === k}" data-sub="${k}">${l}</button>`).join('')}
     </div>
     ${body}`;
 }
+function weekbar(label, frac) {
+  const ws = selWeek(), we = addDays(ws, 6), s = parse(ws), e = parse(we);
+  const range = s.getMonth() === e.getMonth() ? `${s.getDate()} a ${e.getDate()} de ${MONTHS[e.getMonth()]}` : `${s.getDate()} de ${MONTHS[s.getMonth()]} a ${e.getDate()} de ${MONTHS[e.getMonth()]}`;
+  const isThis = ws === blockOf(TODAY);
+  return `<div class="weekbar">
+      <button class="arrow" data-act="prev" aria-label="Semana anterior">‹</button>
+      <div class="label">${range}<small>${isThis ? 'esta semana' : `${DAYS[s.getDay()].toLowerCase()} ${ddmm(ws)} a ${DAYS[e.getDay()].toLowerCase()} ${ddmm(we)}`}</small></div>
+      <button class="arrow" data-act="next" aria-label="Próxima semana">›</button>
+      ${isThis ? '' : '<button class="today-btn" data-act="today">voltar para hoje</button>'}
+      <div class="prog"><span>${label}</span><span class="bar"><i style="width:${Math.round(frac * 100)}%"></i></span></div>
+    </div>`;
+}
 function renderDay() {
-  const ws = selWeek(), w = weekDoc(ws);
-  const strip = DAYS.map((_, i) => {
-    const iso = addDays(ws, i), d = dayItems(iso);
+  const strip = blockDays(selWeek()).map(iso => {
+    const d = dayItems(iso), i = parse(iso).getDay();
     const cls = [`chip c-${i}`, iso === selDay && 'on', iso === TODAY && 'today', d.list.length && d.done === d.list.length && 'complete'].filter(Boolean).join(' ');
     return `<button class="${cls}" data-day="${iso}" aria-label="${DAYS[i]} ${ddmm(iso)}"><span class="dow">${DOW[i]}</span><span class="num">${parse(iso).getDate()}</span><span class="cnt">${d.done}/${d.list.length}</span></button>`;
   }).join('');
@@ -467,7 +490,7 @@ function renderDay() {
   const groups = PERIODS.map(p => {
     const items = d.list.filter(it => p.test(minutes(it)) || (it.special && p.key === 'manha'));
     if (!items.length) return '';
-    return `<div class="group"><h3>${icon(p.icon)}${p.label}</h3>${items.map(it => rowItem(it, !!w.done?.[it.key])).join('')}</div>`;
+    return `<div class="group"><h3>${icon(p.icon)}${p.label}</h3>${items.map(it => rowItem(it, isDone(it))).join('')}</div>`;
   }).join('');
   const pct = d.list.length ? Math.round(d.done / d.list.length * 100) : 0;
   return `
@@ -491,12 +514,12 @@ function renderDay() {
 function rowItem(it, done, checkable = true) {
   const k = kColor(it);
   if (it.special) return `
-    <div class="row-item special ${done ? 'done' : ''}" tabindex="0" data-key="${it.key}">
+    <div class="row-item special ${done ? 'done' : ''}" tabindex="0" data-key="${it.key}" data-iso="${it.iso || ''}">
       <input type="checkbox" class="chk" ${done ? 'checked' : ''} aria-label="Feito">
       <div class="text">${esc(it.text)}</div>${icon(it.icon)}
     </div>`;
   return `
-    <div class="row-item ${it.hl ? 'hl' : ''} ${done ? 'done' : ''} ${checkable ? '' : 'nochk'}" tabindex="0" data-key="${it.key}" style="--k:${k}">
+    <div class="row-item ${it.hl ? 'hl' : ''} ${done ? 'done' : ''} ${checkable ? '' : 'nochk'}" tabindex="0" data-key="${it.key}" data-iso="${it.iso || ''}" style="--k:${k}">
       ${checkable ? `<input type="checkbox" class="chk" ${done ? 'checked' : ''} aria-label="Feito">` : ''}
       <div class="time">${esc(it.time) || '—'}</div>
       <div>
@@ -508,14 +531,13 @@ function rowItem(it, done, checkable = true) {
     </div>`;
 }
 function renderWeekGrid() {
-  const ws = selWeek(), w = weekDoc(ws);
-  return `<div class="weekgrid">${DAYS.map((name, i) => {
-    const iso = addDays(ws, i), d = dayItems(iso);
+  return `<div class="weekgrid">${blockDays(selWeek()).map(iso => {
+    const d = dayItems(iso), i = parse(iso).getDay(), name = DAYS[i];
     return `<section class="wcol c-${i} ${iso === TODAY ? 'today' : ''}">
       <button class="wcol-head tint" data-day="${iso}" data-go="dia"><b>${name}</b><span>${ddmm(iso)} · ${d.done}/${d.list.length}${d.note ? ` · ${esc(d.note)}` : ''}</span></button>
       ${d.list.map(it => `
-        <div class="mini ${w.done?.[it.key] ? 'done' : ''}" data-key="${it.key}" style="--k:${it.special ? 'var(--title)' : kColor(it)}">
-          <input type="checkbox" class="chk" ${w.done?.[it.key] ? 'checked' : ''} aria-label="Feito">
+        <div class="mini ${isDone(it) ? 'done' : ''}" data-key="${it.key}" data-iso="${iso}" style="--k:${it.special ? 'var(--title)' : kColor(it)}">
+          <input type="checkbox" class="chk" ${isDone(it) ? 'checked' : ''} aria-label="Feito">
           <div>${it.time ? `<div class="t">${esc(it.time)}</div>` : ''}<div class="x">${esc(it.text)}</div></div>
         </div>`).join('') || '<div class="empty">Livre</div>'}
     </section>`;
@@ -528,7 +550,7 @@ const LISTS = [
   { key: 'pessoais', title: 'Pendências pessoais', icon: 'lista', color: 'var(--green)' }
 ];
 function renderGoals() {
-  const lists = weekDoc(selWeek()).lists || {};
+  const lists = goals.get(selWeek())?.lists || {};
   return `<div class="panels">${LISTS.map(l => `
     <div class="panel" data-list="${l.key}" style="--c:${l.color}">
       <h2 class="tint">${icon(l.icon)}${l.title}</h2>
@@ -558,17 +580,19 @@ function renderFixed() {
   }).join('')}`;
 }
 
-function toggleDone(key, on) { saveWeek(selWeek(), { done: { [key]: on } }); render(); }
-function findItem(key) {
+function toggleDone(key, iso, on) { saveWeek(weekOf(iso), { done: { [key]: on } }); render(); }
+function findItem(key, iso) {
   if (key.startsWith('fixed:')) return { mode: 'fixed', fixedId: key.slice(6) };
-  const [fid, iso] = key.split('_');
-  if (iso) return { mode: 'fixed', fixedId: fid, iso };
-  return { mode: 'week', id: key };
+  const [fid, fiso] = key.split('_');
+  if (fiso) return { mode: 'fixed', fixedId: fid, iso: fiso };
+  return { mode: 'week', id: key, iso };
 }
 
 $('view').addEventListener('click', e => {
   const t = e.target, act = t.closest('[data-act]')?.dataset.act;
-  if (view !== 'rotina') return;
+  if (view !== 'rotina' && view !== 'treino') return;
+  if (act === 'addex') return editActivity({ mode: 'new', iso: t.closest('[data-iso]').dataset.iso, exercise: true });
+  if (act === 'addexfixed') return editActivity({ mode: 'newFixed', wd: parse(selDay).getDay(), exercise: true });
   if (t.closest('[data-sub]')) { sub = t.closest('[data-sub]').dataset.sub; remember(); return render(); }
   if (t.closest('[data-day]')) { const b = t.closest('[data-day]'); selDay = b.dataset.day; if (b.dataset.go) { sub = 'dia'; remember(); } return render(); }
   if (act === 'prev' || act === 'next') { selDay = addDays(selDay, act === 'prev' ? -7 : 7); return render(); }
@@ -576,8 +600,8 @@ $('view').addEventListener('click', e => {
   if (act === 'add') return editActivity({ mode: 'new', iso: t.closest('[data-iso]').dataset.iso });
   if (act === 'addfixed') return editActivity({ mode: 'newFixed', wd: +t.closest('[data-wd]').dataset.wd });
   if (act === 'restore') {
-    const iso = t.dataset.iso, w = weekDoc(selWeek());
-    saveWeek(selWeek(), { skip: (w.skip || []).filter(k => !k.endsWith('_' + iso)) }); return render();
+    const iso = t.dataset.iso, w = weekDoc(weekOf(iso));
+    saveWeek(weekOf(iso), { skip: (w.skip || []).filter(k => !k.endsWith('_' + iso)) }); return render();
   }
   if (act === 'addgoal') {
     const panel = t.closest('.panel'), arr = goalList(panel);
@@ -592,15 +616,19 @@ $('view').addEventListener('click', e => {
     return;
   }
   const row = t.closest('[data-key]'); if (!row) return;
-  if (t.classList.contains('chk')) return toggleDone(row.dataset.key, t.checked);
-  editActivity(findItem(row.dataset.key));
+  if (t.classList.contains('chk')) return toggleDone(row.dataset.key, row.dataset.iso, t.checked);
+  editActivity(findItem(row.dataset.key, row.dataset.iso));
 });
 $('view').addEventListener('keydown', e => {
   if (e.key === 'Enter' && e.target.matches('.row-item, .card')) e.target.click();
   if (e.key === 'Enter' && e.target.tagName === 'TEXTAREA') { e.preventDefault(); e.target.blur(); }
 });
-function goalList(panel) { return ((weekDoc(selWeek()).lists || {})[panel.dataset.list] || []).map(x => ({ ...x })); }
-function saveGoal(panel, arr) { saveWeek(selWeek(), { lists: { [panel.dataset.list]: arr } }); }
+function goalList(panel) { return ((goals.get(selWeek())?.lists || {})[panel.dataset.list] || []).map(x => ({ ...x })); }
+function saveGoal(panel, arr) {
+  const id = selWeek(), doc = { lists: { prioridades: [], academicas: [], pessoais: [], ...(goals.get(id)?.lists || {}), [panel.dataset.list]: arr } };
+  goals.set(id, doc);
+  queue(() => db.doc('goals/' + id).set(doc));
+}
 $('view').addEventListener('change', e => {
   if (e.target.tagName !== 'TEXTAREA') return;
   const panel = e.target.closest('.panel'), arr = goalList(panel);
@@ -621,7 +649,7 @@ function openForm({ title, note, fields, onSave, onDelete, deleteLabel, extra })
     if (f.type === 'icons') return `<label class="full">${f.label}<div class="icon-pick" id="${id}" data-value="${esc(f.value || '')}">
       <button type="button" data-icon="" title="sem ícone"><span class="none">∅</span></button>
       ${PICKABLE.map(n => `<button type="button" data-icon="${n}" title="${CATS[ICON_CAT[n]].label}" style="--k:${CATS[ICON_CAT[n]].color}" class="${n === f.value ? 'on' : ''}">${icon(n)}</button>`).join('')}</div></label>`;
-    return `<label class="${cls}">${f.label}<input type="${f.type || 'text'}" id="${id}" value="${esc(f.value ?? '')}" placeholder="${esc(f.placeholder || '')}" ${f.type === 'number' ? 'min="0" inputmode="numeric"' : ''}></label>`;
+    return `<label class="${cls}">${f.label}<input type="${f.type || 'text'}" id="${id}" ${f.list ? `list="${f.list}"` : ''} value="${esc(f.value ?? '')}" placeholder="${esc(f.placeholder || '')}" ${f.type === 'number' ? 'min="0" inputmode="numeric"' : ''}></label>`;
   }).join('');
   const del = $('fDelete');
   del.hidden = !onDelete; del.classList.remove('armed'); del.textContent = deleteLabel || 'Excluir';
@@ -655,19 +683,20 @@ $('fDelete').onclick = () => {
 // Editor de atividade (da semana ou fixa)
 function editActivity(c) {
   const isFixed = c.mode === 'fixed' || c.mode === 'newFixed';
-  const ws = c.iso ? weekOf(c.iso) : selWeek();
-  let it = { time: '', text: '', sub: '', icon: 'coracao', hl: false };
+  const ws = weekOf(c.iso || selDay), block = blockOf(c.iso || selDay);
+  let it = { time: '', text: '', sub: '', icon: c.exercise ? 'academia' : 'coracao', hl: false };
   if (c.mode === 'week') it = weekDoc(ws).items.find(x => x.id === c.id);
   if (c.mode === 'fixed') it = fixed.find(x => x.id === c.fixedId);
   if (!it) return;
-  const whenOpts = isFixed ? DAYS.map((d, i) => [i, d]) : DAYS.map((d, i) => [addDays(ws, i), `${d} ${ddmm(addDays(ws, i))}`]);
+  const whenOpts = isFixed ? DAYS.map((d, i) => [i, d]) : blockDays(block).map(iso => [iso, `${DAYS[parse(iso).getDay()]} ${ddmm(iso)}`]);
+  if (!isFixed && it.date && !whenOpts.some(o => o[0] === it.date)) whenOpts.unshift([it.date, `${DAYS[parse(it.date).getDay()]} ${ddmm(it.date)}`]);
   openForm({
-    title: c.mode.startsWith('new') ? 'Nova atividade' : 'Editar atividade',
+    title: c.mode.startsWith('new') ? (c.exercise ? 'Novo treino' : 'Nova atividade') : 'Editar atividade',
     note: c.mode === 'fixed' ? 'Atividade fixa: mudanças aqui valem para todas as semanas.' : '',
     fields: [
       { name: 'time', label: 'Horário', value: it.time, placeholder: 'ex.: 14:00 – 18:00' },
       { name: 'when', label: isFixed ? 'Dia da semana' : 'Dia', type: 'select', options: whenOpts, value: isFixed ? (it.weekday ?? c.wd) : (it.date || c.iso) },
-      { name: 'text', label: 'Atividade', value: it.text, full: true, placeholder: 'ex.: Faculdade' },
+      { name: 'text', label: 'Atividade', value: it.text, full: true, placeholder: c.exercise ? 'ex.: Pilates' : 'ex.: Faculdade', list: c.exercise ? 'ex-names' : '' },
       { name: 'sub', label: 'Detalhe (opcional)', value: it.sub, full: true, placeholder: 'ex.: (bloco 1 – revisão)' },
       { name: 'icon', label: 'Tipo (a cor segue o tipo)', type: 'icons', value: it.icon },
       { name: 'hl', label: 'Destacar', type: 'check', value: it.hl },
@@ -695,6 +724,43 @@ function editActivity(c) {
       selDay = v.when;
     }
   });
+}
+
+// ================= Atividade física =================
+// Não tem lista separada: mostra as atividades da rotina do tipo Exercício.
+// Criar ou editar um treino aqui muda a rotina, e vice-versa.
+const isExercise = it => catOf(it) === 'exercicio';
+function spanMinutes(t) {
+  const m = (t || '').match(/(\d{1,2}):(\d{2})\D+(\d{1,2}):(\d{2})/);
+  return m ? Math.max(0, (+m[3] * 60 + +m[4]) - (+m[1] * 60 + +m[2])) : 60;
+}
+function renderTraining() {
+  const days = blockDays(selWeek()).map(iso => ({ iso, list: dayItems(iso).list.filter(isExercise) }));
+  const all = days.flatMap(d => d.list), done = all.filter(isDone);
+  const mins = done.reduce((a, it) => a + spanMinutes(it.time), 0);
+  const plannedMins = all.reduce((a, it) => a + spanMinutes(it.time), 0);
+  const hrs = m => m >= 60 ? `${Math.floor(m / 60)}h${m % 60 ? String(m % 60).padStart(2, '0') : ''}` : `${m} min`;
+  const fixedEx = fixed.filter(isExercise).sort((a, b) => a.weekday - b.weekday || minutes(a) - minutes(b));
+  $('view').innerHTML = `
+    ${weekbar(`${done.length} de ${all.length} treinos feitos`, all.length ? done.length / all.length : 0)}
+    <div class="exsum">
+      <div class="stat"><b>${done.length}/${all.length}</b><span>treinos feitos</span></div>
+      <div class="stat"><b>${hrs(mins)}</b><span>de ${hrs(plannedMins)} planejados</span></div>
+      <div class="stat"><b>${days.filter(d => d.list.length).length}</b><span>dias com treino</span></div>
+    </div>
+    <p class="link-note">Tudo daqui também aparece na Minha rotina, no dia e horário certos. E o que você marcar como exercício na rotina aparece aqui.</p>
+    ${days.map(d => {
+      const i = parse(d.iso).getDay();
+      return `<section class="fixed-day exday c-${i}" data-iso="${d.iso}">
+        <h3>${DAYS[i]} ${ddmm(d.iso)}${d.iso === TODAY ? ' · hoje' : ''}${d.list.length ? '' : ' <span class="rest">dia de descanso</span>'}</h3>
+        ${d.list.map(it => rowItem(it, isDone(it))).join('')}
+        <button class="add" data-act="addex">+ treino</button>
+      </section>`;
+    }).join('')}
+    <section class="shelf"><h3>Treinos fixos (toda semana)</h3>
+      ${fixedEx.map(f => rowItem({ ...f, key: 'fixed:' + f.id, text: `${DAYS[f.weekday]} · ${f.text}` }, false, false)).join('') || '<div class="empty">Nenhum treino fixo.</div>'}
+      <button class="add" data-act="addexfixed" style="--c:var(--green)">+ treino fixo</button>
+    </section>`;
 }
 
 // ================= Livros =================
@@ -771,7 +837,7 @@ function editShow(s) {
 
 // Cliques em livros e filmes
 $('view').addEventListener('click', e => {
-  if (view === 'rotina') return;
+  if (view === 'rotina' || view === 'treino') return;
   const t = e.target;
   if (t.closest('[data-new]')) return t.closest('[data-new]').dataset.new === 'book' ? editBook() : editShow();
   const bc = t.closest('[data-book]'), sc = t.closest('[data-show]');
@@ -807,6 +873,7 @@ render();
   const later = () => { if (!typing()) render(); };
   db.collection('fixed').onSnapshot(s => { fixed = s.docs.map(d => ({ id: d.id, ...d.data() })); later(); }, lost);
   db.collection('weeks').onSnapshot(s => { weeks.clear(); s.docs.forEach(d => weeks.set(d.id, { ...blankWeek(d.id), ...d.data() })); later(); }, lost);
+  db.collection('goals').onSnapshot(s => { goals.clear(); s.docs.forEach(d => goals.set(d.id, d.data())); later(); }, lost);
   db.collection('books').onSnapshot(s => { books = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.updated || 0) - (a.updated || 0)); later(); }, lost);
   db.collection('shows').onSnapshot(s => { shows = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.updated || 0) - (a.updated || 0)); later(); }, lost);
   document.addEventListener('focusout', () => setTimeout(later, 60));
