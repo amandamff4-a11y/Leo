@@ -4,7 +4,10 @@ import json, os, sys
 
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 src = open(os.path.join(root, 'planejamento-semana.html'), encoding='utf-8').read()
-data_dir = sys.argv[1] if len(sys.argv) > 1 else None
+args = sys.argv[1:]
+pwa = '--pwa' in args
+args = [a for a in args if a != '--pwa']
+data_dir = args[0] if args else None
 
 seed = {c: {} for c in ('fixed', 'weeks', 'goals', 'books', 'shows')}
 if data_dir:
@@ -39,6 +42,7 @@ shim = r'''
   const SEED = __SEED__;
   let data = null;
   try { data = JSON.parse(localStorage.getItem(KEY)); } catch {}
+  const fresh = !data;
   if (!data) data = JSON.parse(JSON.stringify(SEED));
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch {} };
   save();
@@ -68,6 +72,14 @@ shim = r'''
   box.innerHTML = '<p>Seus dados ficam salvos neste navegador. Guarde uma cópia de vez em quando, ou use a cópia para levar o planner para outro aparelho.</p>' +
     '<button class="btn" id="bkSave">Baixar cópia dos dados</button><button class="btn" id="bkLoad">Abrir cópia</button><input type="file" id="bkFile" accept="application/json,.json" hidden>';
   document.querySelector('.wrap').appendChild(box);
+  // Primeira vez abrindo sem dados: mostra como trazer a agenda de um arquivo de cópia
+  if (fresh && !Object.values(data).some(c => Object.keys(c).length)) {
+    const hi = document.createElement('div');
+    hi.className = 'notice';
+    hi.innerHTML = '<b>Bem-vinda ao seu planner! ♡</b><br>Para trazer a sua agenda, toque em <b>Abrir cópia</b> e escolha o arquivo <b>meus-dados.json</b>. Ou comece do zero adicionando suas atividades.<br><button class="btn primary" style="margin-top:8px" id="bkLoad2">Abrir cópia</button>';
+    document.querySelector('.mainnav').after(hi);
+    document.getElementById('bkLoad2').onclick = () => file.click();
+  }
   document.getElementById('bkSave').onclick = () => {
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
@@ -91,5 +103,20 @@ out = ('<!doctype html>\n<html lang="pt-BR">\n<head>\n<meta charset="utf-8">\n'
        '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
        + head + '\n</head>\n<body>\n<div class="wrap">' + NOJS + body[:main_script] + shim + body[main_script:] + '\n</body>\n</html>\n')
 out = out.replace('<title>Planejamento da Semana</title>', '<title>Meu Planner</title>')
-open(os.path.join(root, 'meu-planner.html'), 'w', encoding='utf-8').write(out)
-print('meu-planner.html', len(out), 'bytes;', {c: len(v) for c, v in seed.items()})
+if pwa:
+    # Versão instalável: ícone, tela cheia e funcionamento sem internet
+    out = out.replace('<title>Meu Planner</title>', '''<title>Meu Planner</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Meu Planner">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#fdf8f4">''')
+    out = out.replace('\n</body>', "\n<script>if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js');</script>\n</body>")
+    target = os.path.join(root, 'docs', 'index.html')
+else:
+    target = os.path.join(root, 'meu-planner.html')
+open(target, 'w', encoding='utf-8').write(out)
+print(target, len(out), 'bytes;', {c: len(v) for c, v in seed.items()})
