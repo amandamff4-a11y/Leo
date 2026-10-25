@@ -4,274 +4,281 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Pathway+Gothic+One&family=Rozha+One&display=swap" rel="stylesheet">
 <style>
-  /* Layout: abas de semanas no topo, 7 colunas de dias (domingo a sábado), listas da semana embaixo — igual ao planner em papel */
+  /* Layout: menu principal (Rotina, Livros, Filmes e séries) → na rotina: semana → dia → manhã/tarde/noite, como um planner em camadas */
   :root {
-    --bg: #fdf8f4;
-    --surface: #fffaf8;
-    --ink: #3d3b52;
-    --muted: #6f6b82;
-    --title: #d6336c;
-    --script: #3b3a6b;
-    --line: #3d3b5214;
-    --pink: #e64980;
-    --orange: #e8590c;
-    --peach: #f08c00;
-    --green: #2b8a3e;
-    --blue: #1c7ed6;
-    --purple: #6741d9;
-    --indigo: #3b4cc0;
-    --danger: #c92a2a;
-    --shadow: #3d3b5233;
+    --bg: #fdf8f4; --surface: #fffaf8; --raised: #ffffff;
+    --ink: #3d3b52; --muted: #6f6b82; --line: #3d3b521a;
+    --title: #d6336c; --script: #3b3a6b; --shadow: #3d3b5226;
+    --pink: #e64980; --orange: #e8590c; --peach: #e67700; --green: #2b8a3e;
+    --blue: #1c7ed6; --purple: #6741d9; --indigo: #3b4cc0; --slate: #6c7a89; --gold: #c28a00; --danger: #c92a2a;
     --f-display: "Rozha One", Georgia, serif;
     --f-body: "Pathway Gothic One", "Arial Narrow", sans-serif;
     --f-hand: "Caveat", "Segoe Print", cursive;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #1d1b26; --surface: #25222f; --ink: #ece8f4; --muted: #a9a4bb; --title: #f783ac; --script: #c5c2f0;
-      --line: #ffffff14; --pink: #f783ac; --orange: #ff922b; --peach: #ffc078; --green: #69db7c; --blue: #74c0fc;
-      --purple: #b197fc; --indigo: #91a7ff; --danger: #ff8787; --shadow: #0008; color-scheme: dark;
+      --bg: #1d1b26; --surface: #25222f; --raised: #2c2938; --ink: #ece8f4; --muted: #a9a4bb; --line: #ffffff1a;
+      --title: #f783ac; --script: #c5c2f0; --shadow: #0009;
+      --pink: #f783ac; --orange: #ff922b; --peach: #ffc078; --green: #69db7c; --blue: #74c0fc; --purple: #b197fc;
+      --indigo: #91a7ff; --slate: #adb5bd; --gold: #ffd43b; --danger: #ff8787; color-scheme: dark;
     }
   }
   :root[data-theme="dark"] {
-    --bg: #1d1b26; --surface: #25222f; --ink: #ece8f4; --muted: #a9a4bb; --title: #f783ac; --script: #c5c2f0;
-    --line: #ffffff14; --pink: #f783ac; --orange: #ff922b; --peach: #ffc078; --green: #69db7c; --blue: #74c0fc;
-    --purple: #b197fc; --indigo: #91a7ff; --danger: #ff8787; --shadow: #0008; color-scheme: dark;
+    --bg: #1d1b26; --surface: #25222f; --raised: #2c2938; --ink: #ece8f4; --muted: #a9a4bb; --line: #ffffff1a;
+    --title: #f783ac; --script: #c5c2f0; --shadow: #0009;
+    --pink: #f783ac; --orange: #ff922b; --peach: #ffc078; --green: #69db7c; --blue: #74c0fc; --purple: #b197fc;
+    --indigo: #91a7ff; --slate: #adb5bd; --gold: #ffd43b; --danger: #ff8787; color-scheme: dark;
   }
   * { box-sizing: border-box; }
-  body {
-    background: var(--bg); color: var(--ink);
-    font-family: var(--f-body); font-size: 17px; letter-spacing: .2px;
-  }
+  body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 18px; letter-spacing: .2px; }
   .wrap {
-    max-width: 1480px; margin: 0 auto;
-    padding-block: 16px 40px;
-    padding-left: max(16px, env(safe-area-inset-left, 0px));
-    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    max-width: 1180px; margin: 0 auto; padding-block: 14px 48px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
   }
-  button { font: inherit; color: inherit; }
-  button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--title); outline-offset: 2px; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, .row-item:focus-visible { outline: 2px solid var(--title); outline-offset: 2px; }
+  .tint { background: color-mix(in srgb, var(--c, var(--pink)) 13%, var(--surface)); }
 
-  /* Cabeçalho */
+  /* ---------- Cabeçalho ---------- */
   header { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; }
-  .hand { font-family: var(--f-hand); color: var(--script); font-size: 23px; line-height: 1.05; }
-  .hand.left { transform: rotate(-10deg); justify-self: start; }
-  .hand.right { transform: rotate(-12deg); justify-self: end; color: var(--title); }
-  .title-block { text-align: center; }
-  h1 {
-    margin: 0; font-family: var(--f-display); font-weight: normal; color: var(--title);
-    font-size: clamp(30px, 5vw, 58px); line-height: 1.05; transform: rotate(-1.5deg); text-wrap: balance;
-  }
-  .period {
-    display: inline-block; margin-top: 6px; padding: 3px 26px; border-radius: 999px;
-    background: color-mix(in srgb, var(--pink) 14%, var(--surface)); color: var(--ink);
-    font-size: clamp(18px, 2.4vw, 26px);
-  }
-  @media (max-width: 760px) {
+  .hand { font-family: var(--f-hand); color: var(--script); font-size: 22px; line-height: 1.05; }
+  .hand.left { transform: rotate(-9deg); justify-self: start; }
+  .hand.right { transform: rotate(-10deg); justify-self: end; color: var(--title); }
+  h1 { margin: 0; text-align: center; font-family: var(--f-display); font-weight: normal; color: var(--title); font-size: clamp(28px, 4.6vw, 50px); line-height: 1.05; transform: rotate(-1.5deg); text-wrap: balance; }
+  @media (max-width: 700px) {
     header { grid-template-columns: 1fr 1fr; }
-    .title-block { grid-column: 1 / -1; grid-row: 1; }
-    .hand { font-size: 19px; }
+    h1 { grid-column: 1 / -1; grid-row: 1; }
+    .hand { font-size: 18px; }
   }
 
-  /* Abas de semanas */
-  .tabs-row { display: flex; gap: 10px; align-items: center; margin: 18px 0 10px; }
-  .tabs { display: flex; gap: 6px; overflow-x: auto; padding: 4px 2px; flex: 1; min-width: 0; scrollbar-width: thin; }
-  .tab {
-    flex: none; border: 1px solid var(--line); background: var(--surface); border-radius: 999px;
-    padding: 6px 14px; cursor: pointer; font-size: 17px; white-space: nowrap; font-variant-numeric: tabular-nums;
+  /* ---------- Menu principal ---------- */
+  .mainnav { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 18px 0 16px; }
+  .mainnav button {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 10px 8px;
+    font-size: 20px; text-transform: uppercase; letter-spacing: .8px;
   }
-  .tab:hover { border-color: var(--title); }
-  .tab.on { background: var(--title); border-color: var(--title); color: var(--bg); }
-  .tab small { opacity: .75; font-size: 14px; margin-left: 4px; }
-  .tab.fixed-tab { border-style: dashed; }
-  .tab.add { color: var(--title); border-style: dashed; }
-  .progress {
-    flex: none; display: flex; align-items: center; gap: 8px; font-size: 16px; color: var(--muted);
+  .mainnav button[aria-current="page"] { background: var(--title); border-color: var(--title); color: var(--bg); }
+  .mainnav button[aria-current="page"] .ico { color: var(--bg); }
+  .mainnav .ico { color: var(--title); }
+  @media (max-width: 520px) { .mainnav button { flex-direction: column; gap: 2px; font-size: 16px; } }
+
+  /* ---------- Barra da semana ---------- */
+  .weekbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .weekbar .arrow { border: 1px solid var(--line); background: var(--surface); width: 38px; height: 38px; border-radius: 50%; font-size: 22px; line-height: 1; }
+  .weekbar .label { font-size: 24px; min-width: 0; }
+  .weekbar .label small { display: block; font-size: 15px; color: var(--muted); }
+  .weekbar .today-btn { border: 1px dashed var(--title); color: var(--title); background: none; border-radius: 999px; padding: 4px 12px; font-size: 16px; }
+  .weekbar .prog { margin-left: auto; display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 16px; }
+  .bar { width: 120px; height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; display: inline-block; }
+  .bar i { display: block; height: 100%; background: var(--c, var(--title)); border-radius: 99px; transition: width .3s; }
+  @media (max-width: 620px) { .weekbar .prog { width: 100%; margin-left: 0; } .weekbar .prog .bar { flex: 1; } }
+
+  .subnav { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 14px; overflow-x: auto; }
+  .subnav button { flex: none; border: 0; background: none; padding: 8px 12px; font-size: 18px; color: var(--muted); border-bottom: 3px solid transparent; margin-bottom: -1px; }
+  .subnav button[aria-selected="true"] { color: var(--title); border-bottom-color: var(--title); }
+
+  /* ---------- Dia a dia ---------- */
+  .strip { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-bottom: 12px; }
+  .chip {
+    --c: var(--pink); border: 1px solid color-mix(in srgb, var(--c) 30%, transparent);
+    background: var(--surface); border-radius: 12px; padding: 6px 2px; display: grid; justify-items: center; gap: 1px; position: relative;
   }
-  .bar { width: 110px; height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; }
-  .bar i { display: block; height: 100%; background: var(--title); border-radius: 99px; transition: width .3s; }
-  @media (max-width: 620px) { .tabs-row { flex-wrap: wrap; } .progress { width: 100%; } .bar { flex: 1; } }
-  .hint { color: var(--muted); font-size: 15px; margin: 0 0 12px; }
-  .notice {
-    padding: 14px 16px; border-radius: 12px; margin-bottom: 12px;
-    background: color-mix(in srgb, var(--peach) 16%, var(--surface)); color: var(--ink);
+  .chip .dow { font-size: 14px; text-transform: uppercase; color: var(--c); letter-spacing: .6px; }
+  .chip .num { font-size: 24px; line-height: 1; font-variant-numeric: tabular-nums; }
+  .chip .cnt { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .chip.on { background: var(--c); border-color: var(--c); }
+  .chip.on .dow, .chip.on .num, .chip.on .cnt { color: var(--surface); }
+  .chip.today::after { content: ""; position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--title); }
+  .chip.on.today::after { background: var(--surface); }
+  .chip.complete .cnt::before { content: "✓ "; }
+
+  .c-0 { --c: var(--pink); } .c-1 { --c: var(--orange); } .c-2 { --c: var(--peach); } .c-3 { --c: var(--green); }
+  .c-4 { --c: var(--blue); } .c-5 { --c: var(--purple); } .c-6 { --c: var(--peach); }
+
+  .daycard { background: var(--surface); border: 1px solid color-mix(in srgb, var(--c) 25%, transparent); border-radius: 16px; overflow: hidden; }
+  .daycard-head { display: flex; align-items: center; gap: 12px; padding: 12px 16px; flex-wrap: wrap; }
+  .daycard-head h2 { margin: 0; font-weight: normal; font-size: 26px; color: var(--c); }
+  .daycard-head .note { font-size: 16px; color: var(--muted); }
+  .daycard-head .prog { margin-left: auto; display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 16px; }
+  .groups { padding: 4px 16px 14px; display: grid; gap: 14px; }
+  .group h3 { margin: 0 0 4px; display: flex; align-items: center; gap: 8px; font-weight: normal; font-size: 16px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.2px; }
+  .group h3::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .group h3 .ico svg { width: 18px; height: 18px; }
+
+  .row-item {
+    --k: var(--slate);
+    display: grid; grid-template-columns: 26px 96px minmax(0, 1fr) 28px; gap: 8px; align-items: center;
+    padding: 9px 10px; border-radius: 10px; border-left: 4px solid var(--k); cursor: pointer;
+    background: color-mix(in srgb, var(--k) 6%, var(--surface)); margin-top: 5px;
+  }
+  .row-item:hover { background: color-mix(in srgb, var(--k) 12%, var(--surface)); }
+  .row-item.hl { background: color-mix(in srgb, var(--k) 15%, var(--surface)); }
+  .row-item .time { font-size: 17px; font-variant-numeric: tabular-nums; color: var(--muted); }
+  .row-item .text { font-size: 19px; line-height: 1.2; overflow-wrap: anywhere; }
+  .row-item .sub { font-size: 15px; color: var(--muted); overflow-wrap: anywhere; }
+  .row-item .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
+  .tag { font-size: 12.5px; text-transform: uppercase; letter-spacing: .7px; color: var(--k); }
+  .tag.fx { color: var(--muted); }
+  .row-item .ico { color: var(--k); justify-self: end; }
+  .row-item.done { opacity: .55; }
+  .row-item.done .text, .row-item.done .time { text-decoration: line-through; }
+  .row-item.special { grid-template-columns: 26px minmax(0, 1fr) 36px; border-left-color: var(--title); background: color-mix(in srgb, var(--pink) 14%, var(--surface)); }
+  .row-item.special .text { font-size: 23px; color: var(--title); }
+  .row-item.special .ico svg { width: 32px; height: 32px; }
+  .row-item.nochk { grid-template-columns: 96px minmax(0, 1fr) 28px; }
+  @media (max-width: 520px) {
+    .row-item { grid-template-columns: 26px 64px minmax(0, 1fr) 24px; gap: 6px; padding: 8px; }
+    .row-item.nochk { grid-template-columns: 64px minmax(0, 1fr) 24px; }
+    .row-item .time { font-size: 15px; }
   }
 
-  /* Dias */
-  .week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
-  @media (max-width: 1250px) { .week { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-  @media (max-width: 760px)  { .week { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 480px)  { .week { grid-template-columns: 1fr; } }
-  .day {
-    --c: var(--pink); --tint: color-mix(in srgb, var(--c) 14%, var(--surface));
-    background: linear-gradient(to bottom, var(--tint) 0 74px, var(--surface) 74px);
-    border: 1px solid color-mix(in srgb, var(--c) 22%, transparent);
-    border-radius: 12px; padding: 8px 6px 10px; display: flex; flex-direction: column; min-width: 0;
-  }
-  .day.today { box-shadow: 0 0 0 2px var(--c); }
-  .c-orange { --c: var(--orange); } .c-peach { --c: var(--peach); } .c-green { --c: var(--green); }
-  .c-blue { --c: var(--blue); } .c-purple { --c: var(--purple); } .c-indigo { --c: var(--indigo); }
-  .day-head { position: relative; text-align: center; color: var(--c); min-height: 62px; line-height: 1.1; }
-  .day-name { font-size: 23px; text-transform: uppercase; letter-spacing: .6px; }
-  .day-date { font-size: 21px; font-variant-numeric: tabular-nums; }
-  .day-note { font-size: 15px; }
-  .today-pill { font-size: 13px; background: var(--c); color: var(--surface); border-radius: 99px; padding: 0 8px; }
-  .day-head .ico { position: absolute; right: 2px; top: 12px; }
-  .items { display: flex; flex-direction: column; gap: 3px; flex: 1; margin-top: 6px; }
-  .empty { color: var(--muted); font-size: 15px; text-align: center; padding: 10px 4px; }
-
-  .item {
-    display: grid; grid-template-columns: 22px minmax(0, 1fr) 28px; gap: 4px; align-items: start;
-    padding: 7px 5px; border-radius: 8px; border-bottom: 1px solid var(--line);
-    cursor: pointer;
-  }
-  .item:hover { background: color-mix(in srgb, var(--c) 8%, var(--surface)); }
-  .item.hl { background: var(--tint); border-bottom-color: transparent; }
-  .item .chk {
-    appearance: none; -webkit-appearance: none; width: 16px; height: 16px; margin: 3px 0 0;
-    border: 1.6px solid var(--c); border-radius: 4px; background: var(--surface); cursor: pointer;
+  .chk {
+    appearance: none; -webkit-appearance: none; flex: none; width: 22px; height: 22px; margin: 0;
+    border: 2px solid var(--k, var(--c, var(--title))); border-radius: 6px; background: var(--raised); cursor: pointer;
     display: grid; place-content: center;
   }
-  .item .chk:checked { background: var(--c); }
-  .item .chk:checked::after, .list .chk:checked::after {
-    content: ""; width: 8px; height: 4px; border: 2px solid var(--surface); border-top: 0; border-right: 0;
-    transform: rotate(-45deg) translate(1px, -1px);
-  }
-  .item .time { font-size: 16px; font-variant-numeric: tabular-nums; }
-  .item .text { font-size: 17px; line-height: 1.2; overflow-wrap: anywhere; }
-  .item .sub { font-size: 14.5px; color: var(--muted); line-height: 1.15; overflow-wrap: anywhere; }
-  .item .fixed-mark { font-size: 12px; color: var(--c); letter-spacing: .5px; text-transform: uppercase; }
-  .item.done .time, .item.done .text, .item.done .sub { text-decoration: line-through; opacity: .45; }
-  .item .ico { color: var(--c); justify-self: end; }
-  .item.special { grid-template-columns: 22px minmax(0, 1fr); text-align: center; padding: 12px 6px; background: var(--tint); }
-  .item.special .text { font-size: 21px; color: var(--c); }
-  .item.special .ico { justify-self: center; }
-  .item.nochk { grid-template-columns: minmax(0, 1fr) 28px; }
+  .chk:checked { background: var(--k, var(--c, var(--title))); }
+  .chk:checked::after { content: ""; width: 10px; height: 5px; border: 2.5px solid var(--raised); border-top: 0; border-right: 0; transform: rotate(-45deg) translate(1px, -1px); }
 
-  .add, .restore {
-    margin-top: 6px; font-size: 15px; background: none; border: 1px dashed color-mix(in srgb, var(--c) 50%, transparent);
-    color: var(--c); border-radius: 8px; padding: 5px; cursor: pointer;
+  .add {
+    width: 100%; margin-top: 8px; font-size: 16px; background: none; border: 1px dashed color-mix(in srgb, var(--c, var(--title)) 55%, transparent);
+    color: var(--c, var(--title)); border-radius: 10px; padding: 8px;
   }
-  .restore { border: 0; padding: 2px; text-decoration: underline; }
-  .add:hover { background: var(--tint); }
+  .add:hover { background: color-mix(in srgb, var(--c, var(--title)) 8%, var(--surface)); }
+  .linkbtn { background: none; border: 0; color: var(--muted); text-decoration: underline; font-size: 15px; padding: 4px 0; }
+  .empty { color: var(--muted); font-size: 16px; padding: 14px 4px; text-align: center; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 12px; font-size: 15px; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 10px; height: 10px; border-radius: 3px; background: var(--k); display: inline-block; }
 
-  .ico svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; display: block; }
-  .special .ico svg { width: 32px; height: 32px; }
+  /* ---------- Semana inteira ---------- */
+  .weekgrid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+  @media (max-width: 1000px) { .weekgrid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  @media (max-width: 680px) { .weekgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 420px) { .weekgrid { grid-template-columns: 1fr; } }
+  .wcol { background: var(--surface); border: 1px solid color-mix(in srgb, var(--c) 25%, transparent); border-radius: 12px; overflow: hidden; min-width: 0; }
+  .wcol.today { box-shadow: 0 0 0 2px var(--c); }
+  .wcol-head { width: 100%; border: 0; padding: 8px 6px; text-align: center; color: var(--c); line-height: 1.1; }
+  .wcol-head b { font-weight: normal; display: block; font-size: 19px; text-transform: uppercase; letter-spacing: .6px; }
+  .wcol-head span { font-size: 15px; color: var(--muted); }
+  .mini { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 6px; align-items: start; padding: 6px 8px; border-top: 1px solid var(--line); border-left: 3px solid var(--k); cursor: pointer; }
+  .mini .chk { width: 17px; height: 17px; border-width: 1.6px; border-radius: 4px; margin-top: 2px; }
+  .mini .chk:checked::after { width: 8px; height: 4px; border-width: 2px; }
+  .mini .t { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .mini .x { font-size: 16px; line-height: 1.15; overflow-wrap: anywhere; }
+  .mini.done .x { text-decoration: line-through; opacity: .5; }
 
-  /* Listas da semana */
-  .panels { display: grid; grid-template-columns: 1fr 1fr 1fr .85fr; gap: 10px; margin-top: 12px; }
-  @media (max-width: 1100px) { .panels { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 620px)  { .panels { grid-template-columns: 1fr; } }
-  .panel {
-    --c: var(--pink); --tint: color-mix(in srgb, var(--c) 14%, var(--surface));
-    background: linear-gradient(to bottom, var(--tint) 0 46px, var(--surface) 46px);
-    border: 1px solid color-mix(in srgb, var(--c) 22%, transparent);
-    border-radius: 12px; padding: 10px 16px 14px; min-width: 0;
-  }
-  .panel h2 { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; font-weight: normal; font-size: 22px; color: var(--c); text-transform: uppercase; letter-spacing: .6px; }
-  .list { list-style: none; padding: 0; margin: 0; display: grid; gap: 2px; }
-  .list li { display: flex; align-items: flex-start; gap: 8px; }
-  .list .chk {
-    appearance: none; -webkit-appearance: none; flex: none; width: 16px; height: 16px; margin-top: 5px;
-    border: 1.6px solid var(--c); border-radius: 4px; background: var(--surface); cursor: pointer; display: grid; place-content: center;
-  }
-  .list .chk:checked { background: var(--c); }
-  .list textarea {
-    flex: 1; resize: none; field-sizing: content; overflow: hidden; line-height: 1.25; min-width: 0; font: inherit; font-size: 17px; color: var(--ink); background: transparent;
-    border: 0; border-radius: 4px; padding: 2px 4px;
-  }
-  .list textarea:focus { background: var(--tint); outline: none; }
-  .list li.done textarea { text-decoration: line-through; opacity: .45; }
-  .list .x { border: 0; background: none; color: var(--danger); cursor: pointer; font-size: 20px; line-height: 1; opacity: .35; }
-  .list li:hover .x, .list .x:focus-visible { opacity: 1; }
-  .panel .add { width: 100%; }
-  .remember .big {
-    font-family: var(--f-hand); font-weight: 700; color: var(--title); font-size: 32px;
-    background: color-mix(in srgb, var(--pink) 14%, var(--surface)); border-radius: 999px;
-    display: inline-block; padding: 0 18px; transform: rotate(-5deg); margin: 4px 0 8px;
-  }
-  .remember p { font-family: var(--f-hand); font-size: 23px; color: var(--script); line-height: 1.25; transform: rotate(-3deg); margin: 0; }
+  /* ---------- Metas da semana ---------- */
+  .panels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  @media (max-width: 680px) { .panels { grid-template-columns: 1fr; } }
+  .panel { --c: var(--pink); background: var(--surface); border: 1px solid color-mix(in srgb, var(--c) 25%, transparent); border-radius: 14px; padding: 0 16px 14px; min-width: 0; }
+  .panel h2 { margin: 0 -16px 10px; padding: 10px 16px; display: flex; align-items: center; gap: 10px; font-weight: normal; font-size: 21px; color: var(--c); text-transform: uppercase; letter-spacing: .6px; }
+  .list { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
+  .list li { display: flex; align-items: flex-start; gap: 10px; }
+  .list .chk { margin-top: 3px; }
+  .list textarea { flex: 1; min-width: 0; font: inherit; font-size: 18px; color: var(--ink); background: transparent; border: 0; border-radius: 4px; padding: 2px 4px; resize: none; field-sizing: content; overflow: hidden; line-height: 1.25; }
+  .list textarea:focus { background: color-mix(in srgb, var(--c) 10%, var(--surface)); outline: none; }
+  .list li.done textarea { text-decoration: line-through; opacity: .5; }
+  .list .del { border: 0; background: none; color: var(--danger); font-size: 22px; line-height: 1; opacity: .35; }
+  .list li:hover .del, .list .del:focus-visible { opacity: 1; }
+  .remember .big { font-family: var(--f-hand); font-weight: 700; color: var(--title); font-size: 32px; display: inline-block; padding: 0 16px; border-radius: 999px; background: color-mix(in srgb, var(--pink) 13%, var(--surface)); transform: rotate(-4deg); margin: 6px 0 8px; }
+  .remember p { font-family: var(--f-hand); font-size: 23px; color: var(--script); line-height: 1.25; margin: 0; }
 
-  /* Editor */
-  dialog {
-    border: 0; border-radius: 16px; padding: 0; width: min(460px, calc(100vw - 32px));
-    color: var(--ink); background: var(--surface); box-shadow: 0 20px 60px var(--shadow);
+  /* ---------- Fixas ---------- */
+  .fixed-intro { color: var(--muted); font-size: 16px; margin: 0 0 12px; }
+  .fixed-day { margin-bottom: 14px; }
+  .fixed-day h3 { margin: 0 0 2px; font-weight: normal; font-size: 20px; color: var(--c); text-transform: uppercase; letter-spacing: .8px; display: flex; align-items: center; gap: 10px; }
+  .fixed-day h3::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .fixed-day .add { width: auto; padding: 4px 12px; }
+
+  /* ---------- Livros e filmes ---------- */
+  .media-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .media-head h2 { margin: 0; font-family: var(--f-display); font-weight: normal; color: var(--title); font-size: 30px; }
+  .media-head .btn { margin-left: auto; }
+  .shelf { margin-bottom: 18px; }
+  .shelf h3 { margin: 0 0 8px; font-weight: normal; font-size: 17px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.2px; display: flex; gap: 8px; align-items: center; }
+  .shelf h3::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; }
+  .card {
+    --c: var(--purple); background: var(--surface); border: 1px solid color-mix(in srgb, var(--c) 25%, transparent);
+    border-radius: 14px; padding: 12px 14px; display: grid; gap: 6px; cursor: pointer; min-width: 0;
   }
+  .card:hover { border-color: var(--c); }
+  .card .top { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; align-items: start; }
+  .card .ttl { font-size: 21px; line-height: 1.15; overflow-wrap: anywhere; }
+  .card .by { font-size: 15px; color: var(--muted); }
+  .card .note { font-size: 15px; color: var(--muted); font-family: var(--f-hand); font-size: 20px; line-height: 1.1; }
+  .card .meta { display: flex; align-items: center; gap: 8px; font-size: 15px; color: var(--muted); flex-wrap: wrap; }
+  .card .meta .bar { flex: 1; min-width: 80px; }
+  .card.done .ttl { text-decoration: line-through; opacity: .6; }
+  .pill { font-size: 13px; text-transform: uppercase; letter-spacing: .7px; border-radius: 999px; padding: 1px 8px; background: color-mix(in srgb, var(--c) 14%, var(--surface)); color: var(--c); }
+  .step { border: 1px solid var(--line); background: var(--raised); border-radius: 999px; padding: 2px 10px; font-size: 15px; }
+  .stars { color: var(--gold); letter-spacing: 1px; }
+  .btn { border: 1px solid var(--line); background: var(--raised); padding: 6px 16px; border-radius: 999px; font-size: 17px; }
+  .btn.primary { background: var(--title); border-color: var(--title); color: var(--bg); }
+  .btn.danger { color: var(--danger); }
+  .btn.danger.armed { background: var(--danger); border-color: var(--danger); color: var(--bg); }
+  details.done-shelf summary { cursor: pointer; color: var(--muted); font-size: 17px; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 8px; }
+
+  .ico { display: inline-flex; }
+  .ico svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+  .notice { padding: 14px 16px; border-radius: 12px; margin-bottom: 12px; background: color-mix(in srgb, var(--peach) 16%, var(--surface)); }
+
+  /* ---------- Editor ---------- */
+  dialog { border: 0; border-radius: 16px; padding: 0; width: min(480px, calc(100vw - 32px)); color: var(--ink); background: var(--surface); box-shadow: 0 20px 60px var(--shadow); }
   dialog::backdrop { background: #1d1b2666; }
   dialog form { padding: 20px; display: grid; gap: 12px; }
   dialog h3 { margin: 0; font-family: var(--f-display); color: var(--title); font-weight: normal; font-size: 25px; }
-  .fixed-note { margin: -6px 0 0; font-size: 15px; color: var(--muted); }
-  dialog label { display: grid; gap: 4px; font-size: 15px; color: var(--muted); }
-  dialog input[type=text], dialog select {
-    font: inherit; font-size: 18px; color: var(--ink); background: var(--bg);
-    border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; width: 100%;
+  .form-note { margin: -6px 0 0; font-size: 15px; color: var(--muted); }
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+  .fields label { display: grid; gap: 4px; font-size: 15px; color: var(--muted); min-width: 0; }
+  .fields .full { grid-column: 1 / -1; }
+  .fields input[type=text], .fields input[type=number], .fields select {
+    font: inherit; font-size: 18px; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; width: 100%;
   }
-  dialog .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  dialog .check { display: flex; align-items: center; gap: 8px; color: var(--ink); font-size: 17px; }
+  .fields .check { display: flex; align-items: center; gap: 8px; color: var(--ink); font-size: 17px; }
   .icon-pick { display: flex; flex-wrap: wrap; gap: 5px; }
-  .icon-pick button { border: 1px solid var(--line); background: var(--bg); border-radius: 8px; padding: 4px; cursor: pointer; color: var(--ink); }
-  .icon-pick button.on { border-color: var(--title); color: var(--title); background: color-mix(in srgb, var(--pink) 14%, var(--surface)); }
+  .icon-pick button { --k: var(--slate); border: 1px solid var(--line); background: var(--bg); border-radius: 8px; padding: 4px; color: var(--k); }
+  .icon-pick button.on { border-color: var(--k); background: color-mix(in srgb, var(--k) 16%, var(--surface)); }
   .icon-pick .ico svg { width: 21px; height: 21px; }
-  .icon-pick .none { width: 21px; height: 21px; display: grid; place-content: center; }
+  .icon-pick .none { width: 21px; height: 21px; display: grid; place-content: center; color: var(--muted); }
   .actions { display: flex; gap: 8px; justify-content: space-between; flex-wrap: wrap; margin-top: 4px; }
   .actions span { display: flex; gap: 8px; flex-wrap: wrap; }
-  .btn { border: 1px solid var(--line); background: var(--bg); padding: 6px 14px; border-radius: 999px; cursor: pointer; font-size: 16px; }
-  .btn.primary { background: var(--title); border-color: var(--title); color: var(--bg); }
-  .btn.danger { color: var(--danger); }
-  .btn.danger.armed { background: var(--danger); color: var(--bg); }
-
-  .toast {
-    position: fixed; left: 50%; transform: translateX(-50%);
-    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
-    background: var(--ink); color: var(--bg); padding: 8px 16px; border-radius: 999px; font-size: 16px;
-    max-width: calc(100vw - 32px);
-  }
+  .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--bg); padding: 8px 16px; border-radius: 999px; font-size: 16px; max-width: calc(100vw - 32px); z-index: 5; }
   @media (prefers-reduced-motion: reduce) { .bar i { transition: none; } }
 </style>
 
 <div class="wrap">
   <header>
     <div class="hand left">disciplina<br>também é<br>amor próprio ♡</div>
-    <div class="title-block">
-      <h1>PLANEJAMENTO DA SEMANA</h1>
-      <div class="period" id="period">carregando…</div>
-    </div>
+    <h1>PLANEJAMENTO DA SEMANA</h1>
     <div class="hand right">foco<br>organização<br>evolução<br>momentos bons ♡</div>
   </header>
 
-  <div class="tabs-row">
-    <nav class="tabs" id="tabs" aria-label="Semanas"></nav>
-    <div class="progress" id="progress"></div>
-  </div>
-  <p class="hint" id="hint"></p>
-  <div class="notice" id="notice" hidden></div>
+  <nav class="mainnav" id="mainnav" aria-label="Seções">
+    <button data-view="rotina"><span class="ico" data-icon="agenda"></span>Minha rotina</button>
+    <button data-view="livros"><span class="ico" data-icon="livro"></span>Livros</button>
+    <button data-view="filmes"><span class="ico" data-icon="filme"></span>Filmes e séries</button>
+  </nav>
 
-  <main class="week" id="week"></main>
-  <section class="panels" id="panels"></section>
+  <div class="notice" id="notice" hidden></div>
+  <main id="view"></main>
 </div>
 
 <dialog id="dlg">
   <form id="form">
-    <h3 id="dlgTitle">Editar</h3>
-    <p class="fixed-note" id="fixedNote" hidden>Atividade fixa: aparece em todas as semanas. Mudanças aqui valem para todas.</p>
-    <div class="row">
-      <label>Horário<input type="text" id="fTime" name="time" placeholder="ex.: 14:00 – 18:00 ou Tarde"></label>
-      <label><span id="whenLabel">Dia</span><select id="fWhen" name="when"></select></label>
-    </div>
-    <label>Atividade<input type="text" id="fText" name="text" placeholder="ex.: Faculdade" required></label>
-    <label>Detalhe (opcional)<input type="text" id="fSub" name="sub" placeholder="ex.: (bloco 1 – revisão)"></label>
-    <label>Ícone<div class="icon-pick" id="iconPick"></div></label>
-    <div class="row">
-      <label class="check"><input type="checkbox" id="fHl" name="hl"> Destacar</label>
-      <label class="check" id="repeatWrap"><input type="checkbox" id="fRepeat" name="repeat"> Repete toda semana</label>
-    </div>
+    <h3 id="fTitle"></h3>
+    <p class="form-note" id="fNote" hidden></p>
+    <div class="fields" id="fFields"></div>
     <div class="actions">
       <span>
-        <button type="button" class="btn danger" id="btnDelete">Excluir</button>
-        <button type="button" class="btn" id="btnSkip" hidden>Pular nesta semana</button>
+        <button type="button" class="btn danger" id="fDelete">Excluir</button>
+        <button type="button" class="btn" id="fExtra" hidden></button>
       </span>
       <span>
-        <button type="button" class="btn" id="btnCancel">Cancelar</button>
+        <button type="button" class="btn" id="fCancel">Cancelar</button>
         <button type="submit" class="btn primary">Salvar</button>
       </span>
     </div>
@@ -279,68 +286,96 @@
 </dialog>
 
 <script>
+// ================= Ícones e categorias =================
 const ICONS = {
+  agenda: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 14h2M12 14h2M16 14h0M8 17h2"/>',
+  filme: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M7 5l2 4M12 5l2 4M17 5l2 4"/>',
   cafe: '<path d="M4 9h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 10h2a2.5 2.5 0 0 1 0 5h-2"/><path d="M8 3c0 1.5 1 1.5 1 3M12 3c0 1.5 1 1.5 1 3"/>',
-  carro: '<path d="M3 15v-3l2-5h14l2 5v3"/><rect x="2" y="12" width="20" height="5" rx="1.5"/><circle cx="7" cy="17.5" r="1.5"/><circle cx="17" cy="17.5" r="1.5"/>',
-  notebook: '<rect x="4" y="5" width="16" height="11" rx="1"/><path d="M2 19h20"/>',
-  livro: '<path d="M2 5c3-1 7-1 10 1v14c-3-2-7-2-10-1z"/><path d="M22 5c-3-1-7-1-10 1v14c3-2 7-2 10-1z"/>',
   comida: '<path d="M6 3v7a2 2 0 0 0 4 0V3M8 3v18"/><path d="M17 3c-2 0-3 3-3 6s1 3 3 3v9"/>',
-  coracao: '<path d="M12 20s-8-5-8-11a4.5 4.5 0 0 1 8-2.5A4.5 4.5 0 0 1 20 9c0 6-8 11-8 11z"/>',
-  lua: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
-  tenis: '<ellipse cx="15" cy="8" rx="5" ry="6" transform="rotate(40 15 8)"/><path d="M11 12l-8 9M12 5l6 6M10 8l6 6"/>',
-  academia: '<path d="M2 12h20M5 8v8M8 6v12M16 6v12M19 8v8"/>',
+  livro: '<path d="M2 5c3-1 7-1 10 1v14c-3-2-7-2-10-1z"/><path d="M22 5c-3-1-7-1-10 1v14c3-2 7-2 10-1z"/>',
+  notebook: '<rect x="4" y="5" width="16" height="11" rx="1"/><path d="M2 19h20"/>',
   prova: '<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M8 8h8M8 12h8M8 16h5"/>',
   apresentacao: '<rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 21h8M7 12l3-3 2 2 4-4"/>',
-  taca: '<path d="M7 3h10l-1 6a4 4 0 0 1-8 0z"/><path d="M12 13v7M8 21h8"/>',
-  lista: '<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M8 8h1M11 8h5M8 12h1M11 12h5M8 16h1M11 16h5"/>',
-  sol: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
-  laco: '<path d="M12 11c-3-5-9-6-9-2s6 4 9 2zM12 11c3-5 9-6 9-2s-6 4-9 2z"/><path d="M11 12l-4 8M13 12l4 8"/>',
-  folha: '<path d="M12 21V8"/><path d="M12 12c-4 0-6-3-6-7 4 0 6 3 6 7zM12 9c3 0 5-2 5-6-3 0-5 2-5 6z"/>',
-  bolo: '<rect x="4" y="12" width="16" height="8" rx="1.5"/><path d="M4 15c2 1.5 4 1.5 6 0s4-1.5 6 0 4 1.5 4 0"/><path d="M7 12V9h10v3M12 9V6"/><circle cx="12" cy="4.5" r="1"/>',
   capelo: '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5M22 9v6"/>',
+  academia: '<path d="M2 12h20M5 8v8M8 6v12M16 6v12M19 8v8"/>',
+  tenis: '<ellipse cx="15" cy="8" rx="5" ry="6" transform="rotate(40 15 8)"/><path d="M11 12l-8 9M12 5l6 6M10 8l6 6"/>',
+  carro: '<path d="M3 15v-3l2-5h14l2 5v3"/><rect x="2" y="12" width="20" height="5" rx="1.5"/><circle cx="7" cy="17.5" r="1.5"/><circle cx="17" cy="17.5" r="1.5"/>',
+  lista: '<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M8 8h1M11 8h5M8 12h1M11 12h5M8 16h1M11 16h5"/>',
+  medico: '<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v3a4 4 0 0 0 8 0v-2"/><circle cx="18" cy="12" r="2"/>',
+  coracao: '<path d="M12 20s-8-5-8-11a4.5 4.5 0 0 1 8-2.5A4.5 4.5 0 0 1 20 9c0 6-8 11-8 11z"/>',
+  taca: '<path d="M7 3h10l-1 6a4 4 0 0 1-8 0z"/><path d="M12 13v7M8 21h8"/>',
+  bolo: '<rect x="4" y="12" width="16" height="8" rx="1.5"/><path d="M4 15c2 1.5 4 1.5 6 0s4-1.5 6 0 4 1.5 4 0"/><path d="M7 12V9h10v3M12 9V6"/><circle cx="12" cy="4.5" r="1"/>',
   estrela: '<path d="M12 3l2.8 5.8 6.2.9-4.5 4.4 1 6.2L12 17.4 6.5 20.3l1-6.2L3 9.7l6.2-.9z"/>',
-  medico: '<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v3a4 4 0 0 0 8 0v-2"/><circle cx="18" cy="12" r="2"/>'
+  lua: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+  sol: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  tarde: '<path d="M3 18h18M6 18a6 6 0 0 1 12 0M12 6v2M5.6 10.6l1.4 1.4M18.4 10.6 17 12"/>',
+  laco: '<path d="M12 11c-3-5-9-6-9-2s6 4 9 2zM12 11c3-5 9-6 9-2s-6 4-9 2z"/><path d="M11 12l-4 8M13 12l4 8"/>',
+  folha: '<path d="M12 21V8"/><path d="M12 12c-4 0-6-3-6-7 4 0 6 3 6 7zM12 9c3 0 5-2 5-6-3 0-5 2-5 6z"/>'
 };
 const icon = n => n && ICONS[n] ? `<span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg></span>` : '<span class="ico"></span>';
+document.querySelectorAll('[data-icon]').forEach(el => el.outerHTML = icon(el.dataset.icon));
+
+// O ícone define a categoria (e a cor) da atividade
+const CATS = {
+  estudo: { label: 'Estudos', color: 'var(--blue)' },
+  exercicio: { label: 'Exercício', color: 'var(--green)' },
+  refeicao: { label: 'Refeição', color: 'var(--orange)' },
+  lazer: { label: 'Lazer e afeto', color: 'var(--pink)' },
+  descanso: { label: 'Descanso', color: 'var(--purple)' },
+  trajeto: { label: 'Trajeto', color: 'var(--slate)' },
+  pendencia: { label: 'Pendências', color: 'var(--gold)' }
+};
+const ICON_CAT = {
+  livro: 'estudo', notebook: 'estudo', prova: 'estudo', apresentacao: 'estudo', capelo: 'estudo',
+  academia: 'exercicio', tenis: 'exercicio', cafe: 'refeicao', comida: 'refeicao',
+  coracao: 'lazer', taca: 'lazer', bolo: 'lazer', estrela: 'lazer', filme: 'lazer', laco: 'lazer', folha: 'lazer',
+  lua: 'descanso', carro: 'trajeto', lista: 'pendencia', medico: 'pendencia', agenda: 'pendencia'
+};
+const PICKABLE = ['livro', 'notebook', 'prova', 'apresentacao', 'academia', 'tenis', 'cafe', 'comida', 'coracao', 'taca', 'bolo', 'filme', 'estrela', 'lua', 'carro', 'lista', 'medico'];
+const catOf = it => CATS[ICON_CAT[it.icon]] ? ICON_CAT[it.icon] : 'trajeto';
+const kColor = it => CATS[catOf(it)].color;
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const $ = id => document.getElementById(id);
 
+// ================= Datas =================
 const DAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-const DAY_COLOR = ['', 'c-orange', 'c-peach', 'c-green', 'c-blue', 'c-purple', 'c-peach'];
-const DAY_ICON = ['coracao', 'sol', 'coracao', 'folha', 'laco', 'coracao', 'sol'];
+const DOW = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 const MONTHS = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
-const LISTS = [
-  { key: 'prioridades', title: 'Prioridades da semana', icon: 'coracao', color: '' },
-  { key: 'academicas', title: 'Tarefas acadêmicas', icon: 'capelo', color: 'c-indigo' },
-  { key: 'pessoais', title: 'Pendências pessoais', icon: 'coracao', color: 'c-green' }
-];
-
-// ---------- Datas (semanas de domingo a sábado) ----------
 const parse = iso => { const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d, 12); };
 const fmt = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 const addDays = (iso, n) => { const d = parse(iso); d.setDate(d.getDate() + n); return fmt(d); };
-const weekStart = d => { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12); x.setDate(x.getDate() - x.getDay()); return fmt(x); };
+const weekOf = iso => addDays(iso, -parse(iso).getDay());
 const ddmm = iso => { const d = parse(iso); return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`; };
+const longDate = iso => { const d = parse(iso); return `${d.getDate()} de ${MONTHS[d.getMonth()]}`; };
 const TODAY = fmt(new Date());
-const THIS_WEEK = weekStart(new Date());
 
 function minutes(it) {
   if (it.special) return -1;
-  const t = (it.time || '').toLowerCase();
-  const m = t.match(/(\d{1,2}):(\d{2})/);
+  const t = (it.time || '').toLowerCase(), m = t.match(/(\d{1,2}):(\d{2})/);
   if (m) return +m[1] * 60 + +m[2];
   if (t.startsWith('manh')) return 480;
   if (t.startsWith('tarde')) return 840;
   if (t.startsWith('noite')) return 1140;
   return 2000;
 }
+const PERIODS = [
+  { key: 'manha', label: 'Manhã', icon: 'sol', test: m => m < 720 },
+  { key: 'tarde', label: 'Tarde', icon: 'tarde', test: m => m >= 720 && m < 1080 },
+  { key: 'noite', label: 'Noite', icon: 'lua', test: m => m >= 1080 && m < 2000 },
+  { key: 'livre', label: 'Sem horário', icon: 'lista', test: m => m >= 2000 }
+];
 
-// ---------- Estado ----------
+// ================= Estado =================
 let db = null;
-let fixed = [];          // atividades fixas: {id, weekday, time, text, sub, icon, hl}
-const weeks = new Map(); // id da semana (data do domingo) -> documento
-let loaded = { fixed: false, weeks: false };
-let selected = THIS_WEEK;
-try { selected = localStorage.getItem('agenda-aba') || THIS_WEEK; } catch {}
+let fixed = [], books = [], shows = [];
+const weeks = new Map();
+let pref = {};
+try { pref = JSON.parse(localStorage.getItem('agenda-pref') || '{}'); } catch {}
+let view = ['rotina', 'livros', 'filmes'].includes(location.hash.slice(1)) ? location.hash.slice(1) : (pref.view || 'rotina');
+let sub = pref.sub || 'dia';
+let selDay = TODAY;
+const selWeek = () => weekOf(selDay);
+const remember = () => { try { localStorage.setItem('agenda-pref', JSON.stringify({ view, sub })); } catch {} };
 
 const blankWeek = start => ({ start, items: [], done: {}, skip: [], notes: {}, lists: { prioridades: [], academicas: [], pessoais: [] } });
 const weekDoc = id => weeks.get(id) || blankWeek(id);
@@ -348,286 +383,433 @@ const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(
 
 let chain = Promise.resolve();
 function queue(fn) {
+  if (!db) { toast('Abra pelo link do Claude para salvar.'); return chain; }
   chain = chain.then(fn).catch(e => toast(e && e.code === 'quota_exceeded' ? 'A agenda está cheia: apague semanas antigas.' : 'Não consegui salvar. Tente de novo.'));
   return chain;
 }
 function saveWeek(id, patch) {
-  if (!db) return toast('Abra pelo link do Claude para salvar.');
-  const exists = weeks.has(id);
-  if (!exists) weeks.set(id, { ...blankWeek(id), ...patch });
-  else {
-    const cur = weeks.get(id), next = { ...cur };
-    for (const k in patch) next[k] = (patch[k] && typeof patch[k] === 'object' && !Array.isArray(patch[k]) && cur[k]) ? { ...cur[k], ...patch[k] } : patch[k];
-    weeks.set(id, next);
-  }
-  const full = weeks.get(id);
-  return queue(() => exists ? db.doc('weeks/' + id).update(patch) : db.doc('weeks/' + id).set(full));
+  const exists = weeks.has(id), cur = weekDoc(id), next = { ...cur };
+  for (const k in patch) next[k] = (patch[k] && typeof patch[k] === 'object' && !Array.isArray(patch[k])) ? { ...(cur[k] || {}), ...patch[k] } : patch[k];
+  weeks.set(id, next);
+  return queue(() => exists ? db.doc('weeks/' + id).update(patch) : db.doc('weeks/' + id).set(next));
+}
+function saveDoc(coll, arr, id, data) {
+  const i = arr.findIndex(x => x.id === id);
+  i >= 0 ? (arr[i] = { id, ...data }) : arr.push({ id, ...data });
+  return queue(() => db.doc(coll + '/' + id).set(data));
+}
+function deleteDoc(coll, arr, id) {
+  const i = arr.findIndex(x => x.id === id); if (i >= 0) arr.splice(i, 1);
+  return queue(() => db.doc(coll + '/' + id).delete());
 }
 
-// ---------- Abas ----------
-const tabsEl = document.getElementById('tabs');
-function weekIds() {
-  const ids = new Set([...weeks.keys(), THIS_WEEK]);
-  if (selected !== 'fixas') ids.add(selected);
-  return [...ids].sort();
-}
-function renderTabs() {
-  const ids = weekIds();
-  tabsEl.innerHTML = `<button class="tab fixed-tab ${selected === 'fixas' ? 'on' : ''}" data-week="fixas">★ Atividades fixas</button>` +
-    ids.map(id => `<button class="tab ${id === selected ? 'on' : ''}" data-week="${id}">${ddmm(id)} – ${ddmm(addDays(id, 6))}${id === THIS_WEEK ? '<small>esta semana</small>' : ''}</button>`).join('') +
-    `<button class="tab add" data-week="${addDays(ids[ids.length - 1], 7)}" title="Abrir a semana seguinte">+ próxima semana</button>`;
-  const on = tabsEl.querySelector('.tab.on');
-  if (on) on.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-}
-tabsEl.addEventListener('click', e => {
-  const b = e.target.closest('.tab'); if (!b) return;
-  selected = b.dataset.week;
-  try { localStorage.setItem('agenda-aba', selected); } catch {}
-  renderAll();
-});
-
-// ---------- Dias ----------
-const weekEl = document.getElementById('week');
-function dayItems(wid, i) {
-  const w = weekDoc(wid), iso = addDays(wid, i);
-  const skip = new Set(w.skip || []);
-  const fx = fixed.filter(f => f.weekday === i).map(f => ({ ...f, key: f.id + '_' + iso, fixed: true }));
+// Atividades de um dia: fixas (menos as puladas) + as da semana, em ordem de horário
+function dayItems(iso) {
+  const w = weekDoc(weekOf(iso)), skip = new Set(w.skip || []), wd = parse(iso).getDay();
+  const fx = fixed.filter(f => f.weekday === wd).map(f => ({ ...f, key: f.id + '_' + iso, fixedId: f.id, fixed: true }));
   const shown = fx.filter(f => !skip.has(f.key));
   const own = (w.items || []).filter(it => it.date === iso).map(it => ({ ...it, key: it.id }));
-  return { iso, list: [...shown, ...own].sort((a, b) => minutes(a) - minutes(b)), skipped: fx.length - shown.length };
+  const list = [...shown, ...own].sort((a, b) => minutes(a) - minutes(b));
+  const done = list.filter(it => w.done?.[it.key]).length;
+  return { list, done, skipped: fx.length - shown.length, note: (w.notes || {})[iso] };
 }
-function itemHtml(it, checkable, done) {
+
+// ================= Navegação =================
+$('mainnav').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  view = b.dataset.view; remember(); render();
+  try { history.replaceState(null, '', '#' + view); } catch {}
+});
+function render() {
+  $('mainnav').querySelectorAll('button').forEach(b => b.dataset.view === view ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current'));
+  if (view === 'livros') return renderBooks();
+  if (view === 'filmes') return renderShows();
+  renderRotina();
+}
+
+// ================= Minha rotina =================
+const SUBS = [['dia', 'Dia a dia'], ['semana', 'Semana inteira'], ['metas', 'Metas da semana'], ['fixas', 'Atividades fixas']];
+function renderRotina() {
+  const ws = selWeek(), we = addDays(ws, 6);
+  let total = 0, made = 0;
+  for (let i = 0; i < 7; i++) { const d = dayItems(addDays(ws, i)); total += d.list.length; made += d.done; }
+  const pct = total ? Math.round(made / total * 100) : 0;
+  const s = parse(ws), e = parse(we);
+  const range = s.getMonth() === e.getMonth() ? `${s.getDate()} a ${e.getDate()} de ${MONTHS[e.getMonth()]}` : `${s.getDate()} de ${MONTHS[s.getMonth()]} a ${e.getDate()} de ${MONTHS[e.getMonth()]}`;
+  const isThis = ws === weekOf(TODAY);
+  let body = '';
+  if (sub === 'dia') body = renderDay();
+  else if (sub === 'semana') body = renderWeekGrid();
+  else if (sub === 'metas') body = renderGoals();
+  else body = renderFixed();
+  $('view').innerHTML = `
+    ${sub === 'fixas' ? '' : `
+    <div class="weekbar">
+      <button class="arrow" data-act="prev" aria-label="Semana anterior">‹</button>
+      <div class="label">${range}<small>${isThis ? 'esta semana' : `semana de ${ddmm(ws)} a ${ddmm(we)}`}</small></div>
+      <button class="arrow" data-act="next" aria-label="Próxima semana">›</button>
+      ${isThis ? '' : '<button class="today-btn" data-act="today">voltar para hoje</button>'}
+      <div class="prog"><span>${made} de ${total} feitas na semana</span><span class="bar"><i style="width:${pct}%"></i></span></div>
+    </div>`}
+    <div class="subnav" role="tablist">
+      ${SUBS.map(([k, l]) => `<button role="tab" aria-selected="${sub === k}" data-sub="${k}">${l}</button>`).join('')}
+    </div>
+    ${body}`;
+}
+function renderDay() {
+  const ws = selWeek(), w = weekDoc(ws);
+  const strip = DAYS.map((_, i) => {
+    const iso = addDays(ws, i), d = dayItems(iso);
+    const cls = [`chip c-${i}`, iso === selDay && 'on', iso === TODAY && 'today', d.list.length && d.done === d.list.length && 'complete'].filter(Boolean).join(' ');
+    return `<button class="${cls}" data-day="${iso}" aria-label="${DAYS[i]} ${ddmm(iso)}"><span class="dow">${DOW[i]}</span><span class="num">${parse(iso).getDate()}</span><span class="cnt">${d.done}/${d.list.length}</span></button>`;
+  }).join('');
+  const wd = parse(selDay).getDay(), d = dayItems(selDay);
+  const groups = PERIODS.map(p => {
+    const items = d.list.filter(it => p.test(minutes(it)) || (it.special && p.key === 'manha'));
+    if (!items.length) return '';
+    return `<div class="group"><h3>${icon(p.icon)}${p.label}</h3>${items.map(it => rowItem(it, !!w.done?.[it.key])).join('')}</div>`;
+  }).join('');
+  const pct = d.list.length ? Math.round(d.done / d.list.length * 100) : 0;
+  return `
+    <div class="strip">${strip}</div>
+    <section class="daycard c-${wd}">
+      <div class="daycard-head tint">
+        <h2>${DAYS[wd]}, ${longDate(selDay)}</h2>
+        ${d.note ? `<span class="note">(${esc(d.note)})</span>` : ''}
+        <div class="prog"><span>${d.done} de ${d.list.length}</span><span class="bar"><i style="width:${pct}%"></i></span></div>
+      </div>
+      <div class="groups">
+        ${groups || '<div class="empty">Nenhuma atividade neste dia ainda.</div>'}
+        <div>
+          ${d.skipped ? `<button class="linkbtn" data-act="restore" data-iso="${selDay}">${d.skipped} atividade${d.skipped > 1 ? 's' : ''} fixa${d.skipped > 1 ? 's' : ''} pulada${d.skipped > 1 ? 's' : ''} neste dia · mostrar de novo</button>` : ''}
+          <button class="add" data-act="add" data-iso="${selDay}">+ adicionar atividade</button>
+        </div>
+      </div>
+    </section>
+    <div class="legend">${Object.values(CATS).map(c => `<span style="--k:${c.color}"><i></i>${c.label}</span>`).join('')}<span>· fixa = repete toda semana</span></div>`;
+}
+function rowItem(it, done, checkable = true) {
+  const k = kColor(it);
   if (it.special) return `
-    <div class="item special" tabindex="0" data-key="${it.key}">
-      ${checkable ? `<input type="checkbox" class="chk" ${done ? 'checked' : ''} aria-label="Feito">` : '<span></span>'}
-      <span>${icon(it.icon)}<span class="text">${esc(it.text)}</span></span>
+    <div class="row-item special ${done ? 'done' : ''}" tabindex="0" data-key="${it.key}">
+      <input type="checkbox" class="chk" ${done ? 'checked' : ''} aria-label="Feito">
+      <div class="text">${esc(it.text)}</div>${icon(it.icon)}
     </div>`;
   return `
-    <div tabindex="0" class="item ${it.hl ? 'hl' : ''} ${done ? 'done' : ''} ${checkable ? '' : 'nochk'}" data-key="${it.key}">
+    <div class="row-item ${it.hl ? 'hl' : ''} ${done ? 'done' : ''} ${checkable ? '' : 'nochk'}" tabindex="0" data-key="${it.key}" style="--k:${k}">
       ${checkable ? `<input type="checkbox" class="chk" ${done ? 'checked' : ''} aria-label="Feito">` : ''}
-      <span>
-        ${it.time ? `<span class="time">${esc(it.time)}</span><br>` : ''}
-        <span class="text">${esc(it.text)}</span>
-        ${it.sub ? `<br><span class="sub">${esc(it.sub)}</span>` : ''}
-        ${it.fixed && checkable ? '<br><span class="fixed-mark">fixa</span>' : ''}
-      </span>
+      <div class="time">${esc(it.time) || '—'}</div>
+      <div>
+        <div class="text">${esc(it.text)}</div>
+        ${it.sub ? `<div class="sub">${esc(it.sub)}</div>` : ''}
+        <div class="tags"><span class="tag">${CATS[catOf(it)].label}</span>${it.fixed && checkable ? '<span class="tag fx">· fixa</span>' : ''}</div>
+      </div>
       ${icon(it.icon)}
     </div>`;
 }
-function renderWeek() {
-  if (selected === 'fixas') return renderFixed();
-  const w = weekDoc(selected);
-  let total = 0, made = 0;
-  weekEl.innerHTML = DAYS.map((name, i) => {
-    const { iso, list, skipped } = dayItems(selected, i);
-    const note = (w.notes || {})[iso];
-    list.forEach(it => { total++; if (w.done?.[it.key]) made++; });
-    return `
-      <article class="day ${DAY_COLOR[i]} ${iso === TODAY ? 'today' : ''}" data-iso="${iso}">
-        <div class="day-head">
-          <div class="day-name">${name}</div>
-          <div class="day-date">${ddmm(iso)}</div>
-          ${note ? `<div class="day-note">(${esc(note)})</div>` : ''}
-          ${iso === TODAY ? '<span class="today-pill">hoje</span>' : ''}
-          ${icon(DAY_ICON[i])}
-        </div>
-        <div class="items">
-          ${list.length ? list.map(it => itemHtml(it, true, !!w.done?.[it.key])).join('') : '<div class="empty">Nada marcado ainda</div>'}
-        </div>
-        ${skipped ? `<button class="restore" data-restore="${iso}">↺ ${skipped} fixa${skipped > 1 ? 's' : ''} pulada${skipped > 1 ? 's' : ''}: mostrar de novo</button>` : ''}
-        <button class="add" data-add="${iso}">+ adicionar</button>
-      </article>`;
-  }).join('');
-  const pct = total ? Math.round(made / total * 100) : 0;
-  document.getElementById('progress').innerHTML = `<span>${made} de ${total} feitas</span><span class="bar"><i style="width:${pct}%"></i></span>`;
+function renderWeekGrid() {
+  const ws = selWeek(), w = weekDoc(ws);
+  return `<div class="weekgrid">${DAYS.map((name, i) => {
+    const iso = addDays(ws, i), d = dayItems(iso);
+    return `<section class="wcol c-${i} ${iso === TODAY ? 'today' : ''}">
+      <button class="wcol-head tint" data-day="${iso}" data-go="dia"><b>${name}</b><span>${ddmm(iso)} · ${d.done}/${d.list.length}${d.note ? ` · ${esc(d.note)}` : ''}</span></button>
+      ${d.list.map(it => `
+        <div class="mini ${w.done?.[it.key] ? 'done' : ''}" data-key="${it.key}" style="--k:${it.special ? 'var(--title)' : kColor(it)}">
+          <input type="checkbox" class="chk" ${w.done?.[it.key] ? 'checked' : ''} aria-label="Feito">
+          <div>${it.time ? `<div class="t">${esc(it.time)}</div>` : ''}<div class="x">${esc(it.text)}</div></div>
+        </div>`).join('') || '<div class="empty">Livre</div>'}
+    </section>`;
+  }).join('')}</div>
+  <p class="legend">Toque no nome do dia para abrir o dia com detalhes.</p>`;
 }
-function renderFixed() {
-  weekEl.innerHTML = DAYS.map((name, i) => {
-    const list = fixed.filter(f => f.weekday === i).sort((a, b) => minutes(a) - minutes(b)).map(f => ({ ...f, key: f.id, fixed: true }));
-    return `
-      <article class="day ${DAY_COLOR[i]}" data-wd="${i}">
-        <div class="day-head"><div class="day-name">${name}</div><div class="day-date">toda semana</div>${icon(DAY_ICON[i])}</div>
-        <div class="items">${list.length ? list.map(it => itemHtml(it, false)).join('') : '<div class="empty">Sem atividades fixas</div>'}</div>
-        <button class="add" data-addfixed="${i}">+ adicionar fixa</button>
-      </article>`;
-  }).join('');
-  document.getElementById('progress').innerHTML = `<span>${fixed.length} atividades fixas</span>`;
-}
-weekEl.addEventListener('click', e => {
-  const t = e.target;
-  if (t.dataset.add) return openEditor({ mode: 'new', iso: t.dataset.add });
-  if (t.dataset.addfixed) return openEditor({ mode: 'newFixed', wd: +t.dataset.addfixed });
-  if (t.dataset.restore) {
-    const w = weekDoc(selected), iso = t.dataset.restore;
-    return (saveWeek(selected, { skip: (w.skip || []).filter(k => !k.endsWith('_' + iso)) }), renderAll());
-  }
-  const item = t.closest('.item'); if (!item) return;
-  const key = item.dataset.key;
-  if (t.classList.contains('chk')) {
-    item.classList.toggle('done', t.checked);
-    saveWeek(selected, { done: { [key]: t.checked } });
-    return renderWeek();
-  }
-  if (selected === 'fixas') return openEditor({ mode: 'fixed', id: key });
-  const [fid, iso] = key.split('_');
-  if (iso) return openEditor({ mode: 'fixed', id: fid, iso });
-  openEditor({ mode: 'week', id: key });
-});
-weekEl.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.classList.contains('item')) e.target.click(); });
-
-// ---------- Listas da semana ----------
-const panelsEl = document.getElementById('panels');
-function renderPanels() {
-  if (panelsEl.contains(document.activeElement) && document.activeElement.tagName === 'TEXTAREA') return;
-  if (selected === 'fixas') { panelsEl.innerHTML = ''; return; }
-  const lists = weekDoc(selected).lists || {};
-  panelsEl.innerHTML = LISTS.map(l => `
-    <div class="panel ${l.color}" data-list="${l.key}">
-      <h2>${icon(l.icon)}${l.title}</h2>
-      <ul class="list">
-        ${(lists[l.key] || []).map((it, i) => `
-          <li class="${it.done ? 'done' : ''}" data-i="${i}">
-            <input type="checkbox" class="chk" ${it.done ? 'checked' : ''} aria-label="Feito">
-            <textarea rows="1" id="l-${l.key}-${i}" placeholder="Escreva aqui…" aria-label="Item">${esc(it.text)}</textarea>
-            <button class="x" aria-label="Excluir item">×</button>
-          </li>`).join('')}
-      </ul>
-      <button class="add">+ adicionar</button>
-    </div>`).join('') + `
-    <div class="panel remember c-orange">
-      <h2>${icon('sol')}Lembre-se</h2>
+const LISTS = [
+  { key: 'prioridades', title: 'Prioridades da semana', icon: 'coracao', color: 'var(--pink)' },
+  { key: 'academicas', title: 'Tarefas acadêmicas', icon: 'capelo', color: 'var(--indigo)' },
+  { key: 'pessoais', title: 'Pendências pessoais', icon: 'lista', color: 'var(--green)' }
+];
+function renderGoals() {
+  const lists = weekDoc(selWeek()).lists || {};
+  return `<div class="panels">${LISTS.map(l => `
+    <div class="panel" data-list="${l.key}" style="--c:${l.color}">
+      <h2 class="tint">${icon(l.icon)}${l.title}</h2>
+      <ul class="list">${(lists[l.key] || []).map((it, i) => `
+        <li class="${it.done ? 'done' : ''}" data-i="${i}">
+          <input type="checkbox" class="chk" ${it.done ? 'checked' : ''} aria-label="Feito">
+          <textarea rows="1" id="l-${l.key}-${i}" placeholder="Escreva aqui…" aria-label="Item">${esc(it.text)}</textarea>
+          <button class="del" aria-label="Excluir item">×</button>
+        </li>`).join('') || '<li class="empty">Nada por aqui ainda.</li>'}</ul>
+      <button class="add" data-act="addgoal">+ adicionar</button>
+    </div>`).join('')}
+    <div class="panel remember" style="--c:var(--orange)">
+      <h2 class="tint">${icon('sol')}Lembre-se</h2>
       <div class="big">Você consegue! ♡</div>
       <p>Organização também é autocuidado.<br>Disciplina hoje, conquistas amanhã.<br>Cada passo importa. ♡</p>
-    </div>`;
+    </div>
+  </div>`;
 }
-function listOf(panel) { return [...((weekDoc(selected).lists || {})[panel.dataset.list] || [])].map(x => ({ ...x })); }
-function saveList(panel, arr) { saveWeek(selected, { lists: { [panel.dataset.list]: arr } }); }
-panelsEl.addEventListener('click', e => {
-  const panel = e.target.closest('.panel[data-list]'); if (!panel) return;
-  const arr = listOf(panel), li = e.target.closest('li');
-  if (e.target.classList.contains('chk')) { arr[li.dataset.i].done = e.target.checked; li.classList.toggle('done', e.target.checked); return saveList(panel, arr); }
-  if (e.target.classList.contains('x')) { arr.splice(li.dataset.i, 1); saveList(panel, arr); return renderPanels(); }
-  if (e.target.classList.contains('add')) {
-    arr.push({ text: '', done: false }); saveList(panel, arr); renderPanels();
-    const inputs = panelsEl.querySelectorAll(`[data-list="${panel.dataset.list}"] textarea`);
-    inputs[inputs.length - 1]?.focus();
+function renderFixed() {
+  return `<p class="fixed-intro">Estas atividades aparecem sozinhas em todas as semanas. Para não fazer uma delas numa semana específica, abra o dia e escolha "Pular nesta semana".</p>
+  ${[1, 2, 3, 4, 5, 6, 0].map(i => {
+    const list = fixed.filter(f => f.weekday === i).sort((a, b) => minutes(a) - minutes(b));
+    return `<section class="fixed-day c-${i}"><h3>${DAYS[i]}</h3>
+      ${list.map(f => rowItem({ ...f, key: 'fixed:' + f.id }, false, false)).join('') || '<div class="empty" style="text-align:left">Nenhuma atividade fixa.</div>'}
+      <button class="add" data-act="addfixed" data-wd="${i}">+ fixa na ${DAYS[i].toLowerCase()}</button>
+    </section>`;
+  }).join('')}`;
+}
+
+function toggleDone(key, on) { saveWeek(selWeek(), { done: { [key]: on } }); render(); }
+function findItem(key) {
+  if (key.startsWith('fixed:')) return { mode: 'fixed', fixedId: key.slice(6) };
+  const [fid, iso] = key.split('_');
+  if (iso) return { mode: 'fixed', fixedId: fid, iso };
+  return { mode: 'week', id: key };
+}
+
+$('view').addEventListener('click', e => {
+  const t = e.target, act = t.closest('[data-act]')?.dataset.act;
+  if (view !== 'rotina') return;
+  if (t.closest('[data-sub]')) { sub = t.closest('[data-sub]').dataset.sub; remember(); return render(); }
+  if (t.closest('[data-day]')) { const b = t.closest('[data-day]'); selDay = b.dataset.day; if (b.dataset.go) { sub = 'dia'; remember(); } return render(); }
+  if (act === 'prev' || act === 'next') { selDay = addDays(selDay, act === 'prev' ? -7 : 7); return render(); }
+  if (act === 'today') { selDay = TODAY; return render(); }
+  if (act === 'add') return editActivity({ mode: 'new', iso: t.closest('[data-iso]').dataset.iso });
+  if (act === 'addfixed') return editActivity({ mode: 'newFixed', wd: +t.closest('[data-wd]').dataset.wd });
+  if (act === 'restore') {
+    const iso = t.dataset.iso, w = weekDoc(selWeek());
+    saveWeek(selWeek(), { skip: (w.skip || []).filter(k => !k.endsWith('_' + iso)) }); return render();
   }
+  if (act === 'addgoal') {
+    const panel = t.closest('.panel'), arr = goalList(panel);
+    arr.push({ text: '', done: false }); saveGoal(panel, arr); render();
+    const areas = $('view').querySelectorAll(`[data-list="${panel.dataset.list}"] textarea`); areas[areas.length - 1]?.focus(); return;
+  }
+  const li = t.closest('.panel[data-list] li[data-i]');
+  if (li) {
+    const panel = li.closest('.panel'), arr = goalList(panel);
+    if (t.classList.contains('chk')) { arr[li.dataset.i].done = t.checked; saveGoal(panel, arr); li.classList.toggle('done', t.checked); }
+    if (t.classList.contains('del')) { arr.splice(li.dataset.i, 1); saveGoal(panel, arr); render(); }
+    return;
+  }
+  const row = t.closest('[data-key]'); if (!row) return;
+  if (t.classList.contains('chk')) return toggleDone(row.dataset.key, t.checked);
+  editActivity(findItem(row.dataset.key));
 });
-panelsEl.addEventListener('change', e => {
+$('view').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.matches('.row-item, .card')) e.target.click();
+  if (e.key === 'Enter' && e.target.tagName === 'TEXTAREA') { e.preventDefault(); e.target.blur(); }
+});
+function goalList(panel) { return ((weekDoc(selWeek()).lists || {})[panel.dataset.list] || []).map(x => ({ ...x })); }
+function saveGoal(panel, arr) { saveWeek(selWeek(), { lists: { [panel.dataset.list]: arr } }); }
+$('view').addEventListener('change', e => {
   if (e.target.tagName !== 'TEXTAREA') return;
-  const panel = e.target.closest('.panel'), arr = listOf(panel);
-  arr[e.target.closest('li').dataset.i].text = e.target.value.trim();
-  saveList(panel, arr);
+  const panel = e.target.closest('.panel'), arr = goalList(panel);
+  arr[e.target.closest('li').dataset.i].text = e.target.value.trim(); saveGoal(panel, arr);
 });
-panelsEl.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.tagName === 'TEXTAREA') { e.preventDefault(); e.target.blur(); } });
-panelsEl.addEventListener('focusout', () => setTimeout(() => { if (!panelsEl.contains(document.activeElement)) renderPanels(); }, 50));
 
-// ---------- Editor ----------
-const dlg = document.getElementById('dlg'), form = document.getElementById('form');
-const $ = id => document.getElementById(id);
-const iconPick = $('iconPick');
-let ctx = null, pickedIcon = '';
-iconPick.innerHTML = '<button type="button" data-icon="" title="sem ícone"><span class="none">∅</span></button>' +
-  Object.keys(ICONS).map(n => `<button type="button" data-icon="${n}" title="${n}">${icon(n)}</button>`).join('');
-iconPick.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { pickedIcon = b.dataset.icon; markIcon(); } });
-const markIcon = () => iconPick.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.icon === pickedIcon));
-
-function openEditor(c) {
-  ctx = c;
-  const isFixed = c.mode === 'fixed' || c.mode === 'newFixed';
-  let it = { time: '', text: '', sub: '', icon: 'coracao', hl: false };
-  if (c.mode === 'week') it = weekDoc(selected).items.find(x => x.id === c.id);
-  if (c.mode === 'fixed') it = fixed.find(x => x.id === c.id);
-  if (!it) return;
-  $('dlgTitle').textContent = c.mode.startsWith('new') ? 'Nova atividade' : 'Editar atividade';
-  $('fixedNote').hidden = !(c.mode === 'fixed');
-  $('whenLabel').textContent = isFixed ? 'Dia da semana' : 'Dia';
-  $('fWhen').innerHTML = isFixed
-    ? DAYS.map((d, i) => `<option value="${i}">${d}</option>`).join('')
-    : DAYS.map((d, i) => { const iso = addDays(selected, i); return `<option value="${iso}">${d} ${ddmm(iso)}</option>`; }).join('');
-  $('fWhen').value = isFixed ? String(c.mode === 'fixed' ? it.weekday : c.wd) : (c.iso || it.date);
-  $('fTime').value = it.time || ''; $('fText').value = it.text || ''; $('fSub').value = it.sub || '';
-  $('fHl').checked = !!it.hl;
-  $('repeatWrap').hidden = isFixed; $('fRepeat').checked = false;
-  $('btnDelete').hidden = c.mode.startsWith('new');
-  $('btnDelete').classList.remove('armed'); $('btnDelete').textContent = c.mode === 'fixed' ? 'Excluir de todas as semanas' : 'Excluir';
-  $('btnSkip').hidden = !(c.mode === 'fixed' && c.iso);
-  pickedIcon = it.icon || ''; markIcon();
-  dlg.showModal();
-  $('fText').focus();
+// ================= Formulário genérico =================
+let formCtx = null;
+function openForm({ title, note, fields, onSave, onDelete, deleteLabel, extra }) {
+  formCtx = { fields, onSave, onDelete, extra };
+  $('fTitle').textContent = title;
+  $('fNote').hidden = !note; $('fNote').textContent = note || '';
+  $('fFields').innerHTML = fields.map(f => {
+    if (f.hidden) return '';
+    const id = 'ff-' + f.name, cls = f.full ? 'full' : '';
+    if (f.type === 'check') return `<label class="check ${cls}"><input type="checkbox" id="${id}" ${f.value ? 'checked' : ''}> ${f.label}</label>`;
+    if (f.type === 'select') return `<label class="${cls}">${f.label}<select id="${id}">${f.options.map(([v, l]) => `<option value="${esc(v)}" ${String(v) === String(f.value) ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></label>`;
+    if (f.type === 'icons') return `<label class="full">${f.label}<div class="icon-pick" id="${id}" data-value="${esc(f.value || '')}">
+      <button type="button" data-icon="" title="sem ícone"><span class="none">∅</span></button>
+      ${PICKABLE.map(n => `<button type="button" data-icon="${n}" title="${CATS[ICON_CAT[n]].label}" style="--k:${CATS[ICON_CAT[n]].color}" class="${n === f.value ? 'on' : ''}">${icon(n)}</button>`).join('')}</div></label>`;
+    return `<label class="${cls}">${f.label}<input type="${f.type || 'text'}" id="${id}" value="${esc(f.value ?? '')}" placeholder="${esc(f.placeholder || '')}" ${f.type === 'number' ? 'min="0" inputmode="numeric"' : ''}></label>`;
+  }).join('');
+  const del = $('fDelete');
+  del.hidden = !onDelete; del.classList.remove('armed'); del.textContent = deleteLabel || 'Excluir';
+  $('fExtra').hidden = !extra; if (extra) $('fExtra').textContent = extra.label;
+  $('dlg').showModal();
+  $('fFields').querySelector('input[type=text]')?.focus();
 }
-form.addEventListener('submit', e => {
-  e.preventDefault();
-  const base = { time: $('fTime').value.trim(), text: $('fText').value.trim() || 'Atividade', sub: $('fSub').value.trim(), icon: pickedIcon, hl: $('fHl').checked };
-  const when = $('fWhen').value;
-  if (ctx.mode === 'fixed' || ctx.mode === 'newFixed' || $('fRepeat').checked) {
-    const wd = (ctx.mode === 'fixed' || ctx.mode === 'newFixed') ? +when : parse(when).getDay();
-    const id = ctx.mode === 'fixed' ? ctx.id : uid('f');
-    const doc = { ...base, weekday: wd };
-    if (!db) return toast('Abra pelo link do Claude para salvar.');
-    const i = fixed.findIndex(f => f.id === id);
-    i >= 0 ? (fixed[i] = { id, ...doc }) : fixed.push({ id, ...doc });
-    queue(() => db.doc('fixed/' + id).set(doc));
-    if (ctx.mode === 'week') removeWeekItem(ctx.id);
-  } else {
-    const items = weekDoc(selected).items.map(x => ({ ...x }));
-    if (ctx.mode === 'week') { const i = items.findIndex(x => x.id === ctx.id); items[i] = { ...items[i], ...base, date: when }; }
-    else items.push({ id: uid('w'), ...base, date: when });
-    saveWeek(selected, { items });
-  }
-  dlg.close(); renderAll();
+$('fFields').addEventListener('click', e => {
+  const b = e.target.closest('.icon-pick button'); if (!b) return;
+  const pick = b.parentElement; pick.dataset.value = b.dataset.icon;
+  pick.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b && b.dataset.icon !== ''));
 });
-function removeWeekItem(id) { saveWeek(selected, { items: weekDoc(selected).items.filter(x => x.id !== id) }); }
-$('btnCancel').onclick = () => dlg.close();
-$('btnSkip').onclick = () => {
-  const w = weekDoc(selected);
-  saveWeek(selected, { skip: [...(w.skip || []), ctx.id + '_' + ctx.iso] });
-  dlg.close(); renderAll();
-};
-$('btnDelete').onclick = () => {
-  const b = $('btnDelete');
+function formValues() {
+  const out = {};
+  formCtx.fields.forEach(f => {
+    if (f.hidden) { out[f.name] = f.value; return; }
+    const el = $('ff-' + f.name);
+    out[f.name] = f.type === 'check' ? el.checked : f.type === 'icons' ? el.dataset.value : f.type === 'number' ? (el.value === '' ? null : +el.value) : el.value.trim();
+  });
+  return out;
+}
+$('form').addEventListener('submit', e => { e.preventDefault(); formCtx.onSave(formValues()); $('dlg').close(); render(); });
+$('fCancel').onclick = () => $('dlg').close();
+$('fExtra').onclick = () => { formCtx.extra.run(); $('dlg').close(); render(); };
+$('fDelete').onclick = () => {
+  const b = $('fDelete');
   if (!b.classList.contains('armed')) { b.classList.add('armed'); b.textContent = 'Toque de novo para excluir'; return; }
-  if (ctx.mode === 'fixed') {
-    if (!db) return toast('Abra pelo link do Claude para salvar.');
-    fixed = fixed.filter(f => f.id !== ctx.id);
-    queue(() => db.doc('fixed/' + ctx.id).delete());
-  } else removeWeekItem(ctx.id);
-  dlg.close(); renderAll();
+  formCtx.onDelete(); $('dlg').close(); render();
 };
 
-// ---------- Geral ----------
+// Editor de atividade (da semana ou fixa)
+function editActivity(c) {
+  const isFixed = c.mode === 'fixed' || c.mode === 'newFixed';
+  const ws = c.iso ? weekOf(c.iso) : selWeek();
+  let it = { time: '', text: '', sub: '', icon: 'coracao', hl: false };
+  if (c.mode === 'week') it = weekDoc(ws).items.find(x => x.id === c.id);
+  if (c.mode === 'fixed') it = fixed.find(x => x.id === c.fixedId);
+  if (!it) return;
+  const whenOpts = isFixed ? DAYS.map((d, i) => [i, d]) : DAYS.map((d, i) => [addDays(ws, i), `${d} ${ddmm(addDays(ws, i))}`]);
+  openForm({
+    title: c.mode.startsWith('new') ? 'Nova atividade' : 'Editar atividade',
+    note: c.mode === 'fixed' ? 'Atividade fixa: mudanças aqui valem para todas as semanas.' : '',
+    fields: [
+      { name: 'time', label: 'Horário', value: it.time, placeholder: 'ex.: 14:00 – 18:00' },
+      { name: 'when', label: isFixed ? 'Dia da semana' : 'Dia', type: 'select', options: whenOpts, value: isFixed ? (it.weekday ?? c.wd) : (it.date || c.iso) },
+      { name: 'text', label: 'Atividade', value: it.text, full: true, placeholder: 'ex.: Faculdade' },
+      { name: 'sub', label: 'Detalhe (opcional)', value: it.sub, full: true, placeholder: 'ex.: (bloco 1 – revisão)' },
+      { name: 'icon', label: 'Tipo (a cor segue o tipo)', type: 'icons', value: it.icon },
+      { name: 'hl', label: 'Destacar', type: 'check', value: it.hl },
+      { name: 'repeat', label: 'Repete toda semana', type: 'check', value: false, hidden: isFixed }
+    ],
+    deleteLabel: c.mode === 'fixed' ? 'Excluir de todas as semanas' : 'Excluir',
+    extra: c.mode === 'fixed' && c.iso ? { label: 'Pular nesta semana', run: () => saveWeek(ws, { skip: [...(weekDoc(ws).skip || []), c.fixedId + '_' + c.iso] }) } : null,
+    onDelete: c.mode.startsWith('new') ? null : () => c.mode === 'fixed'
+      ? deleteDoc('fixed', fixed, c.fixedId)
+      : saveWeek(ws, { items: weekDoc(ws).items.filter(x => x.id !== c.id) }),
+    onSave: v => {
+      const base = { time: v.time, text: v.text || 'Atividade', sub: v.sub, icon: v.icon, hl: v.hl };
+      if (isFixed || v.repeat) {
+        const id = c.mode === 'fixed' ? c.fixedId : uid('f');
+        saveDoc('fixed', fixed, id, { ...base, weekday: isFixed ? +v.when : parse(v.when).getDay() });
+        if (c.mode === 'week') saveWeek(ws, { items: weekDoc(ws).items.filter(x => x.id !== c.id) });
+        return;
+      }
+      const tw = weekOf(v.when);
+      if (c.mode === 'week' && tw === ws) {
+        saveWeek(ws, { items: weekDoc(ws).items.map(x => x.id === c.id ? { ...x, ...base, date: v.when } : x) });
+      } else {
+        saveWeek(tw, { items: [...weekDoc(tw).items, { id: uid('w'), ...base, date: v.when }] });
+      }
+      selDay = v.when;
+    }
+  });
+}
+
+// ================= Livros =================
+const BOOK_STATUS = [['lendo', 'Lendo agora'], ['quero', 'Quero ler'], ['lido', 'Já li']];
+function renderBooks() {
+  const card = b => {
+    const pct = b.pages ? Math.min(100, Math.round((b.page || 0) / b.pages * 100)) : 0;
+    return `<div class="card ${b.status === 'lido' ? 'done' : ''}" tabindex="0" data-book="${b.id}" style="--c:var(--purple)">
+      <div class="top"><input type="checkbox" class="chk" ${b.status === 'lido' ? 'checked' : ''} aria-label="Terminei"><div><div class="ttl">${esc(b.title)}</div>${b.author ? `<div class="by">${esc(b.author)}</div>` : ''}</div></div>
+      ${b.status === 'lendo' ? `<div class="meta"><span>pág. ${b.page || 0}${b.pages ? ` de ${b.pages}` : ''}</span>${b.pages ? `<span class="bar"><i style="width:${pct}%"></i></span><span>${pct}%</span>` : ''}<button class="step" data-step="10">+10 pág.</button></div>` : ''}
+      ${b.note ? `<div class="note">${esc(b.note)}</div>` : ''}
+    </div>`;
+  };
+  const by = s => books.filter(b => b.status === s);
+  $('view').innerHTML = `
+    <div class="media-head"><h2>Livros</h2><button class="btn primary" data-new="book">+ Adicionar livro</button></div>
+    ${books.length ? '' : '<div class="empty">Nenhum livro ainda. Toque em "Adicionar livro" ou me mande a lista que eu coloco aqui.</div>'}
+    ${by('lendo').length ? `<section class="shelf"><h3>Lendo agora</h3><div class="cards">${by('lendo').map(card).join('')}</div></section>` : ''}
+    ${by('quero').length ? `<section class="shelf"><h3>Quero ler</h3><div class="cards">${by('quero').map(card).join('')}</div></section>` : ''}
+    ${by('lido').length ? `<details class="done-shelf"><summary>Já li (${by('lido').length})</summary><div class="cards">${by('lido').map(card).join('')}</div></details>` : ''}`;
+}
+function editBook(b) {
+  const isNew = !b; b = b || { status: 'lendo' };
+  openForm({
+    title: isNew ? 'Novo livro' : 'Editar livro',
+    fields: [
+      { name: 'title', label: 'Título', value: b.title, full: true },
+      { name: 'author', label: 'Autor(a)', value: b.author, full: true },
+      { name: 'status', label: 'Situação', type: 'select', options: BOOK_STATUS, value: b.status, full: true },
+      { name: 'page', label: 'Página atual', type: 'number', value: b.page },
+      { name: 'pages', label: 'Total de páginas', type: 'number', value: b.pages },
+      { name: 'note', label: 'Anotação (opcional)', value: b.note, full: true, placeholder: 'ex.: amando o capítulo 3' }
+    ],
+    onDelete: isNew ? null : () => deleteDoc('books', books, b.id),
+    onSave: v => saveDoc('books', books, b.id || uid('b'), { ...v, title: v.title || 'Livro sem título', updated: Date.now() })
+  });
+}
+
+// ================= Filmes e séries =================
+const SHOW_STATUS = [['vendo', 'Assistindo'], ['quero', 'Quero ver'], ['visto', 'Já vi']];
+function renderShows() {
+  const card = s => `<div class="card ${s.status === 'visto' ? 'done' : ''}" tabindex="0" data-show="${s.id}" style="--c:${s.kind === 'serie' ? 'var(--blue)' : 'var(--pink)'}">
+      <div class="top"><input type="checkbox" class="chk" ${s.status === 'visto' ? 'checked' : ''} aria-label="Já vi"><div><div class="ttl">${esc(s.title)}</div>
+      <div class="meta"><span class="pill">${s.kind === 'serie' ? 'Série' : 'Filme'}</span>${s.where ? `<span>${esc(s.where)}</span>` : ''}${s.rating ? `<span class="stars">${'★'.repeat(s.rating)}${'☆'.repeat(5 - s.rating)}</span>` : ''}</div></div></div>
+      ${s.kind === 'serie' && s.status === 'vendo' ? `<div class="meta"><span>Temporada ${s.season || 1} · episódio ${s.episode || 1}</span><button class="step" data-step="1">+1 episódio</button></div>` : ''}
+      ${s.note ? `<div class="note">${esc(s.note)}</div>` : ''}
+    </div>`;
+  const by = st => shows.filter(s => s.status === st);
+  $('view').innerHTML = `
+    <div class="media-head"><h2>Filmes e séries</h2><button class="btn primary" data-new="show">+ Adicionar</button></div>
+    ${shows.length ? '' : '<div class="empty">Nada por aqui ainda. Toque em "Adicionar" ou me mande o que você está vendo.</div>'}
+    ${by('vendo').length ? `<section class="shelf"><h3>Assistindo</h3><div class="cards">${by('vendo').map(card).join('')}</div></section>` : ''}
+    ${by('quero').length ? `<section class="shelf"><h3>Quero ver</h3><div class="cards">${by('quero').map(card).join('')}</div></section>` : ''}
+    ${by('visto').length ? `<details class="done-shelf"><summary>Já vi (${by('visto').length})</summary><div class="cards">${by('visto').map(card).join('')}</div></details>` : ''}`;
+}
+function editShow(s) {
+  const isNew = !s; s = s || { kind: 'serie', status: 'vendo', season: 1, episode: 1 };
+  openForm({
+    title: isNew ? 'Novo filme ou série' : 'Editar',
+    fields: [
+      { name: 'title', label: 'Título', value: s.title, full: true },
+      { name: 'kind', label: 'Tipo', type: 'select', options: [['serie', 'Série'], ['filme', 'Filme']], value: s.kind },
+      { name: 'status', label: 'Situação', type: 'select', options: SHOW_STATUS, value: s.status },
+      { name: 'season', label: 'Temporada (série)', type: 'number', value: s.season },
+      { name: 'episode', label: 'Episódio (série)', type: 'number', value: s.episode },
+      { name: 'where', label: 'Onde assistir', value: s.where, placeholder: 'ex.: Netflix' },
+      { name: 'rating', label: 'Nota', type: 'select', options: [[0, 'sem nota'], [1, '★'], [2, '★★'], [3, '★★★'], [4, '★★★★'], [5, '★★★★★']], value: s.rating || 0 },
+      { name: 'note', label: 'Anotação (opcional)', value: s.note, full: true }
+    ],
+    onDelete: isNew ? null : () => deleteDoc('shows', shows, s.id),
+    onSave: v => saveDoc('shows', shows, s.id || uid('s'), { ...v, rating: +v.rating, title: v.title || 'Sem título', updated: Date.now() })
+  });
+}
+
+// Cliques em livros e filmes
+$('view').addEventListener('click', e => {
+  if (view === 'rotina') return;
+  const t = e.target;
+  if (t.closest('[data-new]')) return t.closest('[data-new]').dataset.new === 'book' ? editBook() : editShow();
+  const bc = t.closest('[data-book]'), sc = t.closest('[data-show]');
+  if (bc) {
+    const b = books.find(x => x.id === bc.dataset.book); const { id, ...data } = b;
+    if (t.classList.contains('chk')) { saveDoc('books', books, id, { ...data, status: t.checked ? 'lido' : 'lendo', page: t.checked && b.pages ? b.pages : b.page, updated: Date.now() }); return render(); }
+    if (t.dataset.step) { const page = Math.min((b.page || 0) + 10, b.pages || Infinity); saveDoc('books', books, id, { ...data, page, status: b.pages && page >= b.pages ? 'lido' : 'lendo', updated: Date.now() }); return render(); }
+    return editBook(b);
+  }
+  if (sc) {
+    const s = shows.find(x => x.id === sc.dataset.show); const { id, ...data } = s;
+    if (t.classList.contains('chk')) { saveDoc('shows', shows, id, { ...data, status: t.checked ? 'visto' : 'vendo', updated: Date.now() }); return render(); }
+    if (t.dataset.step) { saveDoc('shows', shows, id, { ...data, episode: (s.episode || 1) + 1, updated: Date.now() }); return render(); }
+    return editShow(s);
+  }
+});
+
+// ================= Início =================
 function toast(msg) {
   const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; t.setAttribute('role', 'status');
   document.body.appendChild(t); setTimeout(() => t.remove(), 3200);
 }
-function renderAll() {
-  if (selected === 'fixas') {
-    $('period').textContent = 'atividades que se repetem toda semana';
-    $('hint').textContent = 'O que estiver aqui aparece sozinho em todas as semanas. Clique numa atividade para mudar ou excluir.';
-  } else {
-    const s = parse(selected), e = parse(addDays(selected, 6));
-    $('period').textContent = `${s.getDate()} de ${MONTHS[s.getMonth()]} a ${String(e.getDate()).padStart(2, '0')} de ${MONTHS[e.getMonth()]}`;
-    $('hint').textContent = 'Marque a caixinha quando fizer · clique numa atividade para editar · as marcadas como "fixa" se repetem toda semana';
-  }
-  renderTabs(); renderWeek(); renderPanels();
-}
-
-renderAll();
+render();
 (async () => {
   db = window.claude?.use ? await window.claude.use('db') : null;
   if (!db) {
-    const n = $('notice'); n.hidden = false;
-    n.textContent = 'Sua agenda fica salva na nuvem quando você abre esta página pelo link do Claude. Aqui ela não consegue carregar nem salvar.';
+    $('notice').hidden = false;
+    $('notice').textContent = 'Sua agenda fica salva na nuvem quando você abre esta página pelo link do Claude. Aqui ela não consegue carregar nem salvar.';
     return;
   }
-  db.collection('fixed').onSnapshot(snap => {
-    fixed = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    loaded.fixed = true; renderAll();
-  }, () => toast('Perdi a conexão com a agenda. Recarregue a página.'));
-  db.collection('weeks').onSnapshot(snap => {
-    weeks.clear();
-    snap.docs.forEach(d => weeks.set(d.id, { ...blankWeek(d.id), ...d.data() }));
-    loaded.weeks = true; renderAll();
-  }, () => toast('Perdi a conexão com a agenda. Recarregue a página.'));
+  const lost = () => toast('Perdi a conexão com a agenda. Recarregue a página.');
+  const typing = () => document.activeElement?.tagName === 'TEXTAREA' || $('dlg').open;
+  const later = () => { if (!typing()) render(); };
+  db.collection('fixed').onSnapshot(s => { fixed = s.docs.map(d => ({ id: d.id, ...d.data() })); later(); }, lost);
+  db.collection('weeks').onSnapshot(s => { weeks.clear(); s.docs.forEach(d => weeks.set(d.id, { ...blankWeek(d.id), ...d.data() })); later(); }, lost);
+  db.collection('books').onSnapshot(s => { books = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.updated || 0) - (a.updated || 0)); later(); }, lost);
+  db.collection('shows').onSnapshot(s => { shows = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.updated || 0) - (a.updated || 0)); later(); }, lost);
+  document.addEventListener('focusout', () => setTimeout(later, 60));
+  $('dlg').addEventListener('close', later);
 })();
 </script>
