@@ -14,7 +14,7 @@
 <meta name="theme-color" content="#fff6f3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Dancing+Script:wght@600;700&family=Pathway+Gothic+One&family=Rozha+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Nunito:wght@400;600;700&family=Dancing+Script:wght@600;700&family=Pathway+Gothic+One&family=Rozha+One&display=swap" rel="stylesheet">
 <style>
   /* Layout: menu principal (Rotina, Livros, Filmes e séries) → na rotina: semana → dia → manhã/tarde/noite, como um planner em camadas */
   :root {
@@ -463,6 +463,177 @@
   .actions span { display: flex; gap: 8px; flex-wrap: wrap; }
   .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--bg); padding: 8px 16px; border-radius: 999px; font-size: 16px; max-width: calc(100vw - 32px); z-index: 5; }
   @media (prefers-reduced-motion: reduce) { .bar i { transition: none; } }
+  /* ================= Visual 2: mais calmo, organizado e com a cara da Amandinha =================
+     Creme claro, rosa antigo como cor principal, verde-sálvia e dourado de apoio.
+     Títulos em serifa suave (Fraunces), texto em Nunito, letra cursiva só na marca. */
+  :root {
+    --bg: #fbf6f2; --surface: #ffffff; --raised: #ffffff; --soft: #f6e8ec;
+    --ink: #3b2f35; --muted: #8b7c82; --line: #3b2f3516;
+    --title: #c4567a; --script: #6b4a5c; --shadow: #6b4a5c1f;
+    --pink: #d9799a; --orange: #e0956a; --peach: #dba774; --green: #6f9c7d;
+    --blue: #6f9ccc; --purple: #9d8ccf; --indigo: #7f86c9; --slate: #a3979d; --gold: #c39a3f; --danger: #c95656;
+    --f-display: "Fraunces", Georgia, serif;
+    --f-body: "Nunito", "Segoe UI", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1f1a1d; --surface: #2a2327; --raised: #322a2f; --soft: #3a2c33;
+      --ink: #f3e9ee; --muted: #b3a3ab; --line: #ffffff17; --title: #ec94b1; --script: #e2c4d3; --shadow: #0008;
+      --pink: #ec94b1; --orange: #f0ae86; --peach: #ecc396; --green: #94c4a1; --blue: #94bde8;
+      --purple: #bfb0ec; --indigo: #a7adec; --slate: #c2b6bc; --gold: #e3c06a; --danger: #f08b8b; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1f1a1d; --surface: #2a2327; --raised: #322a2f; --soft: #3a2c33;
+    --ink: #f3e9ee; --muted: #b3a3ab; --line: #ffffff17; --title: #ec94b1; --script: #e2c4d3; --shadow: #0008;
+    --pink: #ec94b1; --orange: #f0ae86; --peach: #ecc396; --green: #94c4a1; --blue: #94bde8;
+    --purple: #bfb0ec; --indigo: #a7adec; --slate: #c2b6bc; --gold: #e3c06a; --danger: #f08b8b; color-scheme: dark;
+  }
+  body {
+    font-family: var(--f-body); font-size: 15.5px; letter-spacing: 0; line-height: 1.4;
+    background-color: var(--bg);
+    background-image: linear-gradient(180deg, color-mix(in srgb, var(--soft) 80%, transparent) 0, transparent 320px);
+    background-size: auto; background-attachment: scroll;
+  }
+  .wrap { max-width: 1120px; }
+  .tint { background: color-mix(in srgb, var(--c, var(--pink)) 7%, var(--surface)); }
+
+  /* Cabeçalho */
+  header.top { gap: 12px; padding: 4px 0; }
+  header.top .hand { display: none; }
+  .logo { width: 58px; height: 58px; border-radius: 16px; box-shadow: 0 6px 16px var(--shadow); }
+  h1.brand-name { font-size: clamp(28px, 4vw, 38px); }
+  header.top .hello { font-family: var(--f-body); font-size: 14px; color: var(--muted); margin-top: 4px; }
+  header.top .hello b { color: var(--ink); font-weight: 700; }
+
+  /* Menu do computador: uma linha de abas discretas */
+  .mainnav { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 14px; padding: 6px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 6px 20px -14px var(--shadow); }
+  .mainnav button {
+    flex: 1 1 auto; flex-direction: row; gap: 7px; padding: 8px 12px; font-size: 14px; font-weight: 600;
+    text-transform: none; letter-spacing: 0; background: transparent; border: 0; box-shadow: none; border-radius: 12px; color: var(--muted);
+  }
+  .mainnav button:hover { transform: none; background: var(--soft); color: var(--ink); }
+  .mainnav .ico { color: inherit; }
+  .mainnav .ico svg { width: 19px; height: 19px; }
+  .mainnav button[aria-current="page"] { background: var(--title); color: var(--surface); }
+
+  /* Barra de baixo do celular */
+  @media (max-width: 900px) {
+    .mainnav { display: none; }
+    .tabbar { background: color-mix(in srgb, var(--surface) 94%, transparent); box-shadow: 0 -6px 24px -12px var(--shadow); }
+    .tabbar button { font-size: 11.5px; font-weight: 600; color: var(--muted); }
+    .tabbar button[aria-current="page"] { color: var(--title); background: var(--soft); }
+  }
+  .more-grid button { --c: var(--title); border: 1px solid var(--line); background: var(--surface); font-size: 15px; font-weight: 600; }
+  .more-grid .ico { color: var(--title); }
+  .more-grid button[aria-current="page"] { background: var(--title); color: var(--surface); }
+
+  /* Abas internas como botão segmentado */
+  .subnav { border: 0; background: var(--soft); border-radius: 14px; padding: 4px; gap: 2px; margin-bottom: 16px; scrollbar-width: none; }
+  .subnav::-webkit-scrollbar { display: none; }
+  .subnav button { border: 0; margin: 0; border-radius: 10px; padding: 7px 14px; font-size: 14px; font-weight: 600; color: var(--muted); }
+  .subnav button[aria-selected="true"] { background: var(--surface); color: var(--title); box-shadow: 0 1px 4px var(--shadow); }
+
+  /* Títulos */
+  .media-head h2, .retro h2, .subj-head h2 { font-family: var(--f-display); font-weight: 600; font-size: 26px; color: var(--ink); letter-spacing: -.2px; }
+  .daycard-head h2 { font-family: var(--f-display); font-weight: 600; font-size: 21px; color: var(--ink); }
+  .wcard h3, .panel h2 { font-family: var(--f-display); font-weight: 600; font-size: 17px; color: var(--ink); text-transform: none; letter-spacing: 0; }
+  .wcard h3 .ico, .panel h2 .ico { color: var(--c, var(--title)); }
+  .group h3, .shelf h3, .fixed-day h3, details.done-shelf summary { font-family: var(--f-body); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted) !important; }
+  .fixed-day h3 { font-size: 13px; }
+
+  /* Cartões: brancos, borda fina e sombra leve */
+  .daycard, .panel, .wcard, .card, .subj-card, .goal, .wcol, .stat, .retro-list li, .energy, .suggest, .acad-banner, .notice {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 8px 24px -18px var(--shadow);
+  }
+  .daycard-head.tint, .panel h2.tint, .wcol-head.tint { background: transparent; }
+  .panel h2 { border-bottom: 1px solid var(--line); }
+  .subj-card { border-top: 4px solid var(--s); }
+  .stat b { color: var(--title); }
+  .acad-sum .stat { background: var(--surface); }
+  .energy .lbl, .suggest { font-size: 15px; }
+  .acad-banner .ico, .retro-list .ico { color: var(--title); }
+
+  /* Linhas de atividade */
+  .row-item { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--k); border-radius: 12px; padding: 9px 10px; margin-top: 6px; grid-template-columns: 24px 88px minmax(0, 1fr) 24px; }
+  .row-item:hover { background: color-mix(in srgb, var(--k) 5%, var(--surface)); }
+  .row-item.hl { background: color-mix(in srgb, var(--k) 8%, var(--surface)); }
+  .row-item .text { font-size: 15.5px; font-weight: 600; }
+  .row-item .time { font-size: 13px; color: var(--muted); }
+  .row-item .sub { font-size: 13px; }
+  .row-item .ico svg { width: 20px; height: 20px; }
+  .row-item.nochk { grid-template-columns: 88px minmax(0, 1fr) 24px; }
+  .row-item.special { background: var(--soft); border-left-color: var(--title); }
+  .row-item.special .text { font-family: var(--f-display); font-size: 19px; }
+  .tag { font-size: 10.5px; font-weight: 700; }
+  @media (max-width: 520px) { .row-item { grid-template-columns: 24px 62px minmax(0, 1fr) 20px; } .row-item.nochk { grid-template-columns: 62px minmax(0, 1fr) 20px; } }
+  .chk { width: 20px; height: 20px; border-radius: 50%; border-width: 1.6px; }
+  .chk:checked::after { width: 9px; height: 4.5px; }
+  .list .chk { border-radius: 50%; }
+
+  /* Faixa dos dias */
+  .chip { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 7px 2px; }
+  .chip .dow { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .8px; }
+  .chip .num { font-family: var(--f-display); font-size: 21px; font-weight: 600; }
+  .chip .cnt { font-size: 11px; }
+  .chip.on { background: var(--title); border-color: var(--title); }
+  .chip.complete:not(.on) { background: color-mix(in srgb, var(--green) 12%, var(--surface)); }
+  .weekbar .label { font-family: var(--f-display); font-weight: 600; font-size: 21px; }
+  .weekbar .label small { font-family: var(--f-body); font-size: 13px; font-weight: 400; }
+  .weekbar .arrow { background: var(--surface); }
+  .weekbar .prog, .daycard-head .prog { font-size: 13px; }
+  .bar i { background: var(--title); }
+
+  /* Botões */
+  .btn { font-size: 14px; font-weight: 600; background: var(--surface); }
+  .btn.primary { background: var(--title); border-color: var(--title); color: #fff; }
+  .add { font-size: 14px; font-weight: 600; color: var(--muted); border: 1px dashed color-mix(in srgb, var(--muted) 45%, transparent); }
+  .add:hover { color: var(--title); border-color: var(--title); background: var(--soft); }
+  .pillbtn { font-size: 13.5px; font-weight: 600; }
+  .pillbtn.on { background: var(--title); border-color: var(--title); }
+  .linkbtn { font-size: 13.5px; }
+  .legend { font-size: 12.5px; }
+  .paste-bar .btn { font-size: 13px; }
+
+  /* Textos que estavam grandes demais com a nova letra */
+  .list textarea { font-size: 15.5px; }
+  .card .ttl { font-size: 17px; font-weight: 700; }
+  .subj-card .sc-name { font-family: var(--f-display); font-size: 19px; font-weight: 600; }
+  .hname { font-size: 15.5px; }
+  .catrow { font-size: 15px; }
+  .resumo { font-size: 15.5px; }
+  .inbox .text { font-size: 15.5px; font-weight: 600; }
+  .entry { font-size: 15px; }
+  .feel { font-size: 13px; }
+  .mini .x { font-size: 14px; }
+  .wcard .big { font-family: var(--f-display); font-weight: 600; color: var(--ink); }
+  .cal-d .n { font-size: 14px; font-weight: 700; }
+  .fields input[type=text], .fields input[type=number], .fields select, .sleep input, .journal { font-size: 16px; }
+  dialog h3 { font-family: var(--f-display); font-weight: 600; color: var(--ink); }
+  .toast { font-size: 14px; }
+
+  /* ================= Tela inicial ================= */
+  .home-hero { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 16px 18px; margin-bottom: 14px; box-shadow: 0 8px 24px -18px var(--shadow); }
+  .ring { --p: 0; width: 76px; height: 76px; border-radius: 50%; display: grid; place-content: center; background: conic-gradient(var(--title) calc(var(--p) * 1%), var(--soft) 0); }
+  .ring span { width: 60px; height: 60px; border-radius: 50%; background: var(--surface); display: grid; place-content: center; font-family: var(--f-display); font-weight: 600; font-size: 18px; }
+  .home-hero h2 { margin: 0; font-family: var(--f-display); font-weight: 600; font-size: 22px; }
+  .home-hero p { margin: 2px 0 0; color: var(--muted); }
+  .home-hero .next { margin-top: 8px; display: inline-flex; gap: 8px; align-items: center; background: var(--soft); border-radius: 999px; padding: 4px 12px; font-size: 14px; color: var(--ink); }
+  .home-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-items: start; }
+  .home-grid > * { margin: 0 !important; }
+  @media (max-width: 760px) { .home-grid { grid-template-columns: 1fr; } }
+  .hcard-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .shortcuts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+  .shortcuts button { display: grid; justify-items: center; gap: 4px; border: 1px solid var(--line); background: var(--surface); border-radius: 16px; padding: 12px 4px; font-size: 12.5px; font-weight: 600; color: var(--ink); }
+  .shortcuts .ico { width: 38px; height: 38px; border-radius: 50%; display: grid; place-content: center; background: var(--soft); color: var(--title); }
+  .shortcuts .ico svg { width: 20px; height: 20px; }
+  .mini-list { display: grid; gap: 6px; }
+  .mini-acad { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 14.5px; }
+  .mini-acad i { width: 10px; height: 10px; border-radius: 50%; background: var(--k); }
+  .mini-acad small { color: var(--muted); }
+  .home .faces { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .home .face span { font-size: 26px; }
+
 </style>
 
 </head>
@@ -480,6 +651,7 @@
   </header>
 
   <nav class="mainnav" id="mainnav" aria-label="Seções">
+    <button data-nav="inicio"><span class="ico" data-icon="casa"></span>Início</button>
     <button data-nav="rotina"><span class="ico" data-icon="agenda"></span>Minha rotina</button>
     <button data-nav="faculdade"><span class="ico" data-icon="capelo"></span>Faculdade</button>
     <button data-nav="bem"><span class="ico" data-icon="coracao"></span>Bem-estar</button>
@@ -490,13 +662,14 @@
     <button data-nav="filmes"><span class="ico" data-icon="filme"></span>Filmes e séries</button>
   </nav>
   <nav class="tabbar" id="tabbar" aria-label="Seções">
+    <button data-nav="inicio"><span class="ico" data-icon="casa"></span>Início</button>
     <button data-nav="rotina"><span class="ico" data-icon="agenda"></span>Rotina</button>
     <button data-nav="faculdade"><span class="ico" data-icon="capelo"></span>Faculdade</button>
     <button data-nav="bem"><span class="ico" data-icon="coracao"></span>Bem-estar</button>
-    <button data-nav="dinheiro"><span class="ico" data-icon="dinheiro"></span>Finanças</button>
     <button data-nav="mais"><span class="ico" data-icon="menu"></span>Mais</button>
   </nav>
   <dialog id="more" class="more"><div class="more-grid">
+    <button data-nav="inicio"><span class="ico" data-icon="casa"></span>Início</button>
     <button data-nav="rotina"><span class="ico" data-icon="agenda"></span>Minha rotina</button>
     <button data-nav="faculdade"><span class="ico" data-icon="capelo"></span>Faculdade</button>
     <button data-nav="bem"><span class="ico" data-icon="coracao"></span>Bem-estar</button>
@@ -699,6 +872,7 @@ const ICONS = {
   entrega: '<path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/>',
   festa: '<path d="M4 20l5-14 9 9z"/><path d="M14 4v2M19 9h2M17 6l2-2M12 2l.5 1M21 12l1 .5"/>',
   passeio: '<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+  casa: '<path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"/>',
   menu: '<rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/>',
   agua: '<path d="M12 3c-3 4.5-6 8-6 11a6 6 0 0 0 12 0c0-3-3-6.5-6-11z"/><path d="M9 15a3 3 0 0 0 3 3"/>',
   sacola: '<path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
@@ -774,7 +948,7 @@ const goals = new Map();
 const weeks = new Map();
 let pref = {};
 try { pref = JSON.parse(localStorage.getItem('agenda-pref') || '{}'); } catch {}
-let view = ['rotina', 'faculdade', 'bem', 'treino', 'dinheiro', 'diario', 'livros', 'filmes'].includes(location.hash.slice(1)) ? location.hash.slice(1) : (pref.view || 'rotina');
+let view = ['inicio', 'rotina', 'faculdade', 'bem', 'treino', 'dinheiro', 'diario', 'livros', 'filmes'].includes(location.hash.slice(1)) ? location.hash.slice(1) : (pref.view || 'inicio');
 let sub = pref.sub || 'dia';
 let selDay = TODAY;
 const selWeek = () => blockOf(selDay);
@@ -819,7 +993,7 @@ function dayItems(iso) {
 const isDone = it => !!weekDoc(weekOf(it.iso)).done?.[it.key];
 
 // ================= Navegação =================
-const TABBAR = ['rotina', 'faculdade', 'bem', 'dinheiro'];
+const TABBAR = ['inicio', 'rotina', 'faculdade', 'bem'];
 function goView(v) {
   if (v === 'mais') { $('more').showModal(); return; }
   if ($('more').open) $('more').close();
@@ -839,6 +1013,7 @@ function render() {
     const on = b.dataset.nav === view || (b.dataset.nav === 'mais' && !TABBAR.includes(view));
     on ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current');
   });
+  if (view === 'inicio') return renderInicio();
   if (view === 'faculdade') return renderFaculdade();
   if (view === 'treino') return renderTraining();
   if (view === 'bem') return renderBem();
@@ -1021,7 +1196,7 @@ function findItem(key, iso) {
 
 $('view').addEventListener('click', e => {
   const t = e.target, act = t.closest('[data-act]')?.dataset.act;
-  if (view !== 'rotina' && view !== 'treino') return;
+  if (view !== 'rotina' && view !== 'treino' && view !== 'inicio') return;
   if (act === 'addprio') {
     const iso = t.closest('[data-prio]').dataset.prio;
     patchDay(iso, { prioridades: [...(dayDoc(iso).prioridades || []), { text: '', done: false }] }); render();
@@ -1961,6 +2136,50 @@ $('view').addEventListener('click', e => {
     }
     return editAcad(a);
   }
+});
+
+// ================= Tela inicial =================
+function renderInicio() {
+  const d = dayItems(TODAY), pct = d.list.length ? Math.round(d.done / d.list.length * 100) : 0;
+  const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
+  const next = d.list.find(it => !isDone(it) && minutes(it) >= nowMin - 30 && minutes(it) < 2000) || d.list.find(it => !isDone(it));
+  const upcoming = d.list.filter(it => !isDone(it)).slice(0, 5);
+  const prazos = acadList().filter(a => a.status !== 'feito' && a.tipo !== 'estudo' && a.date && daysLeft(a) >= -3 && daysLeft(a) <= 14).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 4);
+  const hs = habitList(), habOk = hs.filter(h => habitCount(h, TODAY) >= h.goal).length;
+  const humor = dayDoc(TODAY).humor;
+  const tr = blockDays(blockOf(TODAY)).flatMap(iso => dayItems(iso).list).filter(it => isExercise(it));
+  $('view').innerHTML = `<div class="home">
+    <section class="home-hero">
+      <div class="ring" style="--p:${pct}"><span>${pct}%</span></div>
+      <div>
+        <h2>Seu dia</h2>
+        <p>${d.list.length ? `${d.done} de ${d.list.length} atividades feitas` : 'Nenhuma atividade marcada para hoje.'}${d.note ? ` · ${esc(d.note)}` : ''}</p>
+        ${next ? `<span class="next">${icon(next.icon || 'agenda')}<span>${next.time ? `<b>${esc(next.time)}</b> · ` : ''}${esc(next.text)}</span></span>` : ''}
+      </div>
+    </section>
+    <div class="home-grid">
+      ${prioCard(TODAY)}
+      <section class="wcard"><div class="hcard-head"><h3>${icon('agenda')} Hoje na agenda</h3><button class="linkbtn" data-go-day="${TODAY}">ver o dia</button></div>
+        ${upcoming.map(it => rowItem(it, false)).join('') || '<div class="empty">Tudo feito por hoje ♡</div>'}
+      </section>
+      <section class="wcard"><div class="hcard-head"><h3>${icon('capelo')} Faculdade</h3><button class="linkbtn" data-go-view="faculdade">central</button></div>
+        <div class="mini-list">${prazos.map(a => { const p = priority(a); return `<div class="mini-acad" style="--k:${ACAD_TIPOS[a.tipo][2]}"><i></i><span><b>${esc(a.titulo)}</b><br><small>${esc(subjOf(a.disc).nome)}</small></span><span class="prio-pill ${p.cls}">${whenText(a).split(' · ')[0]}</span></div>`; }).join('') || '<div class="empty">Nenhum prazo nas próximas duas semanas.</div>'}</div>
+      </section>
+      <section class="wcard"><div class="hcard-head"><h3>${icon('coracao')} Como você está?</h3><button class="linkbtn" data-go-view="bem">bem-estar</button></div>
+        <div class="faces">${FACES.map(([k, e, l]) => `<button class="face ${humor === k ? 'on' : ''}" data-humor-home="${k}" aria-label="${l}"><span>${e}</span><small>${l}</small></button>`).join('')}</div>
+        <p class="small muted">Hábitos de hoje: <b>${habOk}/${hs.length}</b> · Treinos na semana: <b>${tr.filter(isDone).length}/${tr.length}</b></p>
+      </section>
+    </div>
+    <section class="wcard" style="margin-top:14px"><h3>Atalhos</h3>
+      <div class="shortcuts">${[['rotina', 'agenda', 'Rotina'], ['faculdade', 'capelo', 'Faculdade'], ['bem', 'coracao', 'Bem-estar'], ['treino', 'academia', 'Treinos'], ['dinheiro', 'dinheiro', 'Finanças'], ['diario', 'diario', 'Diário'], ['livros', 'livro', 'Livros'], ['filmes', 'filme', 'Séries']].map(([k, i, l]) => `<button data-nav="${k}">${icon(i)}<span>${l}</span></button>`).join('')}</div>
+    </section>
+  </div>`;
+}
+$('view').addEventListener('click', e => {
+  if (view !== 'inicio') return;
+  const t = e.target;
+  const hu = t.closest('[data-humor-home]'); if (hu) { patchDay(TODAY, { humor: hu.dataset.humorHome }); return render(); }
+  const gd = t.closest('[data-go-day]'); if (gd) { selDay = gd.dataset.goDay; sub = 'dia'; return goView('rotina'); }
 });
 
 // ================= Livros =================
