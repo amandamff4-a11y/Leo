@@ -9,7 +9,7 @@ pwa = '--pwa' in args
 args = [a for a in args if a != '--pwa']
 data_dir = args[0] if args else None
 
-seed = {c: {} for c in ('fixed', 'weeks', 'goals', 'books', 'shows', 'days', 'habits', 'money', 'wishes', 'journal', 'inbox', 'objetivos', 'perfil')}
+seed = {c: {} for c in ('fixed', 'weeks', 'goals', 'books', 'shows', 'days', 'habits', 'money', 'wishes', 'journal', 'inbox', 'objetivos', 'perfil', 'semestres', 'subjects', 'acad')}
 if data_dir:
     for c in seed:
         d = os.path.join(data_dir, c)
@@ -110,10 +110,16 @@ shim = r'''
     const a = txt.indexOf('{'), b = txt.lastIndexOf('}');
     if (a < 0 || b < a) throw 0;
     const obj = JSON.parse(txt.slice(a, b + 1));
-    ['fixed', 'weeks', 'goals', 'books', 'shows', 'days', 'habits', 'money', 'wishes', 'journal', 'inbox', 'objetivos', 'perfil'].forEach(c => data[c] = data[c] || {});
+    ['fixed', 'weeks', 'goals', 'books', 'shows', 'days', 'habits', 'money', 'wishes', 'journal', 'inbox', 'objetivos', 'perfil', 'semestres', 'subjects', 'acad'].forEach(c => data[c] = data[c] || {});
     if (obj.weeks && obj.fixed) {
-      data = obj; ['fixed', 'weeks', 'goals', 'books', 'shows', 'days', 'habits', 'money', 'wishes', 'journal', 'inbox', 'objetivos', 'perfil'].forEach(c => data[c] = data[c] || {});
+      data = obj; ['fixed', 'weeks', 'goals', 'books', 'shows', 'days', 'habits', 'money', 'wishes', 'journal', 'inbox', 'objetivos', 'perfil', 'semestres', 'subjects', 'acad'].forEach(c => data[c] = data[c] || {});
       return 'Sua agenda chegou! ♡';
+    }
+    if (obj.merge && typeof obj.merge === 'object') {
+      let m = 0;
+      for (const [c, docs] of Object.entries(obj.merge)) { data[c] = data[c] || {}; for (const [id, d] of Object.entries(docs || {})) { data[c][id] = d; m++; } }
+      if (!m) throw 0;
+      return `Pronto, ${m} itens adicionados! ♡`;
     }
     if (!Array.isArray(obj.planner)) throw 0;
     let n = 0;
@@ -170,18 +176,17 @@ shim = r'''
 out = ('<!doctype html>\n<html lang="pt-BR">\n<head>\n<meta charset="utf-8">\n'
        '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
        + head + '\n</head>\n<body>\n<div class="wrap">' + NOJS + body[:main_script] + shim + body[main_script:] + '\n</body>\n</html>\n')
-out = out.replace('<title>Planejamento da Semana</title>', '<title>Meu Planner</title>')
 if pwa:
     # Versão instalável: ícone, tela cheia e funcionamento sem internet
-    out = out.replace('<title>Meu Planner</title>', '''<title>Meu Planner</title>
+    out = out.replace('<title>Vida da Amandinha</title>', '''<title>Vida da Amandinha</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Meu Planner">
+<meta name="apple-mobile-web-app-title" content="Amandinha">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="theme-color" content="#fdf8f4">''')
+<meta name="theme-color" content="#fff6f3">''')
     out = out.replace('\n</body>', "\n<script>if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js');</script>\n</body>")
     target = os.path.join(root, 'docs', 'index.html')
 else:
