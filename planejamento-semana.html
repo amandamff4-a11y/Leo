@@ -30,7 +30,17 @@
     --indigo: #91a7ff; --slate: #adb5bd; --gold: #ffd43b; --danger: #ff8787; color-scheme: dark;
   }
   * { box-sizing: border-box; }
-  body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 18px; letter-spacing: .2px; }
+  body {
+    background-color: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 18px; letter-spacing: .2px;
+    background-image:
+      radial-gradient(circle at 6% 0%, color-mix(in srgb, var(--pink) 18%, transparent) 0 160px, transparent 420px),
+      radial-gradient(circle at 100% 22%, color-mix(in srgb, var(--peach) 16%, transparent) 0 140px, transparent 380px),
+      radial-gradient(circle at 0% 85%, color-mix(in srgb, var(--green) 12%, transparent) 0 120px, transparent 360px),
+      radial-gradient(circle at 96% 100%, color-mix(in srgb, var(--purple) 12%, transparent) 0 120px, transparent 360px),
+      radial-gradient(color-mix(in srgb, var(--pink) 20%, transparent) 1.2px, transparent 1.7px);
+    background-size: auto, auto, auto, auto, 22px 22px;
+    background-attachment: fixed;
+  }
   .wrap {
     max-width: 1180px; margin: 0 auto; padding-block: 14px 48px;
     padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
@@ -42,25 +52,44 @@
   /* ---------- Cabeçalho ---------- */
   header { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; }
   .hand { font-family: var(--f-hand); color: var(--script); font-size: 22px; line-height: 1.05; }
-  .hand.left { transform: rotate(-9deg); justify-self: start; }
-  .hand.right { transform: rotate(-10deg); justify-self: end; color: var(--title); }
+  .hand.left { transform: rotate(-9deg); justify-self: start; display: flex; align-items: center; gap: 6px; }
+  .hand.right { transform: rotate(-10deg); justify-self: end; color: var(--title); display: flex; align-items: center; gap: 6px; }
+  .deco { flex: none; width: 54px; height: 70px; }
+  .deco.sun { width: 62px; height: 62px; transform: rotate(10deg); }
+  .title-block { text-align: center; }
+  .hello { font-family: var(--f-hand); font-size: 24px; color: var(--script); margin-top: 6px; }
+  .hello b { color: var(--title); font-weight: 700; }
+  @media (prefers-reduced-motion: no-preference) {
+    .deco.sun { animation: spin 40s linear infinite; }
+    @keyframes spin { to { transform: rotate(370deg); } }
+    .chk:checked { animation: pop .28s ease-out; }
+    @keyframes pop { 50% { transform: scale(1.3); } }
+  }
   h1 { margin: 0; text-align: center; font-family: var(--f-display); font-weight: normal; color: var(--title); font-size: clamp(28px, 4.6vw, 50px); line-height: 1.05; transform: rotate(-1.5deg); text-wrap: balance; }
   @media (max-width: 700px) {
     header { grid-template-columns: 1fr 1fr; }
-    h1 { grid-column: 1 / -1; grid-row: 1; }
+    .title-block { grid-column: 1 / -1; grid-row: 1; }
     .hand { font-size: 18px; }
+    .deco { width: 36px; height: 48px; } .deco.sun { width: 42px; height: 42px; }
   }
 
   /* ---------- Menu principal ---------- */
   .mainnav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 18px 0 16px; }
   .mainnav button {
     display: flex; align-items: center; justify-content: center; gap: 8px;
-    border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 10px 8px;
-    font-size: 20px; text-transform: uppercase; letter-spacing: .8px;
+    --c: var(--title); border: 1.5px solid color-mix(in srgb, var(--c) 35%, transparent);
+    background: color-mix(in srgb, var(--c) 9%, var(--surface)); border-radius: 16px; padding: 10px 8px;
+    font-size: 20px; text-transform: uppercase; letter-spacing: .8px; box-shadow: 0 3px 0 color-mix(in srgb, var(--c) 25%, transparent);
+    transition: transform .15s;
   }
-  .mainnav button[aria-current="page"] { background: var(--title); border-color: var(--title); color: var(--bg); }
-  .mainnav button[aria-current="page"] .ico { color: var(--bg); }
-  .mainnav .ico { color: var(--title); }
+  .mainnav button:hover { transform: translateY(-2px); }
+  .mainnav button[aria-current="page"] { background: var(--c); border-color: var(--c); color: var(--surface); }
+  .mainnav button[aria-current="page"] .ico { color: var(--surface); }
+  .mainnav .ico { color: var(--c); }
+  .mainnav [data-view="treino"] { --c: var(--green); }
+  .mainnav [data-view="livros"] { --c: var(--purple); }
+  .mainnav [data-view="filmes"] { --c: var(--blue); }
+  #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 20; width: 100%; height: 100%; }
   @media (max-width: 760px) { .mainnav { grid-template-columns: repeat(2, minmax(0, 1fr)); } .mainnav button { font-size: 17px; } }
 
   /* ---------- Barra da semana ---------- */
@@ -82,7 +111,7 @@
   .strip { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-bottom: 12px; }
   .chip {
     --c: var(--pink); border: 1px solid color-mix(in srgb, var(--c) 30%, transparent);
-    background: var(--surface); border-radius: 12px; padding: 6px 2px; display: grid; justify-items: center; gap: 1px; position: relative;
+    background: color-mix(in srgb, var(--c) 9%, var(--surface)); border-radius: 14px; padding: 6px 2px; display: grid; justify-items: center; gap: 1px; position: relative;
   }
   .chip .dow { font-size: 14px; text-transform: uppercase; color: var(--c); letter-spacing: .6px; }
   .chip .num { font-size: 24px; line-height: 1; font-variant-numeric: tabular-nums; }
@@ -262,9 +291,9 @@
 
 <div class="wrap">
   <header>
-    <div class="hand left">disciplina<br>também é<br>amor próprio ♡</div>
-    <h1>PLANEJAMENTO DA SEMANA</h1>
-    <div class="hand right">foco<br>organização<br>evolução<br>momentos bons ♡</div>
+    <div class="hand left"><span>disciplina<br>também é<br>amor próprio ♡</span><svg class="deco" viewBox="0 0 54 70" aria-hidden="true"><path style="stroke:var(--green)" d="M27 66V30" stroke-width="2.5" fill="none" stroke-linecap="round"/><path style="fill:color-mix(in srgb, var(--green) 35%, transparent);stroke:var(--green)" d="M27 52c-8-2-14-8-15-16 8 1 14 7 15 16zM27 46c7-2 12-7 13-14-7 1-12 6-13 14z" stroke-width="1.5"/><path style="fill:color-mix(in srgb, var(--pink) 45%, transparent);stroke:var(--pink)" d="M15 12c2 10 6 18 12 18s10-8 12-18c-4 3-7 5-9 5l-3-9-3 9c-2 0-5-2-9-5z" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+    <div class="title-block"><h1>PLANEJAMENTO DA SEMANA</h1><div class="hello" id="hello"></div></div>
+    <div class="hand right"><svg class="deco sun" viewBox="0 0 62 62" aria-hidden="true"><g style="stroke:var(--gold)" stroke-width="2.5" stroke-linecap="round"><path d="M31 3v8M31 51v8M3 31h8M51 31h8M11 11l6 6M45 45l6 6M11 51l6-6M45 17l6-6"/></g><circle style="fill:color-mix(in srgb, var(--gold) 30%, transparent);stroke:var(--gold)" cx="31" cy="31" r="13" stroke-width="2.2"/><circle style="fill:var(--gold)" cx="26.5" cy="29" r="1.4"/><circle style="fill:var(--gold)" cx="35.5" cy="29" r="1.4"/><path style="stroke:var(--gold)" d="M26 34c3 3 7 3 10 0" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg><span>foco<br>organização<br>evolução<br>momentos bons ♡</span></div>
   </header>
 
   <nav class="mainnav" id="mainnav" aria-label="Seções">
@@ -442,7 +471,13 @@ $('mainnav').addEventListener('click', e => {
   view = b.dataset.view; remember(); render();
   try { history.replaceState(null, '', '#' + view); } catch {}
 });
+function renderHello() {
+  const h = new Date().getHours(), d = parse(TODAY);
+  const hi = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
+  $('hello').innerHTML = `${hi} ♡ hoje é <b>${DAYS[d.getDay()].toLowerCase()}, ${longDate(TODAY)}</b>`;
+}
 function render() {
+  renderHello();
   $('mainnav').querySelectorAll('button').forEach(b => b.dataset.view === view ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current'));
   if (view === 'treino') return renderTraining();
   if (view === 'livros') return renderBooks();
@@ -580,7 +615,27 @@ function renderFixed() {
   }).join('')}`;
 }
 
-function toggleDone(key, iso, on) { saveWeek(weekOf(iso), { done: { [key]: on } }); render(); }
+function toggleDone(key, iso, on) {
+  saveWeek(weekOf(iso), { done: { [key]: on } }); render();
+  const d = dayItems(iso);
+  if (on && d.list.length && d.done === d.list.length) celebrate('Dia completo! Você arrasou ♡');
+}
+// Chuva de confete quando um dia inteiro é concluído ou um livro termina
+function celebrate(msg) {
+  toast(msg);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const cv = document.createElement('canvas'); cv.id = 'confetti'; document.body.appendChild(cv);
+  const ctx = cv.getContext('2d'), W = cv.width = innerWidth, H = cv.height = innerHeight;
+  const cs = getComputedStyle(document.documentElement);
+  const colors = ['--pink', '--orange', '--gold', '--green', '--blue', '--purple'].map(v => cs.getPropertyValue(v).trim());
+  const bits = Array.from({ length: 140 }, () => ({ x: W / 2 + (Math.random() - .5) * 120, y: H * .35, vx: (Math.random() - .5) * 14, vy: -Math.random() * 13 - 4, r: Math.random() * 6.28, s: 5 + Math.random() * 6, c: colors[Math.floor(Math.random() * colors.length)] }));
+  let f = 0;
+  (function tick() {
+    ctx.clearRect(0, 0, W, H);
+    bits.forEach(b => { b.vy += .35; b.x += b.vx; b.y += b.vy; b.r += .2; ctx.save(); ctx.translate(b.x, b.y); ctx.rotate(b.r); ctx.fillStyle = b.c; ctx.fillRect(-b.s / 2, -b.s / 4, b.s, b.s / 2); ctx.restore(); });
+    if (++f < 110) requestAnimationFrame(tick); else cv.remove();
+  })();
+}
 function findItem(key, iso) {
   if (key.startsWith('fixed:')) return { mode: 'fixed', fixedId: key.slice(6) };
   const [fid, fiso] = key.split('_');
@@ -843,7 +898,7 @@ $('view').addEventListener('click', e => {
   const bc = t.closest('[data-book]'), sc = t.closest('[data-show]');
   if (bc) {
     const b = books.find(x => x.id === bc.dataset.book); const { id, ...data } = b;
-    if (t.classList.contains('chk')) { saveDoc('books', books, id, { ...data, status: t.checked ? 'lido' : 'lendo', page: t.checked && b.pages ? b.pages : b.page, updated: Date.now() }); return render(); }
+    if (t.classList.contains('chk')) { saveDoc('books', books, id, { ...data, status: t.checked ? 'lido' : 'lendo', page: t.checked && b.pages ? b.pages : b.page, updated: Date.now() }); if (t.checked) celebrate('Livro terminado! ♡'); return render(); }
     if (t.dataset.step) { const page = Math.min((b.page || 0) + 10, b.pages || Infinity); saveDoc('books', books, id, { ...data, page, status: b.pages && page >= b.pages ? 'lido' : 'lendo', updated: Date.now() }); return render(); }
     return editBook(b);
   }
