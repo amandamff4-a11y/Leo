@@ -348,6 +348,9 @@
 <style>
   .backup { margin-top: 28px; padding: 14px 16px; border-radius: 16px; border: 1.5px dashed color-mix(in srgb, var(--title) 40%, transparent); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; color: var(--muted); font-size: 16px; }
   .backup p { margin: 0; flex: 1 1 260px; }
+  .paste-bar { display: flex; justify-content: flex-end; margin: -6px 0 12px; }
+  .paste-bar .btn { border-color: color-mix(in srgb, var(--title) 45%, transparent); color: var(--title); }
+  #pasteText { width: 100%; font: inherit; font-size: 16px; border: 1px solid var(--line); border-radius: 10px; padding: 10px; background: var(--bg); color: var(--ink); resize: vertical; }
 </style>
 <script>
 // Banco de dados local: guarda tudo neste navegador (localStorage), no mesmo formato do app online
@@ -386,13 +389,78 @@
   box.innerHTML = '<p>Seus dados ficam salvos neste navegador. Guarde uma cópia de vez em quando, ou use a cópia para levar o planner para outro aparelho.</p>' +
     '<button class="btn" id="bkSave">Baixar cópia dos dados</button><button class="btn" id="bkLoad">Abrir cópia</button><input type="file" id="bkFile" accept="application/json,.json" hidden>';
   document.querySelector('.wrap').appendChild(box);
+
+  // "Colar do Claude": aplica um código que o Claude manda no chat (agenda completa ou alterações)
+  const bar = document.createElement('div');
+  bar.className = 'paste-bar';
+  bar.innerHTML = '<button class="btn" id="pasteOpen">📋 Colar do Claude</button>';
+  document.querySelector('.mainnav').after(bar);
+  const dlg = document.createElement('dialog');
+  dlg.innerHTML = '<form id="pasteForm"><h3>Colar do Claude</h3><p class="form-note">Cole aqui o código que o Claude te mandou no chat e toque em Aplicar.</p>' +
+    '<textarea id="pasteText" rows="7" placeholder="Toque e segure aqui, depois escolha Colar"></textarea>' +
+    '<div class="actions"><span></span><span><button type="button" class="btn" id="pasteCancel">Cancelar</button><button type="submit" class="btn primary">Aplicar</button></span></div></form>';
+  document.body.appendChild(dlg);
+  const openPaste = () => { dlg.querySelector('#pasteText').value = ''; dlg.showModal(); };
+  document.getElementById('pasteOpen').onclick = openPaste;
+  dlg.querySelector('#pasteCancel').onclick = () => dlg.close();
+  dlg.querySelector('#pasteForm').onsubmit = e => {
+    e.preventDefault();
+    try {
+      const msg = applyPaste(dlg.querySelector('#pasteText').value);
+      save(); Object.keys(subs).forEach(fire); dlg.close();
+      document.querySelectorAll('.welcome').forEach(el => el.remove());
+      window.celebrate ? celebrate(msg) : alert(msg);
+    } catch { alert('Não entendi esse código. Copie de novo a mensagem inteira do Claude e cole aqui.'); }
+  };
+  const P = iso => { const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d, 12); };
+  const F = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const weekOf = iso => { const d = P(iso); d.setDate(d.getDate() - d.getDay()); return F(d); };
+  const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  const isDate = v => /^\d{4}-\d{2}-\d{2}$/.test(v || '');
+  const week = iso => { const w = weekOf(iso); return data.weeks[w] = data.weeks[w] || { start: w, items: [], done: {}, skip: [], notes: {}, lists: { prioridades: [], academicas: [], pessoais: [] } }; };
+  const same = (a, b) => String(a || '').trim().toLowerCase() === String(b || '').trim().toLowerCase();
+  const pick = (o, keys) => Object.fromEntries(keys.filter(k => o[k] !== undefined).map(k => [k, o[k]]));
+  function applyPaste(txt) {
+    const a = txt.indexOf('{'), b = txt.lastIndexOf('}');
+    if (a < 0 || b < a) throw 0;
+    const obj = JSON.parse(txt.slice(a, b + 1));
+    ['fixed', 'weeks', 'goals', 'books', 'shows'].forEach(c => data[c] = data[c] || {});
+    if (obj.weeks && obj.fixed) {
+      data = obj; ['fixed', 'weeks', 'goals', 'books', 'shows'].forEach(c => data[c] = data[c] || {});
+      return 'Sua agenda chegou! ♡';
+    }
+    if (!Array.isArray(obj.planner)) throw 0;
+    let n = 0;
+    for (const o of obj.planner) {
+      const item = { time: o.time || '', text: o.text || 'Atividade', sub: o.sub || '', icon: o.icon || 'coracao', hl: !!o.hl };
+      if (o.add === 'atividade' && isDate(o.date)) week(o.date).items.push({ id: uid('w'), date: o.date, ...item });
+      else if (o.add === 'fixa' && o.weekday >= 0 && o.weekday <= 6) data.fixed[uid('f')] = { ...item, weekday: +o.weekday };
+      else if (o.add === 'livro') data.books[uid('b')] = { status: 'lendo', ...pick(o, ['title', 'author', 'status', 'page', 'pages', 'note']), updated: Date.now() };
+      else if (o.add === 'serie' || o.add === 'filme') data.shows[uid('s')] = { kind: o.add, status: 'vendo', ...pick(o, ['title', 'status', 'season', 'episode', 'where', 'rating', 'note']), updated: Date.now() };
+      else if (o.add === 'meta' && isDate(o.semana)) {
+        const g = data.goals[o.semana] = data.goals[o.semana] || { lists: { prioridades: [], academicas: [], pessoais: [] } };
+        (g.lists[o.lista || 'prioridades'] = g.lists[o.lista || 'prioridades'] || []).push({ text: o.text, done: false });
+      }
+      else if (o.remove === 'atividade' && isDate(o.date)) {
+        const w = week(o.date), wd = P(o.date).getDay();
+        w.items = w.items.filter(it => !(it.date === o.date && same(it.text, o.text)));
+        Object.entries(data.fixed).forEach(([id, f]) => { if (f.weekday === wd && same(f.text, o.text)) w.skip.push(id + '_' + o.date); });
+      }
+      else if (o.remove === 'fixa') Object.entries(data.fixed).forEach(([id, f]) => { if (f.weekday === +o.weekday && same(f.text, o.text)) delete data.fixed[id]; });
+      else if (o.nota && isDate(o.nota)) week(o.nota).notes[o.nota] = o.text || '';
+      else continue;
+      n++;
+    }
+    if (!n) throw 0;
+    return n === 1 ? 'Pronto, atualizei! ♡' : `Pronto, ${n} atualizações feitas! ♡`;
+  }
   // Primeira vez abrindo sem dados: mostra como trazer a agenda de um arquivo de cópia
   if (fresh && !Object.values(data).some(c => Object.keys(c).length)) {
     const hi = document.createElement('div');
-    hi.className = 'notice';
-    hi.innerHTML = '<b>Bem-vinda ao seu planner! ♡</b><br>Para trazer a sua agenda, toque em <b>Abrir cópia</b> e escolha o arquivo <b>meus-dados.json</b>. Ou comece do zero adicionando suas atividades.<br><button class="btn primary" style="margin-top:8px" id="bkLoad2">Abrir cópia</button>';
-    document.querySelector('.mainnav').after(hi);
-    document.getElementById('bkLoad2').onclick = () => file.click();
+    hi.className = 'notice welcome';
+    hi.innerHTML = '<b>Bem-vinda ao seu planner! ♡</b><br>Para trazer a sua agenda, copie o código que o Claude te mandou e toque em <b>Colar do Claude</b>. Ou comece do zero adicionando suas atividades.<br><button class="btn primary" style="margin-top:8px" id="pasteOpen2">📋 Colar do Claude</button>';
+    bar.after(hi);
+    document.getElementById('pasteOpen2').onclick = openPaste;
   }
   document.getElementById('bkSave').onclick = () => {
     const a = document.createElement('a');
