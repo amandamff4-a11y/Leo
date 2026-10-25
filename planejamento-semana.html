@@ -639,6 +639,19 @@
   .mainnav button[aria-current="page"] { color: var(--c); }
   .mainnav button[aria-current="page"] .ico { background: var(--c); color: #fff; box-shadow: 0 8px 18px -8px var(--c); }
   .mainnav { flex-wrap: nowrap; }
+  /* Abas num cartão, todas à vista (duas fileiras no celular) */
+  .mainnav {
+    flex-wrap: wrap; justify-content: center; overflow: visible; gap: 10px 0;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 24px;
+    padding: 10px 8px 12px; margin: 12px 0 10px; box-shadow: 0 10px 26px -20px var(--shadow);
+  }
+  .mainnav::before { content: "para onde vamos hoje? ♡"; flex-basis: 100%; text-align: center; font-family: var(--f-hand); font-size: 20px; color: var(--script); line-height: 1; }
+  .mainnav button { flex: 0 0 calc(100% / 9); width: auto; }
+  @media (max-width: 900px) {
+    .mainnav { margin: 10px 0 8px; padding: 10px 4px 12px; gap: 12px 0; }
+    .mainnav button { flex: 0 0 20%; width: auto; font-size: 11px; }
+    .mainnav button .ico { width: 46px; height: 46px; }
+  }
   .mainnav button[data-nav="inicio"], .shortcuts [data-nav="inicio"] { --c: var(--title); }
   .mainnav button[data-nav="rotina"], .shortcuts [data-nav="rotina"] { --c: var(--pink); }
   .mainnav button[data-nav="faculdade"], .shortcuts [data-nav="faculdade"] { --c: var(--blue); }
@@ -684,6 +697,9 @@
   .stat { background: color-mix(in srgb, var(--g, var(--title)) 8%, var(--surface)); }
   .stat b { color: var(--g, var(--title)); }
   .chip.on { box-shadow: 0 8px 16px -8px var(--title); }
+  @media (max-width: 900px) {
+    .mainnav { justify-content: center; gap: 12px 0; margin: 10px 0 8px; padding: 10px 4px 12px; }
+  }
   @media (prefers-reduced-motion: no-preference) {
     .spark.s1 { animation: twinkle 2.6s ease-in-out infinite; }
     @keyframes twinkle { 50% { opacity: .3; transform: scale(.8) rotate(20deg); } }
